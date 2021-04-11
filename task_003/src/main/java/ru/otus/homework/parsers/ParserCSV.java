@@ -41,7 +41,7 @@ public class ParserCSV implements Parser {
 
     }
 
-    private Question getQuestion(String setting, String separator) throws BusinessException {
+    public Question getQuestion(String setting, String separator) throws BusinessException {
 
         if(setting == null) {
             throw new BusinessException(Errors.QUESTION_SETTING_IS_NULL, setting);
@@ -61,6 +61,11 @@ public class ParserCSV implements Parser {
             List<String> answers = Arrays.stream(questionStrings).skip(2).collect(Collectors.toList());
 
             question.setText(text);
+
+            if(text.isEmpty()) {
+                throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY);
+            }
+
             QuestionTypes questionType = QuestionTypes.getByName(type);
 
             if(questionType == null) {
@@ -85,12 +90,18 @@ public class ParserCSV implements Parser {
             return question;
 
         }
-
-        return null;
-
+        else if (questionStrings.length == 2) {
+            throw new BusinessException(Errors.QUESTION_DOES_NOT_HAVE_ANSWER_OPTIONS);
+        }
+        else if(questionStrings.length == 1) {
+            throw new BusinessException(Errors.QUESTION_TYPE_IS_EMPTY);
+        }
+        else {
+            throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY);
+        }
     }
 
-    private Answer getAnswer(String setting, String separator) throws BusinessException {
+    public Answer getAnswer(String setting, String separator) throws BusinessException {
 
         if(setting == null) {
             throw new BusinessException(Errors.ANSWER_SETTING_IS_NULL, setting);
@@ -104,9 +115,9 @@ public class ParserCSV implements Parser {
         String text = "";
         Boolean isValid = false;
 
-        if(answerStrings.length > 1) {
+        if(answerStrings.length >= 1) {
             text = answerStrings[0] != null ? (answerStrings[0]).trim() : "";
-            isValid = answerStrings[1] != null ? (answerStrings[1]).trim().equalsIgnoreCase("true") : false;
+            isValid = (answerStrings.length > 1 && answerStrings[1] != null) ? (answerStrings[1]).trim().equalsIgnoreCase("true") : false;
         }
 
         if(text.isEmpty()) {

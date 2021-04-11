@@ -2,16 +2,16 @@ package ru.otus.homework.service;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.homework.domain.Answer;
-import ru.otus.homework.domain.Question;
-import ru.otus.homework.domain.QuestionBook;
-import ru.otus.homework.domain.QuestionTypes;
+import ru.otus.homework.domain.*;
+import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.loaders.Loader;
 import ru.otus.homework.parsers.Parser;
 
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,19 +35,39 @@ public class QuestionBookServiceImplTest {
     @Mock
     private Parser parser;
 
+    private InputStream in;
+    private ByteArrayOutputStream outByte;
+    private PrintStream out;
+
     @InjectMocks
     private QuestionBookServiceImpl questionBookService;
 
-    private InputStream consoleInputStream = System.in;
-    private PrintStream consoleOutputStream = System.out;
+    private final InputStream consoleInputStream = System.in;
+    private final PrintStream consoleOutputStream = System.out;
 
     @AfterEach
     void restoreDefault() {
+
+        try {
+            if(in != null) {
+                in.close();
+            }
+            if(outByte != null) {
+                outByte.close();
+            }
+            if(out != null) {
+                out.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         System.setIn(consoleInputStream);
         System.setOut(consoleOutputStream);
     }
 
-    @DisplayName("Подготовит вопросы для вывода")
+    @DisplayName("метод prepareQuestion подготовит все вопросы для вывода")
     @Test
     void prepareQuestionTest() throws Exception {
 
@@ -72,9 +93,308 @@ public class QuestionBookServiceImplTest {
 
     }
 
-    @DisplayName("Выдаст ошибку при валидации QuestionBook из-за двух ответов в вопросе с вводом единственного варианта")
+    @DisplayName("метод prepareQuestion не выведет ответ для вопроса с вводом ответа")
     @Test
-    void validateQuestionBook_Typing_TotalAnswerCountIncorrect() throws Exception {
+    void prepareQuestionTest_TypingQuestionWithoutAnswer() throws Exception {
+
+        QuestionBook questionBook = getQuestionBook();
+        Question question = questionBook.getQuestions().get(0);
+        List<Answer> answers = question.getAnswers();
+        Answer answer = answers.get(0);
+        String str = questionBookService.prepareQuestion(1, question);
+
+        assertThat(str).doesNotContainIgnoringCase("1." + answer.getText());
+
+    }
+
+    @DisplayName("метод prepareQuestion выведет ответы для вопроса с единичным выбором")
+    @Test
+    void prepareQuestionTest_SingleOptionQuestionHasAnswers() throws Exception {
+
+        QuestionBook questionBook = getQuestionBook();
+        Question question = questionBook.getQuestions().get(1);
+        String str = questionBookService.prepareQuestion(1, question);
+
+        Integer answerNumber = 1;
+        for(Answer answer : question.getAnswers()) {
+            assertThat(str).containsIgnoringCase(answerNumber + "." + answer.getText());
+            answerNumber++;
+        }
+
+    }
+
+    @DisplayName("метод prepareQuestion выведет ответы для вопроса с множественным выбором")
+    @Test
+    void prepareQuestionTest_MultyOptionQuestionHasAnswers() throws Exception {
+
+        QuestionBook questionBook = getQuestionBook();
+        Question question = questionBook.getQuestions().get(2);
+        String str = questionBookService.prepareQuestion(1, question);
+
+        Integer answerNumber = 1;
+        for(Answer answer : question.getAnswers()) {
+            assertThat(str).containsIgnoringCase(answerNumber + "." + answer.getText());
+            answerNumber++;
+        }
+
+    }
+
+    @DisplayName("метод printQuestionBook выведет список вопросов")
+    @Test
+    public void printQuestionBookTest() throws Exception {
+
+        List<String> questions = getQuestions();
+        given(loader.loadQuestions(any())).willReturn(questions);
+        given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
+        configurateEnvironment("");
+
+        questionBookService.printQuestionBook();
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("Current capital of Russia?"),
+                () -> str.contains("JavaScript is language for?"),
+                () -> str.contains("Mark languages and frameworks for current course ..."),
+                () -> str.contains("Print name of company for which course customized for?"),
+                () -> str.contains("Select name of education company?")
+        );
+
+    }
+
+    @DisplayName("метод printQuestionBook присвоит номер каждому вопросу")
+    @Test
+    public void printQuestionBookTest_addQuestionNumbers() throws Exception {
+
+        List<String> questions = getQuestions();
+        given(loader.loadQuestions(any())).willReturn(questions);
+        given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
+        configurateEnvironment("");
+
+        questionBookService.printQuestionBook();
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("1.Current capital of Russia?"),
+                () -> str.contains("2.JavaScript is language for?"),
+                () -> str.contains("3.Mark languages and frameworks for current course ..."),
+                () -> str.contains("4.Print name of company for which course customized for?"),
+                () -> str.contains("5.Select name of education company?")
+        );
+
+    }
+
+    @DisplayName("метод validateQuestionBook свалидирует QuestionBook без ошибок")
+    @Test
+    void validateQuestionBook_QuestionBookValid() throws Exception {
+
+        Boolean validationFlag = questionBookService.validateQuestionBook(getQuestionBook());
+        Assert.assertTrue(validationFlag);
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым списком вопросов")
+    @Test
+    void validateQuestionBook_NullQuestionsUnvalid() throws Exception {
+
+        QuestionBook questionBook = new QuestionBook();
+        Boolean validationFlag = questionBookService.validateQuestionBook(questionBook);
+        Assert.assertFalse(validationFlag);
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым списком вопросов")
+    @Test
+    void validateQuestionBook_EmptyQuestionsUnvalid() throws Exception {
+
+        QuestionBook questionBook = new QuestionBook();
+        questionBook.setQuestions(new ArrayList<>());
+        Boolean validationFlag = questionBookService.validateQuestionBook(questionBook);
+        Assert.assertFalse(validationFlag);
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым вопросом")
+    @Test
+    void validateQuestionBook_NullQuestionTextUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Moscow", true));
+        answers.add(new Answer("Yaroslavl", false));
+
+        Question question = new Question();
+        question.setText(null);
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым вопросом")
+    @Test
+    void validateQuestionBook_EmptyQuestionTextUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Moscow", true));
+        answers.add(new Answer("Yaroslavl", false));
+
+        Question question = new Question();
+        question.setText("");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым вопросом без учёта пробелов")
+    @Test
+    void validateQuestionBook_EmptyQuestionTextIgnoreSpacesUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Moscow", true));
+        answers.add(new Answer("Yaroslavl", false));
+
+        Question question = new Question();
+        question.setText("  ");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым типом вопроса")
+    @Test
+    void validateQuestionBook_NullQuestionTypeUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Moscow", true));
+        answers.add(new Answer("Yaroslavl", false));
+
+        Question question = new Question();
+        question.setText("Current capital of Russia?");
+        question.setType(null);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым ответом")
+    @Test
+    void validateQuestionBook_NullAnswerQuestionUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer(null, true));
+
+        Question question = new Question();
+        question.setText("Current capital of Russia?");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым ответом")
+    @Test
+    void validateQuestionBook_EmptyAnswerQuestionUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("", true));
+
+        Question question = new Question();
+        question.setText("Current capital of Russia?");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым ответом без учёта пробелов")
+    @Test
+    void validateQuestionBook_EmptyAnswerQuestionIgnoreSpacesUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("   ", true));
+
+        Question question = new Question();
+        question.setText("Current capital of Russia?");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым признаком правильности ответа")
+    @Test
+    void validateQuestionBook_NullAnswerIsValidQuestionUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Moscow", null));
+
+        Question question = new Question();
+        question.setText("Current capital of Russia?");
+        question.setType(QuestionTypes.TYPING);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c двумя правильными ответами в вопросе с вводом ответа")
+    @Test
+    void validateQuestionBook_TotalValidTypingAnswerCountUnvalid() throws Exception {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -95,39 +415,105 @@ public class QuestionBookServiceImplTest {
 
     }
 
-    @DisplayName("Выведет список вопросов")
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c двумя правильными ответами в вопросе с выбором единственной опции")
     @Test
-    public void printQuestionBookTest() throws Exception {
+    void validateQuestionBook_TotalValidSingleAnswerCountUnvalid() throws Exception {
 
-        List<String> questions = getQuestions();
-        given(loader.loadQuestions(any())).willReturn(questions);
-        given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Only for frontend", true));
+        answers.add(new Answer("Only for backend", false));
+        answers.add(new Answer("Frontend and backend", true));
 
-        try(ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setOut(out);
+        Question question = new Question();
+        question.setText("JavaScript is language for?");
+        question.setType(QuestionTypes.SINGLE);
+        question.setAnswers(answers);
 
-            questionBookService.printQuestionBook(out);
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
 
-            String str = outByte.toString();
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
 
-            assertAll(str,
-                    () -> str.contains("Current capital of Russia?"),
-                    () -> str.contains("JavaScript is language for?"),
-                    () -> str.contains("Mark languages and frameworks for current course ..."),
-                    () -> str.contains("Print name of company for which course customized for?"),
-                    () -> str.contains("Select name of education company?")
-            );
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
 
     }
 
-    @DisplayName("Проведёт тест с правильными ответами на все вопросы")
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c без неправильного ответа в вопросе с выбором единственной опции")
+    @Test
+    void validateQuestionBook_TotalUnvalidSingleAnswerCountUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Only for frontend", true));
+        answers.add(new Answer("Only for backend", true));
+        answers.add(new Answer("Frontend and backend", true));
+
+        Question question = new Question();
+        question.setText("JavaScript is language for?");
+        question.setType(QuestionTypes.SINGLE);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с одним правильным ответом в вопросе с выбором множества опции")
+    @Test
+    void validateQuestionBook_TotalValidMultyAnswerCountUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Java", true));
+        answers.add(new Answer("Angular", false));
+        answers.add(new Answer("Spring", false));
+        answers.add(new Answer("TypeScript", false));
+
+        Question question = new Question();
+        question.setText("Mark languages and frameworks for current course ...");
+        question.setType(QuestionTypes.MULTY);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод validateQuestionBook не свалидирует QuestionBook без неправильного ответа в вопросе с выбором множества опции")
+    @Test
+    void validateQuestionBook_TotalUnvalidMultyAnswerCountUnvalid() throws Exception {
+
+        ArrayList<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Java", true));
+        answers.add(new Answer("Angular", true));
+        answers.add(new Answer("Spring", true));
+        answers.add(new Answer("TypeScript", true));
+
+        Question question = new Question();
+        question.setText("Mark languages and frameworks for current course ...");
+        question.setType(QuestionTypes.MULTY);
+        question.setAnswers(answers);
+
+        ArrayList<Question> questions = new ArrayList<>();
+        questions.add(question);
+
+        QuestionBook testQuestionBook = new QuestionBook();
+        testQuestionBook.setQuestions(questions);
+
+        Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    @DisplayName("метод performTesting проведёт тест с правильными ответами на все вопросы")
     @Test
     public void performTestingTest_AllAnswersValid() throws Exception {
 
@@ -136,30 +522,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nMoscow\n3\n1 3\nDiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nMoscow\n3\n1 3\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 5 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("При ответе на вопросы теста игнорирует пробелы справа и слева от значимого текста")
+    @DisplayName("метод performTesting при ответе на вопросы теста игнорирует пробелы справа и слева от значимого текста")
     @Test
     public void performTestingTest_AnswerWithSpaceProcessedCorrect() throws Exception {
 
@@ -168,30 +544,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\n   Moscow   \n 3 \n  1  3  \n  Diasoft  \n  3  ";
+        outByte = configurateEnvironment("Anton\nElshin\n   Moscow   \n 3 \n  1  3  \n  Diasoft  \n  3  ");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 5 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Корректно обрабатывает дубли ответов на вопрос, предполагающий несколько ответов")
+    @DisplayName("метод performTesting корректно обрабатывает дубли ответов на вопрос, предполагающий несколько ответов")
     @Test
     public void performTestingTest_MultyAnswerWithSpaceAndDuplication() throws Exception {
 
@@ -202,28 +568,20 @@ public class QuestionBookServiceImplTest {
 
         String answers = "Anton\nElshin\nMoscow\n3\n1 3 3 1\nDiasoft\n3";
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        outByte = configurateEnvironment("Anton\nElshin\nMoscow\n3\n1 3 3 1\nDiasoft\n3");
 
-            questionBookService.performTesting(in, out, true);
+        questionBookService.performTesting(true);
 
-            String str = outByte.toString();
+        String str = outByte.toString();
 
-            assertAll(str,
-                    () -> str.contains("Test result: 5 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
+        assertAll(str,
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Корректно обрабатывает произвольный порядок ответов на вопрос с несколькими ответами")
+    @DisplayName("метод performTesting корректно обрабатывает произвольный порядок ответов на вопрос с несколькими ответами")
     @Test
     public void performTestingTest_MultyInverseAnswer() throws Exception {
 
@@ -232,30 +590,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nMoscow\n3\n3 1\nDiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nMoscow\n3\n3 1\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 5 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для множественного ответа")
+    @DisplayName("метод performTesting не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для множественного ответа")
     @Test
     public void performTestingTest_MultyAnswerIncorrectWithOneUnvalidOption() throws Exception {
 
@@ -264,30 +612,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nMoscow\n3\n1 3 4\nDiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nMoscow\n3\n1 3 4\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 4 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 4 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для единичного ответа")
+    @DisplayName("метод performTesting не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для единичного ответа")
     @Test
     public void performTestingTest_SingleTwoAnswerWithOneValidIncorrect() throws Exception {
 
@@ -296,30 +634,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nMoscow\n1 3\n1 3\nDiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nMoscow\n1 3\n1 3\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 4 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 4 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Корректно обрабатывает ответы на вопросы с печатью правильного ответа без учёта регистра")
+    @DisplayName("метод performTesting корректно обрабатывает ответы на вопросы с печатью правильного ответа без учёта регистра")
     @Test
     public void performTestingTest_ignoreCaseValid() throws Exception {
 
@@ -328,30 +656,20 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nmoscow\n3\n1 3\ndiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nmoscow\n3\n1 3\ndiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 5 valid answers of 5 questions"),
-                    () -> str.contains("Test passed successfully!")
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Не выведет имя и фамилию студента, если данные не указаны")
+    @DisplayName("метод performTesting не выведет имя и фамилию студента, если данные не указаны")
     @Test
     public void performTestingTest_Anonymous() throws Exception {
 
@@ -360,27 +678,17 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "\n\nMoscow\n3\n1 3\nDiasoft\n3";
+        outByte = configurateEnvironment("\n\nMoscow\n3\n1 3\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        Assert.assertFalse(str.contains("Dear, "));
 
-            Assert.assertFalse(str.contains("Dear, "));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    @DisplayName("Не засчитает тест при указании недостаточного количества правильных ответов")
+    @DisplayName("метод performTesting не засчитает тест при указании недостаточного количества правильных ответов")
     @Test
     public void performTestingTest_TestFailed() throws Exception {
 
@@ -389,27 +697,483 @@ public class QuestionBookServiceImplTest {
         given(parser.getQuestionBook(any())).willReturn(getQuestionBook());
         questionBookService.setValidAnswerMinCount(4);
 
-        String answers = "Anton\nElshin\nParis\n1 2\n1 3\nDiasoft\n3";
+        outByte = configurateEnvironment("Anton\nElshin\nParis\n1 2\n1 3\nDiasoft\n3");
 
-        try(InputStream in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
-            ByteArrayOutputStream outByte = new java.io.ByteArrayOutputStream();
-            PrintStream out = new java.io.PrintStream(outByte);
-        ) {
-            System.setIn(in);
-            System.setOut(out);
+        questionBookService.performTesting(true);
 
-            questionBookService.performTesting(in, out, true);
+        String str = outByte.toString();
 
-            String str = outByte.toString();
+        assertAll(str,
+                () -> str.contains("Test result: 3 valid answers of 5 questions"),
+                () -> str.contains("Test failed! Please try again ... ")
+        );
 
-            assertAll(str,
-                    () -> str.contains("Test result: 3 valid answers of 5 questions"),
-                    () -> str.contains("Test failed! Please try again ... ")
-            );
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @DisplayName("метод askStudentInfo запросит и получит имя и фамилию студента")
+    @Test
+    public void askStudentInfoTest() throws Exception {
+
+        outByte = configurateEnvironment("Anton\nElshin");
+
+        questionBookService.askStudentInfo(true);
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("Please enter your name: Anton"),
+                () -> str.contains("Please enter your surname: Elshin")
+        );
+
+    }
+
+    @DisplayName("метод askStudentInfo позволит не вводить имя и фамилию студента")
+    @Test
+    public void askStudentInfoTest_WithoutName() throws Exception {
+
+        outByte = configurateEnvironment("\n\n");
+
+        questionBookService.askStudentInfo(true);
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("Please enter your name: \n"),
+                () -> str.contains("Please enter your surname: \n")
+        );
+
+    }
+
+    @DisplayName("метод askQuestions задаст вопросы и получит на них ответы")
+    @Test
+    public void askQuestionsTest() throws Exception {
+
+        QuestionBook questionBook = getQuestionBook();
+
+        outByte = configurateEnvironment("Moscow\n3\n1 3\nDiasoft\n3");
+
+        questionBookService.askQuestions(questionBook, true);
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("Current capital of Russia? Moscow"),
+                () -> str.contains("JavaScript is language for?: 3"),
+                () -> str.contains("Mark languages and frameworks for current course ...: 1 3"),
+                () -> str.contains("Print name of company for which course customized for?: Diasoft"),
+                () -> str.contains("Select name of education company?: 3")
+        );
+
+    }
+
+    @DisplayName("метод askQuestions позволит не вводить ответы на вопросы")
+    @Test
+    public void askQuestionsTest_skipAnswers() throws Exception {
+
+        QuestionBook questionBook = getQuestionBook();
+
+        outByte = configurateEnvironment("\n\n\n\n\n");
+
+        questionBookService.askQuestions(questionBook, true);
+
+        String str = outByte.toString();
+
+        assertAll(str,
+                () -> str.contains("Current capital of Russia? \n"),
+                () -> str.contains("JavaScript is language for?: \n"),
+                () -> str.contains("Mark languages and frameworks for current course ...: \n"),
+                () -> str.contains("Print name of company for which course customized for?: \n"),
+                () -> str.contains("Select name of education company?: \n")
+        );
+
+    }
+
+    @DisplayName("метод prepareResult подготовит успешный результат теста")
+    @Test
+    void prepareResultTest() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
+    }
+
+    @DisplayName("метод prepareResult подготовит успешный результат теста без учёта регистра")
+    @Test
+    void prepareResultTest_IgnoreSpaces() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("  Moscow  ");
+        questionAnswers.add(" 3 ");
+        questionAnswers.add("  1   3  ");
+        questionAnswers.add("  Diasoft  ");
+        questionAnswers.add("  3  ");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
+    }
+
+    @DisplayName("метод prepareResult подготовит успешный результат теста без учёта регистра")
+    @Test
+    void prepareResultTest_IgnoreCase() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
+    }
+
+    @DisplayName("метод prepareResult подготовит успешный результат теста без учёта дублей для единичного и множественного ответа")
+    @Test
+    void prepareResultTest_SingleAndMultyIgnoreDuplication() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3 3");
+        questionAnswers.add("1 3 1 3");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
+    }
+
+    @DisplayName("метод prepareResult подготовит успешный результат теста без учёта порядка в вопросе множественного выбора")
+    @Test
+    void prepareResultTest_MultyIgnoreInverse() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("3 1");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 5 valid answers of 5 questions"),
+                () -> str.contains("Test passed successfully!")
+        );
+    }
+
+    @DisplayName("метод prepareResult подготовит провальный результат теста")
+    @Test
+    void prepareResultTest_TestFailed() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Paris");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Sberbank");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 3 valid answers of 5 questions"),
+                () -> str.contains("Test failed! Please try again ... ")
+        );
+    }
+
+    @DisplayName("метод prepareResult выведет неуспешный результат при пустых ответах")
+    @Test
+    void prepareResultTest_TestFailedAllEmptyAnswers() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("");
+        questionAnswers.add("");
+        questionAnswers.add("");
+        questionAnswers.add("");
+        questionAnswers.add("");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 0 valid answers of 5 questions"),
+                () -> str.contains("Test failed! Please try again ... ")
+        );
+    }
+
+    @DisplayName("метод prepareResult выведет неуспешный результат при пустых ответах без учёта пробелов")
+    @Test
+    void prepareResultTest_TestFailedAllEmptyAnswersIgnoreCases() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("  ");
+        questionAnswers.add("  ");
+        questionAnswers.add("  ");
+        questionAnswers.add("  ");
+        questionAnswers.add("  ");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> str.contains("Dear, " + student.getName() + " " + student.getSurname()),
+                () -> str.contains("Test result: 0 valid answers of 5 questions"),
+                () -> str.contains("Test failed! Please try again ... ")
+        );
+    }
+
+    @DisplayName("метод prepareResult не выведет данные студента с null в имени и фамилии")
+    @Test
+    void prepareResultTest_NameAndSurnameNull() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student();
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> Assert.assertFalse(str.contains("Dear, "))
+        );
+    }
+
+    @DisplayName("метод prepareResult не выведет данные студента с пустыми данными в имени и фамилии")
+    @Test
+    void prepareResultTest_NameAndSurnameEmpty() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("", "");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> Assert.assertFalse(str.contains("Dear, "))
+        );
+    }
+
+    @DisplayName("метод prepareResult не выведет данные студента с пустыми данными в имени и фамилии без учёта пробелов")
+    @Test
+    void prepareResultTest_NameAndSurnameEmptyIgnoreSpaces() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("  ", "  ");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Diasoft");
+        questionAnswers.add("3");
+
+        String str = questionBookService.prepareResult(student, questionBook, questionAnswers);
+
+        assertAll(str,
+                () -> Assert.assertFalse(str.contains("Dear, "))
+        );
+    }
+
+    @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
+    @Test
+    void prepareResultTest_QuestionAndAnswerQuantityNotEquals() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+        List<String> questionAnswers = new ArrayList<>();
+        questionAnswers.add("Moscow");
+        questionAnswers.add("3");
+        questionAnswers.add("1 3");
+        questionAnswers.add("Diasoft");
+
+        Assertions.assertThrows(BusinessException.class, () -> {
+            questionBookService.prepareResult(student, questionBook, questionAnswers);
+        });
+    }
+
+    @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
+    @Test
+    void prepareResultTest_AnswersListNullEquals() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+
+        Assertions.assertThrows(BusinessException.class, () -> {
+            questionBookService.prepareResult(student, questionBook, null);
+        });
+    }
+
+    @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
+    @Test
+    void prepareResultTest_AnswersListEmptyEquals() throws BusinessException {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        Student student = new Student("Anton", "Elshin");
+        QuestionBook questionBook = getQuestionBook();
+
+        Assertions.assertThrows(BusinessException.class, () -> {
+            questionBookService.prepareResult(student, questionBook, new ArrayList<>());
+        });
+    }
+
+    @DisplayName("метод uniqueAnswersMultyTypeQuestion получит уникальные значения из ответа")
+    @Test
+    void uniqueAnswersMultyTypeQuestionTest() {
+
+        List<String> questionAnswers = questionBookService.uniqueAnswersMultyTypeQuestion("1 3");
+
+        assertThat(questionAnswers).hasSize(2);
+        assertThat(questionAnswers.get(0)).containsIgnoringCase("1");
+        assertThat(questionAnswers.get(1)).containsIgnoringCase("3");
+    }
+
+    @DisplayName("метод uniqueAnswersMultyTypeQuestion получит уникальные значения из ответа без учёта пробелов")
+    @Test
+    void uniqueAnswersMultyTypeQuestionTest_IgnoreSpaces() {
+
+        List<String> questionAnswers = questionBookService.uniqueAnswersMultyTypeQuestion("  1   3  ");
+
+        assertThat(questionAnswers).hasSize(2);
+        assertThat(questionAnswers.get(0)).containsIgnoringCase("1");
+        assertThat(questionAnswers.get(1)).containsIgnoringCase("3");
+    }
+
+    @DisplayName("метод uniqueAnswersMultyTypeQuestion получит уникальные значения из ответа без учёта дублей")
+    @Test
+    void uniqueAnswersMultyTypeQuestionTest_IgnoreDuplication() {
+
+        List<String> questionAnswers = questionBookService.uniqueAnswersMultyTypeQuestion("1 3 3 1");
+
+        assertThat(questionAnswers).hasSize(2);
+        assertThat(questionAnswers.get(0)).containsIgnoringCase("1");
+        assertThat(questionAnswers.get(1)).containsIgnoringCase("3");
+    }
+
+    @DisplayName("метод setValidAnswerMinCount установит минимально допустимое количество правильных ответов")
+    @Test
+    void setValidAnswerMinCountTest() {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        assertThat(questionBookService.getValidAnswerMinCount()).isEqualTo(4);
+    }
+
+    @DisplayName("метод getValidAnswerMinCount получит минимально допустимое количество правильных ответов")
+    @Test
+    void getValidAnswerMinCountTest() {
+
+        questionBookService.setValidAnswerMinCount(4);
+
+        assertThat(questionBookService.getValidAnswerMinCount()).isEqualTo(4);
+    }
+
+    @DisplayName("метод initQuestionBook выполнит загрузку и парсинг файла csv")
+    @Test
+    void initQuestionBookTest() throws Exception {
+
+        List<String> questions = getQuestions();
+        QuestionBook questionBook = getQuestionBook();
+
+        given(loader.loadQuestions(any())).willReturn(questions);
+        given(parser.getQuestionBook(any())).willReturn(questionBook);
+
+        questionBookService.initQuestionBook();
+
+        Mockito.verify(loader, Mockito.times(1))
+                .loadQuestions(any());
+        Mockito.verify(parser, Mockito.times(1))
+                .getQuestionBook(any());
+
+    }
+
+    private ByteArrayOutputStream configurateEnvironment(String answers) {
+
+        in = new ByteArrayInputStream(answers.getBytes(StandardCharsets.UTF_8));
+        outByte = new java.io.ByteArrayOutputStream();
+        out = new java.io.PrintStream(outByte);
+
+        System.setIn(in);
+        System.setOut(out);
+
+        return outByte;
+
     }
 
     private List<String> getQuestions() {

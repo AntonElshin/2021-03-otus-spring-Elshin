@@ -11,10 +11,10 @@ public interface QuestionBookService {
 
     String prepareQuestion(Integer questionNumber, Question question);
 
-    void printQuestionBook(PrintStream out) throws BusinessException;
+    void printQuestionBook() throws BusinessException;
 
     Boolean validateQuestionBook(QuestionBook questionBook);
 
-    void performTesting(InputStream in, PrintStream out, Boolean addAnswersFlag) throws BusinessException;
+    void performTesting(Boolean addAnswersFlag) throws BusinessException;
 
 }

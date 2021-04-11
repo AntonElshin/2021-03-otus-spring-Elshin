@@ -16,7 +16,10 @@ public enum Errors {
     QUESTION_LIST_IS_NULL(9, "Question list is null"),
     QUESTION_LIST_IS_EMPTY(10, "Question book should have questions"),
     GIVEN_ANSWERS_LESS_THEN_QUESTIONS(11, "Given answers: %s less then questions: %s"),
-    ANSWER_LIST_IS_EMPTY(12, "Answer list is empty")
+    ANSWER_LIST_IS_EMPTY(12, "Answer list is empty"),
+    QUESTION_TEXT_IS_EMPTY(13, "Question text is empty"),
+    QUESTION_TYPE_IS_EMPTY(14, "Question type is empty"),
+    QUESTION_AND_ANSWER_QUANTITY_NOT_EQUALS(15, "Question and answer queantity not equals")
     ;
 
     private Integer code;
