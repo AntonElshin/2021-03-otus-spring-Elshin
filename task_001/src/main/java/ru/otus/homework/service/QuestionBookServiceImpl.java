@@ -25,13 +25,13 @@ public class QuestionBookServiceImpl implements QuestionBookService {
         this.resourceName = resourceName;
     }
 
-    public QuestionBook getQuestionBook(String[] questions) throws BusinessException {
+    public QuestionBook getQuestionBook(List<String> questions) throws BusinessException {
         QuestionBook questionBook = questionBookDao.getQuestionBook(questions);
         return questionBook;
     }
 
     @Override
-    public String[] readQuestions() {
+    public List<String> readQuestions() {
 
         List<String> questionsFromFile = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             questionsFromFile.add(question);
         }
 
-        return questionsFromFile.toArray(new String[0]);
+        return questionsFromFile;
     }
 
     @Override
@@ -80,7 +80,12 @@ public class QuestionBookServiceImpl implements QuestionBookService {
     }
 
     @Override
-    public void printQuestionBook(QuestionBook questionBook) {
+    public void printQuestionBook() throws BusinessException {
+
+        List<String> questionsFromFile = readQuestions();
+
+        QuestionBook questionBook = getQuestionBook(questionsFromFile);
+        validateQuestionBook(questionBook);
 
         String questionStr = "";
 

@@ -12,12 +12,7 @@ public class HomeworkApplication {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
 
         QuestionBookService questionBookService = context.getBean(QuestionBookService.class);
-        String[] questionsFromFile = questionBookService.readQuestions();
-
-        QuestionBook questionBook = questionBookService.getQuestionBook(questionsFromFile);
-        if(questionBookService.validateQuestionBook(questionBook)) {
-            questionBookService.printQuestionBook(questionBook);
-        }
+        questionBookService.printQuestionBook();
 
     }
 
