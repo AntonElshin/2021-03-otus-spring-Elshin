@@ -1,0 +1,5 @@
+questions.current_capital_of_russia,typing,answers.moscow:true
+questions.javascript_is_language_for,single,answers.only_for_frontend:false,answers.only_for_backend:false,answers.frontend_and_backend:true
+questions.mark_languages_and_frameworks_for_current_course,multy,answers.java:true,answers.angular:false,answers.spring:true,answers.typescript:false
+questions.print_name_of_company_for_which_course_customized_for,typing,answers.diasoft:true
+questions.select_name_of_education_company,single,answers.university:false,answers.udemy:false,answers.otus:true

@@ -1,0 +1,8 @@
+spring:
+  messages:
+    basename: i18n/messages
+
+question-book:
+  resource-name: questions.csv
+  valid-answer-min-count: 4
+  language-tag: ""
