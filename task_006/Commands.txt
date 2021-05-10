@@ -1,0 +1,65 @@
+// Жанры
+
+add_genre 'genre' -description 'with spaces'
+update_genre 4 -name 'genre 1' -description 'with spaces 1'
+update_genre 4 -name 'genre 2'
+update_genre 4 -description 'with spaces 2'
+update_genre 4
+update_genre 5
+delete_genre 4
+
+get_genre 1
+get_genre 2
+
+find_genres 'дет'
+find_genres 'пов'
+find_genres
+
+list_genres
+count_genres
+
+// Авторы
+
+add_author 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+update_author 6 -lastname 'Елшин 1'
+update_author 6 -firstname 'Антон 1'
+update_author 6 -middlename 'Николаевич 1'
+update_author 6 -lastname 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+update_author 6
+delete_author 6
+
+get_author 1
+get_author 2
+
+find_authors -lastname 'до'
+find_authors -firstname 'ал'
+find_authors -middlename 'ти'
+find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+find_authors
+
+list_authors
+count_authors
+
+// Книги
+
+add_book 'title' -isbn 'isbn' -description 'desc' -authors '1,2' -genres '2,3'
+update_book 5 -title 'title 1'
+update_book 5 -isbn 'isbn 1'
+update_book 5 -description 'desc 1'
+update_book 5 -authors '3'
+update_book 5 -genres '1'
+update_book 5 -title 'title' -isbn 'isbn' -description 'desc' -authors '1,2' -genres '2,3'
+delete_book 5
+
+get_book 1
+get_book 2
+
+find_books -title 'по'
+find_books -isbn '353'
+find_books -authorId '1'
+find_books -genreId '3'
+find_books -authorId '4' -genreId '3'
+find_books
+
+list_books
+count_books
