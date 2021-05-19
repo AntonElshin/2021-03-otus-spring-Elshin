@@ -1,0 +1,148 @@
+1619294116205:a_g Фентези жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде
+1619294142429:a_g "ентези" ""
+1619294709180:a_g -n=Фентези -d=жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде
+1619294747868:a_g -n=Фентези -p=жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде
+1619294979361:a_g --n Фентези --d жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде
+1619295055765:a_g Фентези Приключения
+1619295215382:a_g 'Фентези' 'жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде'
+1619295282165:a_g --n 'Фентези' --d ''
+1619295340618:a_g --n Фентези --d 'жанр современного искусства, разновидность фантастики. Фэнтези основывается на использовании мифологических и сказочных мотивов в современном виде'
+1619336570513:a_g "тест" "с пробелом"
+1619336741883:a_g --n'' --d 't t'
+1619336858498:a_g -n 'test' -d 'with spaces'
+1619336935707:a_g -n "test" -d "with spaces"
+1619336986970:a_g "test" -d "with spaces"
+1619337089939:a_g 'est' -d 'ith spaces'
+1619337127542:a_g 'test' -d 'ith spaces'
+1619337158349:a_g 'test' -d 'with spaces'
+1619873588371:update_genre 1 -name 'test 1' -description 'with spaces 1'
+1619873664327:update_genre 1 -name 'test 2'
+1619874088099:update_genre 1 -name 'test 3'
+1619874161591:update_genre 1 -name 'test 4' -description 'with spaces 4'
+1619874179598:update_genre 1 -name 'test 5'
+1619874868807:add_genre 'genre' -description 'with spaces'
+1619874888872:update_genre 1 -name 'genre 1' -description 'with spaces 1'
+1619874906176:update_genre 1 -name 'genre 2'
+1619874939929:update_genre 1 -description 'with spaces 2'
+1619874959509:update_genre 1
+1619874979341:update_genre 2
+1619876268167:list_genres
+1619880296073:find_genres 'genre 2'
+1619980752949:add_genre 'Детектив' -description 'преимущественно литературный жанр, произведения которого описывают процесс исследования загадочного происшествия с целью выяснения его обстоятельств и раскрытия загадки'
+1619980792244:add_genre 'Комедия' -description 'вид драматургического произведения. Отображает все уродливое и нелепое, смешное и несуразное, высмеивает пороки общества'
+1619980857023:add_genre 'genre' -description 'with spaces'
+1619980905929:update_genre 3 -name 'genre 1' -description 'with spaces 1'
+1619980918454:update_genre 3 -name 'genre 2'
+1619980934800:update_genre 3 -description 'with spaces 2'
+1619980949646:update_genre 3
+1619981964135:get_genre 3
+1619982061678:get_genre 1
+1619982067714:get_genre 2
+1619982110718:delete_genre 3
+1619982240149:find_genres 'дет'
+1619982306166:find_genres 'дет' -description 'лит'
+1619982337374:find_genres '' -description 'смешное'
+1619982363805:list_genres
+1619982582613:find_genres 'дет'
+1619982611078:list_genres
+1619982624991:find_genres 'дет'
+1619982631614:find_genres 'дет' -description 'лит'
+1619982639532:find_genres '' -description 'смешное'
+1619983395228:count_genres
+1620037643720:add_genre 'genre' -description 'with spaces'
+1620064371220:list_genres
+1620064416674:find_genres ''
+1620064488269:add_genre 'genre' -description 'with spaces'
+1620064632059:update_genre 3 -name 'genre 1' -description 'with spaces 1'
+1620064756793:update_genre 3 -name 'genre 2'
+1620064778732:update_genre 3 -description 'with spaces 2'
+1620064861857:update_genre 3
+1620064864735:update_genre 4
+1620064918498:update_genre 3
+1620064955473:update_genre 5
+1620065086121:add_genre '' -description 'with spaces'
+1620065116804:, defaultValue = ""
+1620065124556:add_genre '' -description 'with spaces'
+1620065178085:add_genre 'genre' -description 'with spaces'
+1620065196861:update_genre 3 -name 'genre 1' -description 'with spaces 1'
+1620065292348:add_genre '' -description 'with spaces'
+1620065299288:add_genre 'genre' -description 'with spaces'
+1620065315690:update_genre 4 -name 'genre 1' -description 'with spaces 1'
+1620065326995:update_genre 4 -name 'genre 2'
+1620065339280:update_genre 4 -description 'with spaces 2'
+1620065352279:update_genre 4
+1620065375968:update_genre 5
+1620065385240:delete_genre 4
+1620065408823:get_genre 1
+1620065453178:find_genres 'дет'
+1620065464952:find_genres 'пов'
+1620065473072:find_genres ''
+1620065482721:list_genres
+1620065490222:count_genres
+1620072637133:add_author 'Елшин' -lastname 'Антон' -middlename 'Николаевич'
+1620073168198:add_author 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1620073268196:add_author 'Елшин' -firstname 'Антон' -middlename ''
+1620073427291:add_author 'Елшин' -firstname 'Антон' -middlename ' '
+1620073446572:add_author 'Елшин' -firstname 'Антон' -middlename ''
+1620073546590:add_author 'Елшин' -firstname 'Антон' -middlename ' '
+1620073630909:add_author 'Елшин' -firstname 'Антон' -middlename ''
+1620073719828:add_author 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1620073839746:update_genre 6 -lastname 'Елшин 1'
+1620073858164:update_author 6 -lastname 'Елшин 1'
+1620073873548:update_author 6 -firstname 'Антон 1'
+1620073886314:update_author 6 -middlename 'Николаевич 1'
+1620073897837:update_author 6 -lastname 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1620073938891:update_author 6
+1620074036289:delete_author 6
+1620074061002:get_author 1
+1620074231801:get_author 2
+1620074281221:find_authors -lastname 'до'
+1620074680605:find_authors -firstname 'ал'
+1620074708475:find_authors -firstname 'ти'
+1620074722918:find_authors -middlename 'ти'
+1620074749924:find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+1620074797690:find_authors
+1620074826208:list_authors
+1620074851002:count_authors
+1620453132245:list_authors
+1620453139277:count_authors
+1620463416843:find_books
+1620463598829:List<Book>
+1620463610908:find_books
+1620467430895:find authors
+1620467440327:find_authors
+1620467557711:find_books
+1620467798530:find_books -title 'по'
+1620467832534:find_books -isbn '9'
+1620467897231:find_books -isbn '353'
+1620467929303:find_books -authorId '1'
+1620468324837:find_books -authorId '2'
+1620468341822:find_books -genreId '3'
+1620468362280:find_books -authorId '4' -genreId '3'
+1620471703531:add_book -title 'title' -isbn '123' -description 'desc' - authors '1,2' - genres '3'
+1620471734297:add_book 'title' -isbn '123' -description 'desc' -authors '1,2' -genres '3'
+1620480682657:add_book 'title' -isbn '123' -description 'desc' -authors '1,2' -genres '2,3'
+1620486689981:update 5 -title 'title 1'
+1620486708091:update_book 5 -title 'title 1'
+1620486740954:update_book 5 -isbn '123 1'
+1620486778841:update_book 5 -isbn 'isbn 1'
+1620486792793:update_book 5 -description 'desc 1'
+1620486841777:update_book 5 -authors '3'
+1620486873511:update_book 5 -genres '1'
+1620486916563:update_book 5 -title 'title' -isbn 'isbn' -description 'desc' -authors '1,2' -genres '2,3'
+1620486961215:get_book 1
+1620486986144:get_book 2
+1620486997064:find_books -title 'по'
+1620487007671:find_books -isbn '353'
+1620487024334:find_books -authorId '1'
+1620487055229:delete_book 5
+1620487079102:find_books -authorId '1'
+1620487096659:find_books -genreId '3'
+1620487113328:find_books -authorId '4' -genreId '3'
+1620487157388:count_books
+1620487681613:list_books
+1620487974318:find_books
+1620487991147:find_genres
+1620487999628:list_books
+1620593127579:add_genre 'genre' -description 'with spaces'
+1620595128901:update_genre 100

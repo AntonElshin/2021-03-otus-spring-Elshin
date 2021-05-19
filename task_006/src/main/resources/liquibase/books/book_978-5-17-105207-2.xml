@@ -1,0 +1,66 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-Book_978-5-17-105207-2" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(BOOKID)
+                FROM
+                  LIB_BOOKS
+                WHERE
+                  ISBN = '978-5-17-105207-2'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKS">
+            <column name="BOOKID" valueComputed="nextval('LIB_BOOKS_SEQ')"/>
+            <column name="TITLE">Весь Шерлок Холмс</column>
+            <column name="ISBN">978-5-17-105207-2</column>
+            <column name="DESCRIPTION">Произведения, на которых мы выросли, – и произведения, совершенно нам незнакомые. Все, что написал о великом сыщике с Бейкер-стрит сам сэр Артур Конан Дойл – от классических повестей до небольших рассказов.</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-BookGenreLink_978-5-17-105207-2_1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(*)
+                FROM
+                  LIB_BOOKGENRELINKS
+                WHERE 1=1
+                  AND BOOKID in (select BOOKID from LIB_BOOKS where ISBN = '978-5-17-105207-2')
+                  AND GENREID in (select GENREID from LIB_GENRES where NAME = 'Детектив')
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKGENRELINKS">
+            <column name="BOOKID" valueComputed="(select BOOKID from LIB_BOOKS where ISBN = '978-5-17-105207-2')"/>
+            <column name="GENREID" valueComputed="(select GENREID from LIB_GENRES where NAME = 'Детектив')"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-BookAuthorLink_978-5-17-105207-2_1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(*)
+                FROM
+                  LIB_BOOKAUTHORLINKS
+                WHERE 1=1
+                  AND BOOKID in (select BOOKID from LIB_BOOKS where ISBN = '978-5-17-105207-2')
+                  AND AUTHORID in (select AUTHORID from LIB_AUTHORS where LASTNAME = 'Дойл' AND FIRSTNAME = 'Артур' AND MIDDLENAME = 'Конан')
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKAUTHORLINKS">
+            <column name="BOOKID" valueComputed="(select BOOKID from LIB_BOOKS where ISBN = '978-5-17-105207-2')"/>
+            <column name="AUTHORID" valueComputed="(select AUTHORID from LIB_AUTHORS where LASTNAME = 'Дойл' AND FIRSTNAME = 'Артур' AND MIDDLENAME = 'Конан')"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

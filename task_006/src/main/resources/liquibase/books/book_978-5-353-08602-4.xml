@@ -1,0 +1,66 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-Book_978-5-353-08602-4" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(BOOKID)
+                FROM
+                  LIB_BOOKS
+                WHERE
+                  ISBN = '978-5-353-08602-4'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKS">
+            <column name="BOOKID" valueComputed="nextval('LIB_BOOKS_SEQ')"/>
+            <column name="TITLE">Сказка о рыбаке и рыбке</column>
+            <column name="ISBN">978-5-353-08602-4</column>
+            <column name="DESCRIPTION">А. С. Пушкин писал свои сказки не для детей, однако они давно стали классикой именно детской литературы. Уникальность этого издания «Сказки о рыбаке и рыбке» состоит в том, что оно подготовлено с учетом особенностей детского восприятия: текст разбит на небольшие фрагменты и каждый из них проиллюстрирован. Это помогает малышу не только лучше воспринимать услышанное, усваивать, запоминать, но и делает совместное чтение интересным и занимательным.</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-BookGenreLink_978-5-353-08602-4_1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(*)
+                FROM
+                  LIB_BOOKGENRELINKS
+                WHERE 1=1
+                  AND BOOKID in (select BOOKID from LIB_BOOKS where ISBN = '978-5-353-08602-4')
+                  AND GENREID in (select GENREID from LIB_GENRES where NAME = 'Сказка')
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKGENRELINKS">
+            <column name="BOOKID" valueComputed="(select BOOKID from LIB_BOOKS where ISBN = '978-5-353-08602-4')"/>
+            <column name="GENREID" valueComputed="(select GENREID from LIB_GENRES where NAME = 'Сказка')"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-BookAuthorLink_978-5-353-08602-4_1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(*)
+                FROM
+                  LIB_BOOKAUTHORLINKS
+                WHERE 1=1
+                  AND BOOKID in (select BOOKID from LIB_BOOKS where ISBN = '978-5-353-08602-4')
+                  AND AUTHORID in (select AUTHORID from LIB_AUTHORS where LASTNAME = 'Пушкин' AND FIRSTNAME = 'Александр' AND MIDDLENAME = 'Сергеевич')
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_BOOKAUTHORLINKS">
+            <column name="BOOKID" valueComputed="(select BOOKID from LIB_BOOKS where ISBN = '978-5-353-08602-4')"/>
+            <column name="AUTHORID" valueComputed="(select AUTHORID from LIB_AUTHORS where LASTNAME = 'Пушкин' AND FIRSTNAME = 'Александр' AND MIDDLENAME = 'Сергеевич')"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
