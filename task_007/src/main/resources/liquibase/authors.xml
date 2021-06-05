@@ -1,0 +1,120 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-AuthorDoil" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(AUTHORID)
+                FROM
+                  LIB_AUTHORS
+                WHERE 1=1
+                  AND LASTNAME = 'Дойл'
+                  AND FIRSTNAME = 'Артур'
+                  AND MIDDLENAME = 'Конан'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_AUTHORS">
+            <column name="AUTHORID" valueComputed="nextval('LIB_AUTHORS_SEQ')"/>
+            <column name="LASTNAME">Дойл</column>
+            <column name="FIRSTNAME">Артур</column>
+            <column name="MIDDLENAME">Конан</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AuthorPolevoi" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(AUTHORID)
+                FROM
+                  LIB_AUTHORS
+                WHERE 1=1
+                  AND LASTNAME = 'Полевой'
+                  AND FIRSTNAME = 'Борис'
+                  AND MIDDLENAME = 'Николаевич'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_AUTHORS">
+            <column name="AUTHORID" valueComputed="nextval('LIB_AUTHORS_SEQ')"/>
+            <column name="LASTNAME">Полевой</column>
+            <column name="FIRSTNAME">Борис</column>
+            <column name="MIDDLENAME">Николаевич</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AuthorPushkin" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(AUTHORID)
+                FROM
+                  LIB_AUTHORS
+                WHERE 1=1
+                  AND LASTNAME = 'Пушкин'
+                  AND FIRSTNAME = 'Александр'
+                  AND MIDDLENAME = 'Сергеевич'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_AUTHORS">
+            <column name="AUTHORID" valueComputed="nextval('LIB_AUTHORS_SEQ')"/>
+            <column name="LASTNAME">Пушкин</column>
+            <column name="FIRSTNAME">Александр</column>
+            <column name="MIDDLENAME">Сергеевич</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AuthorZhukovskiy" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(AUTHORID)
+                FROM
+                  LIB_AUTHORS
+                WHERE 1=1
+                  AND LASTNAME = 'Жуковский'
+                  AND FIRSTNAME = 'Василий'
+                  AND MIDDLENAME = 'Андреевич'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_AUTHORS">
+            <column name="AUTHORID" valueComputed="nextval('LIB_AUTHORS_SEQ')"/>
+            <column name="LASTNAME">Жуковский</column>
+            <column name="FIRSTNAME">Василий</column>
+            <column name="MIDDLENAME">Андреевич</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AuthorAksakov" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(AUTHORID)
+                FROM
+                  LIB_AUTHORS
+                WHERE 1=1
+                  AND LASTNAME = 'Аксаков'
+                  AND FIRSTNAME = 'Сергей'
+                  AND MIDDLENAME = 'Тимофеевич'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_AUTHORS">
+            <column name="AUTHORID" valueComputed="nextval('LIB_AUTHORS_SEQ')"/>
+            <column name="LASTNAME">Аксаков</column>
+            <column name="FIRSTNAME">Сергей</column>
+            <column name="MIDDLENAME">Тимофеевич</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
