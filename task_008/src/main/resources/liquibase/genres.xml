@@ -1,0 +1,65 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-GenreDetective" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(GENREID)
+                FROM
+                  LIB_GENRES
+                WHERE
+                  NAME = 'Детектив'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_GENRES">
+            <column name="GENREID" valueComputed="nextval('LIB_GENRES_SEQ')"/>
+            <column name="NAME">Детектив</column>
+            <column name="DESCRIPTION">Преимущественно литературный жанр, произведения которого описывают процесс исследования загадочного происшествия с целью выяснения его обстоятельств и раскрытия загадки</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-GenreTale" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(GENREID)
+                FROM
+                  LIB_GENRES
+                WHERE
+                  NAME = 'Повесть'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_GENRES">
+            <column name="GENREID" valueComputed="nextval('LIB_GENRES_SEQ')"/>
+            <column name="NAME">Повесть</column>
+            <column name="DESCRIPTION">Средняя форма; произведение, в котором освещается ряд событий в жизни главного героя</column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-GenreFairyTale" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(GENREID)
+                FROM
+                  LIB_GENRES
+                WHERE
+                  NAME = 'Сказка'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="LIB_GENRES">
+            <column name="GENREID" valueComputed="nextval('LIB_GENRES_SEQ')"/>
+            <column name="NAME">Сказка</column>
+            <column name="DESCRIPTION">Жанр литературного творчества, чаще всего в сказках присутствует волшебство и различные невероятные приключения</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

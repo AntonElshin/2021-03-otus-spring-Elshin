@@ -1,0 +1,114 @@
+1622923625797:add_genre 'genre' -description 'with spaces'
+1622923636044:update_genre 4 -name 'genre 1'
+1622923644732:update_genre 4 -description 'with spaces 1'
+1622923652441:update_genre 4 -name 'genre' -description 'with spaces'
+1622923661956:update_genre 4
+1622923675027:delete_genre 4
+1622923683310:get_genre 1
+1622923691964:find_genres 'дет'
+1622923815547:find_genres 'пов'
+1622923821817:find_genres
+1622923826570:list_genres
+1622923829919:count_genres
+1622925395367:add_author 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1622925423940:update_author 6 -lastname 'Елшин 1'
+1622925433806:update_author 6 -firstname 'Антон 1'
+1622925444175:update_author 6 -middlename 'Николаевич 1'
+1622925450993:update_author 6 -lastname 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1622925477139:update_author 6
+1622925488515:delete_author 6
+1622925497275:get_author 1
+1622925503235:find_authors -lastname 'до'
+1622928805797:stacktrace
+1622929435949:find_authors -lastname 'до'
+1622929460456:find_authors -firstname 'ал'
+1622929471920:find_authors -middlename 'ти'
+1622929478377:find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+1622929526425:find_authors -lastname 'до'
+1622929535502:find_authors -firstname 'ал'
+1622929540279:find_authors -middlename 'ти'
+1622929545590:find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+1622929937754:find_authors -lastname 'до'
+1622929942273:find_authors -firstname 'ал'
+1622929949646:find_authors -middlename 'ти'
+1622929956713:find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+1622929962262:find_authors
+1622929986622:list_authors
+1622929991069:count_authors
+1622931730343:find_books -title 'по'
+1622931746601:find_books -isbn '353'
+1622931768528:find_books -authorId '1'
+1622931797290:find_books -genreId '3'
+1622931804640:find_books -authorId '4' -genreId '3'
+1622931817670:find_books
+1622932724809:find_books -authorId '1'
+1622932742562:find_books -genreId '3'
+1622932752847:find_books -authorId '4' -genreId '3'
+1622932762921:find_books
+1622932836016:list_books
+1622932844449:count_books
+1622933814428:add_genre 'genre' -description 'with spaces'
+1622933828132:update_genre 4 -name 'genre 1'
+1622933836620:update_genre 4 -description 'with spaces 1'
+1622933845562:update_genre 4 -name 'genre' -description 'with spaces'
+1622933857728:update_genre 4
+1622933865457:delete_genre 4
+1622933873085:get_genre 1
+1622933882827:find_genres 'дет'
+1622933895313:find_genres 'пов'
+1622933901511:find_genres
+1622933910999:list_genres
+1622933918017:count_genres
+1622933929723:add_author 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1622933938027:update_author 6 -lastname 'Елшин 1'
+1622933945332:update_author 6 -firstname 'Антон 1'
+1622933952696:update_author 6 -middlename 'Николаевич 1'
+1622933960949:update_author 6 -lastname 'Елшин' -firstname 'Антон' -middlename 'Николаевич'
+1622933970061:update_author 6
+1622933977559:delete_author 6
+1622933984457:get_author 1
+1622933992193:find_authors -lastname 'до'
+1622933998770:find_authors -firstname 'ал'
+1622934003380:find_authors -middlename 'ти'
+1622934008098:find_authors -lastname 'пу' -firstname 'ал' -middlename 'се'
+1622934016079:find_authors
+1622934021376:list_authors
+1622934030312:count_authors
+1622934036064:add_book 'title' -isbn 'isbn' -description 'desc' -authors '1,2' -genres '2,3'
+1622934049040:update_book 5 -title 'title 1'
+1622934061785:update_book 5 -isbn 'isbn 1'
+1622934069897:update_book 5 -description 'desc 1'
+1622934077157:update_book 5 -authors '3'
+1622934091426:update_book 5 -genres '1'
+1622934116513:update_book 5 -title 'title' -isbn 'isbn' -description 'desc' -authors '1,2' -genres '2,3'
+1622934129833:delete_book 5
+1622934488824:get_book 1
+1622934498122:find_books -title 'по'
+1622934507618:find_books -isbn '353'
+1622934515453:find_books -authorId '1'
+1622934528314:find_books -genreId '3'
+1622934539581:find_books -authorId '4' -genreId '3'
+1622934547737:find_books
+1622934559233:list_books
+1622934568344:count_books
+1622934582619:add_book_comment 3 -text 'Замечательная книга'
+1622934592143:update_book_comment 5 -bookId '2'
+1622934602531:update_book_comment 5 -text 'Замечательная книга!!!'
+1622934612516:update_book_comment 5 -bookId '3' -text 'Замечательная книга'
+1622934626122:update_book_comment 5
+1622934632752:delete_book_comment 5
+1622934738450:add_book_comment 3 -text 'Замечательная книга'
+1622934762036:update_book_comment 5 -bookId '2'
+1622934778196:update_book_comment 5 -text 'Замечательная книга!!!'
+1622934787669:update_book_comment 5 -bookId '3' -text 'Замечательная книга'
+1622934795569:update_book_comment 5
+1622934802850:delete_book_comment 5
+1622934883116:add_book_comment 3 -text 'Замечательная книга'
+1622934891189:update_book_comment 5 -bookId '2'
+1622934899573:update_book_comment 5 -text 'Замечательная книга!!!'
+1622934908235:update_book_comment 5 -bookId '3' -text 'Замечательная книга'
+1622934919723:update_book_comment 5
+1622934927241:delete_book_comment 5
+1622934950443:get_book_comment 1
+1622934959556:find_book_comments 1
+1622934965074:count_book_comments 1
