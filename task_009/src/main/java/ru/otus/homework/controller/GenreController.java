@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.otus.homework.dto.GenreDTO;
 import ru.otus.homework.service.GenreService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class GenreController {
 
     @PostMapping(value = "/api/genres", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public GenreDTO createGenre (
-            @RequestBody GenreDTO genreDTO
+            @Valid @RequestBody GenreDTO genreDTO
     ) {
         return genreService.add(genreDTO);
     }
@@ -43,7 +44,7 @@ public class GenreController {
     @PutMapping(path = "/api/genres/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public GenreDTO modifyGenre (
             @PathVariable(name = "id") Long id,
-            @RequestBody GenreDTO genreDTO
+            @Valid @RequestBody GenreDTO genreDTO
     ) {
         return genreService.update(id, genreDTO);
     }

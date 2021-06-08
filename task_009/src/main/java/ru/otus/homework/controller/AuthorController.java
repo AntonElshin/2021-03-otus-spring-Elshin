@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.otus.homework.dto.AuthorDTO;
 import ru.otus.homework.service.AuthorService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class AuthorController {
 
     @PostMapping(value = "/api/authors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public AuthorDTO createAuthor (
-            @RequestBody AuthorDTO authorDTO
+            @Valid @RequestBody AuthorDTO authorDTO
     ) {
         return authorService.add(authorDTO);
     }
@@ -45,7 +46,7 @@ public class AuthorController {
     @PutMapping(path = "/api/authors/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public AuthorDTO modifyAuthor (
             @PathVariable(name = "id") Long id,
-            @RequestBody AuthorDTO authorDTO
+            @Valid @RequestBody AuthorDTO authorDTO
     ) {
         return authorService.update(id, authorDTO);
     }

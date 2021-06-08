@@ -15,18 +15,19 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "LIB_BOOKS")
-@NamedEntityGraph(name = "book-comments-entity-graph",
-        attributeNodes = {@NamedAttributeNode("comments")})
 public class Book {
     @Id
     @Column(name = "BOOKID")
     @SequenceGenerator( name = "LIB_BOOKS_SEQ", sequenceName = "LIB_BOOKS_SEQ", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIB_BOOKS_SEQ" )
-    private long id;
+    private Long id;
+
     @Column(name = "TITLE", nullable = false)
     private String title;
+
     @Column(name = "ISBN")
     private String isbn;
+
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -44,7 +45,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "GENREID"))
     private List<Genre> genres;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "book")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookComment> comments;
 
     public Book(String title, String isbn, String description, List<Author> authors, List<Genre> genres, List<BookComment> comments) {

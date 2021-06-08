@@ -10,10 +10,8 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long>, QuerydslPredicateExecutor<Book> {
 
-    @EntityGraph(attributePaths = "comments")
     List<Book> findAll(Predicate predicate);
 
-    @EntityGraph(attributePaths = "comments")
     List<Book> findAll();
 
 }

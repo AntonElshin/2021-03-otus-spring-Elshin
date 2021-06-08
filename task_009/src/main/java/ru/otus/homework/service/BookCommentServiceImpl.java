@@ -6,17 +6,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.BookComment;
 import ru.otus.homework.dto.BookCommentDTO;
-import ru.otus.homework.dto.BookCommentResDTO;
+import ru.otus.homework.dto.BookCommentIdTextDTO;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.exceptions.Errors;
+import ru.otus.homework.mapper.BookCommentIdTextMapper;
 import ru.otus.homework.mapper.BookCommentMapper;
 import ru.otus.homework.repository.BookCommentRepository;
 import ru.otus.homework.repository.BookRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +22,10 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     private final BookCommentRepository bookCommentRepository;
     private final BookRepository bookRepository;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
-    public BookCommentResDTO add(BookCommentDTO bookCommentDTO) {
-
-        validationService.validateDTO(bookCommentDTO);
+    public BookCommentIdTextDTO add(BookCommentDTO bookCommentDTO) {
 
         if(bookCommentDTO.getBook() != null && bookCommentDTO.getBook().getId() == null) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
@@ -38,47 +33,27 @@ public class BookCommentServiceImpl implements BookCommentService {
 
         Long bookId = bookCommentDTO.getBook().getId();
 
-        Optional<Book> foundBook = bookRepository.findById(bookId);
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId));
 
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId);
-        }
-
-        BookComment bookComment = new BookComment(foundBook.get(), bookCommentDTO.getText());
+        BookComment bookComment = new BookComment(book, bookCommentDTO.getText());
         bookCommentRepository.save(bookComment);
-        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(bookComment.getId(), bookComment.getText());
-        return bookCommentResDTO;
+        return BookCommentIdTextMapper.INSTANCE.toDto(bookComment);
     }
 
     @Override
     @Transactional
-    public BookCommentResDTO update(long id, BookCommentDTO bookCommentDTO) {
+    public BookCommentIdTextDTO update(long id, BookCommentDTO bookCommentDTO) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_ID);
         }
 
-        validationService.validateDTO(bookCommentDTO);
-
-        Optional<BookComment> foundBookComment = bookCommentRepository.findById(id);
-
-        if(!foundBookComment.isPresent()) {
-            throw new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id);
-        }
-
-        BookComment bookComment = foundBookComment.get();
+        BookComment bookComment = bookCommentRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id));
         Book book = bookComment.getBook();
 
         if(bookCommentDTO.getBook() != null && bookCommentDTO.getBook().getId() != null) {
             Long bookId = bookCommentDTO.getBook().getId();
-
-            Optional<Book> foundBook = bookRepository.findById(bookId);
-
-            if (!foundBook.isPresent()) {
-                throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId);
-            }
-
-            book = foundBook.get();
+            book = bookRepository.findById(bookId).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId));
         }
 
         BookComment updateBookComment = BookCommentMapper.INSTANCE.fromDto(bookCommentDTO);
@@ -86,27 +61,19 @@ public class BookCommentServiceImpl implements BookCommentService {
         updateBookComment.setBook(book);
 
         bookCommentRepository.save(updateBookComment);
-        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(updateBookComment.getId(), updateBookComment.getText());
-        return bookCommentResDTO;
+        return BookCommentIdTextMapper.INSTANCE.toDto(updateBookComment);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BookCommentResDTO getById(long id) {
+    public BookCommentIdTextDTO getById(long id) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_ID);
         }
 
-        Optional<BookComment> foundBookComment = bookCommentRepository.findById(id);
-
-        if(!foundBookComment.isPresent()) {
-            throw new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id);
-        }
-
-        BookComment bookComment = foundBookComment.get();
-        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(bookComment.getId(), bookComment.getText());
-        return bookCommentResDTO;
+        BookComment bookComment = bookCommentRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id));
+        return BookCommentIdTextMapper.INSTANCE.toDto(bookComment);
 
     }
 
@@ -118,40 +85,22 @@ public class BookCommentServiceImpl implements BookCommentService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_ID);
         }
 
-        Optional<BookComment> foundBookComment = bookCommentRepository.findById(id);
-
-        if(!foundBookComment.isPresent()) {
-            throw new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id);
-        }
-
+        bookCommentRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id));
         bookCommentRepository.deleteById(id);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookCommentResDTO> findAllByBookId(long bookId) {
+    public List<BookCommentIdTextDTO> findAllByBookId(long bookId) {
 
         if(bookId == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepository.findById(bookId);
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId));
+        return BookCommentIdTextMapper.INSTANCE.toListDto(book.getComments());
 
-        if (!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId);
-        }
-
-        List<BookComment> bookComments = bookCommentRepository.findAllByBookId(bookId);
-        List<BookCommentResDTO> bookCommentsResDTO = new ArrayList<>();
-        if(bookCommentsResDTO != null) {
-            for(BookComment bookComment : bookComments) {
-                BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(bookComment.getId(), bookComment.getText());
-                bookCommentsResDTO.add(bookCommentResDTO);
-            }
-        }
-
-        return bookCommentsResDTO;
     }
 
 }

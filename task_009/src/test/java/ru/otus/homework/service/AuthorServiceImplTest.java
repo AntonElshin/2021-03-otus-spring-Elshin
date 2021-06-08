@@ -35,9 +35,6 @@ public class AuthorServiceImplTest {
     @Mock
     private BookRepository bookRepository;
 
-    @Mock
-    private ValidationService validationService;
-
     @InjectMocks
     private AuthorServiceImpl authorService;
 
@@ -49,12 +46,10 @@ public class AuthorServiceImplTest {
         Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
         Author createdAuthor = new Author(1L,"Фамилия", "Имя", "Отчество");
 
-        Mockito.doNothing().when(validationService).validateDTO(authorDTO);
         given(authorRepository.save(author)).willReturn(createdAuthor);
 
         authorService.add(authorDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(authorDTO);
         Mockito.verify(authorRepository, Mockito.times(1)).save(author);
 
     }
@@ -66,13 +61,11 @@ public class AuthorServiceImplTest {
         AuthorDTO authorDTO = new AuthorDTO(1L, "Фамилия", "Имя", "Отчество");
         Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
 
-        Mockito.doNothing().when(validationService).validateDTO(authorDTO);
         given(authorRepository.findById(1L)).willReturn(Optional.of(author));
         given(authorRepository.save(author)).willReturn(author);
 
         authorService.update(1L, authorDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(authorDTO);
         Mockito.verify(authorRepository, Mockito.times(1)).save(author);
 
     }
@@ -151,13 +144,17 @@ public class AuthorServiceImplTest {
     @Test
     void deleteById() {
 
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
+
         BooleanExpression predicate = QBook.book.authors.any().id.eq(1L);
 
+        given(authorRepository.findById(1L)).willReturn(Optional.of(author));
         given(bookRepository.findAll(predicate)).willReturn(null);
         Mockito.doNothing().when(authorRepository).deleteById(1L);
 
         authorService.deleteById(1L);
 
+        Mockito.verify(authorRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).deleteById(1L);
 

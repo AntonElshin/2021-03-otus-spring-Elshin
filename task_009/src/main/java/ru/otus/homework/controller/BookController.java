@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.BookResDTO;
+import ru.otus.homework.dto.BookWithCommentsDTO;
 import ru.otus.homework.service.BookService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,12 +18,12 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping(value = "/api/books/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookDTO> getAllBooks() {
+    public List<BookResDTO> getAllBooks() {
         return bookService.findAll();
     }
 
     @GetMapping(value = "/api/books", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookDTO> findBooksByParams(
+    public List<BookResDTO> findBooksByParams(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "authorId", required = false) Long authorId,
@@ -30,7 +33,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookDTO getBook (
+    public BookWithCommentsDTO getBook (
             @PathVariable(name = "id") Long id
     ) {
         return bookService.getById(id);
@@ -38,7 +41,7 @@ public class BookController {
 
     @PostMapping(value = "/api/books", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public BookDTO createBook (
-            @RequestBody BookDTO bookDTO
+            @Valid @RequestBody BookDTO bookDTO
     ) {
         return bookService.add(bookDTO);
     }
@@ -46,7 +49,7 @@ public class BookController {
     @PutMapping(path = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public BookDTO modifyBook (
             @PathVariable(name = "id") Long id,
-            @RequestBody BookDTO bookDTO
+            @Valid @RequestBody BookDTO bookDTO
     ) {
         return bookService.update(id, bookDTO);
     }

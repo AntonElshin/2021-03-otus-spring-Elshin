@@ -11,11 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.otus.homework.dto.AuthorDTO;
-import ru.otus.homework.dto.BookDTO;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.*;
 import ru.otus.homework.service.BookService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -211,8 +210,8 @@ public class BookControllerTest {
     @Test
     public void create() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, null, null, null);
-        GenreDTO genreDTO = new GenreDTO(2L, null, null);
+        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
+        GenreIdDTO genreDTO = new GenreIdDTO(2L);
 
         BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
 
@@ -221,7 +220,7 @@ public class BookControllerTest {
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
 
-        List<BookDTO> books = bookService.findByParams(null, "ISBN", null, null);
+        List<BookResDTO> books = bookService.findByParams(null, "ISBN", null, null);
         assertThat(books.size()).isEqualTo(1);
         assertThat(books.get(0).getAuthors().size()).isEqualTo(1);
         assertThat(books.get(0).getAuthors().get(0).getId()).isEqualTo(1);
@@ -238,14 +237,14 @@ public class BookControllerTest {
     @Test
     public void update() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, null, null, null);
-        GenreDTO genreDTO = new GenreDTO(1L, null, null);
+        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
+        GenreIdDTO genreDTO = new GenreIdDTO(2L);
 
         BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
         bookDTO = bookService.add(bookDTO);
 
-        AuthorDTO updateAuthorDTO = new AuthorDTO(2L, null, null, null);
-        GenreDTO updateGenreDTO = new GenreDTO(2L, null, null);
+        AuthorIdDTO updateAuthorDTO = new AuthorIdDTO(1L);
+        GenreIdDTO updateGenreDTO = new GenreIdDTO(2L);
 
         BookDTO updateBookDTO = new BookDTO("Название 1", "ISBN 1", "Описание 1", List.of(updateAuthorDTO), List.of(updateGenreDTO));
 
@@ -258,11 +257,8 @@ public class BookControllerTest {
                 .andExpect(content().string(containsString("Название 1")))
                 .andExpect(content().string(containsString("ISBN 1")))
                 .andExpect(content().string(containsString("Описание 1")))
-                .andExpect(content().string(containsString("Полевой")))
-                .andExpect(content().string(containsString("Борис")))
-                .andExpect(content().string(containsString("Николаевич")))
-                .andExpect(content().string(containsString("Повесть")))
-                .andExpect(content().string(containsString("Средняя")))
+                .andExpect(content().string(containsString("\"authors\":[{\"id\":1}]")))
+                .andExpect(content().string(containsString("\"genres\":[{\"id\":2}]")))
         ;
 
         bookService.deleteById(bookDTO.getId());
@@ -273,8 +269,8 @@ public class BookControllerTest {
     @Test
     public void delete() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, null, null, null);
-        GenreDTO genreDTO = new GenreDTO(1L, null, null);
+        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
+        GenreIdDTO genreDTO = new GenreIdDTO(2L);
 
         BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
         bookDTO = bookService.add(bookDTO);
@@ -282,7 +278,7 @@ public class BookControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookDTO.getId()))
                 .andDo(print());
 
-        List<BookDTO> books = bookService.findByParams(null, "ISBN", null, null);
+        List<BookResDTO> books = bookService.findByParams(null, "ISBN", null, null);
 
         assertThat(books.size()).isEqualTo(0);
 

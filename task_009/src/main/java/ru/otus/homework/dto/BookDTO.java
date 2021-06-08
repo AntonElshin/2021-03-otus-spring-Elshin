@@ -1,11 +1,9 @@
 package ru.otus.homework.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,12 +25,12 @@ public class BookDTO {
     private String description;
 
     @Size(min=1, message = "У книги должен быть хотя бы один автор")
-    private List<AuthorDTO> authors;
+    private List<AuthorIdDTO> authors;
 
     @Size(min=1, message = "У книги должен быть хотя бы один жанр")
-    private List<GenreDTO> genres;
+    private List<GenreIdDTO> genres;
 
-    public BookDTO(String title, String isbn, String description, List<AuthorDTO> authors, List<GenreDTO> genres) {
+    public BookDTO(String title, String isbn, String description, List<AuthorIdDTO> authors, List<GenreIdDTO> genres) {
         this.title = title;
         this.isbn = isbn;
         this.description = description;

@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework.dto.BookCommentDTO;
-import ru.otus.homework.dto.BookCommentResDTO;
+import ru.otus.homework.dto.BookCommentIdTextDTO;
 import ru.otus.homework.service.BookCommentService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,30 +17,30 @@ public class BookCommentController {
     private final BookCommentService bookCommentService;
 
     @GetMapping(value = "/api/bookcomments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookCommentResDTO> findBookCommentsByParams(
+    public List<BookCommentIdTextDTO> findBookCommentsByParams(
             @RequestParam(value = "bookId") Long bookId
     ) {
         return bookCommentService.findAllByBookId(bookId);
     }
 
     @GetMapping(value = "/api/bookcomments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookCommentResDTO getBookComment (
+    public BookCommentIdTextDTO getBookComment (
             @PathVariable(name = "id") Long id
     ) {
         return bookCommentService.getById(id);
     }
 
     @PostMapping(value = "/api/bookcomments", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookCommentResDTO createBookComment (
-            @RequestBody BookCommentDTO bookCommentDTO
+    public BookCommentIdTextDTO createBookComment (
+            @Valid @RequestBody BookCommentDTO bookCommentDTO
     ) {
         return bookCommentService.add(bookCommentDTO);
     }
 
     @PutMapping(path = "/api/bookcomments/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookCommentResDTO modifyBookComment (
+    public BookCommentIdTextDTO modifyBookComment (
             @PathVariable(name = "id") Long id,
-            @RequestBody BookCommentDTO bookCommentDTO
+            @Valid @RequestBody BookCommentDTO bookCommentDTO
     ) {
         return bookCommentService.update(id, bookCommentDTO);
     }

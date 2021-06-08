@@ -35,9 +35,6 @@ public class GenreServiceImplTest {
     private
     BookRepository bookRepository;
 
-    @Mock
-    private ValidationService validationService;
-
     @InjectMocks
     private GenreServiceImpl genreService;
 
@@ -49,13 +46,11 @@ public class GenreServiceImplTest {
         Genre genre = GenreMapper.INSTANCE.fromDto(genreDTO);
         Genre createdGenre = new Genre(1L, "Жанр", "Описание");
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр")).willReturn(new ArrayList<>());
         given(genreRepository.save(genre)).willReturn(createdGenre);
 
         genreService.add(genreDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(genreDTO);
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameEqualsIgnoreCase("Жанр");
         Mockito.verify(genreRepository, Mockito.times(1)).save(genre);
 
@@ -70,7 +65,6 @@ public class GenreServiceImplTest {
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр")).willReturn(genres);
 
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -88,13 +82,11 @@ public class GenreServiceImplTest {
         GenreDTO genreDTO = new GenreDTO(1L, "Жанр", "Описание");
         Genre genre = GenreMapper.INSTANCE.fromDto(genreDTO);
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findById(1L)).willReturn(Optional.of(genre));
         given(genreRepository.save(genre)).willReturn(genre);
 
         genreService.update(1L, genreDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(genreDTO);
         Mockito.verify(genreRepository, Mockito.times(0)).findByNameEqualsIgnoreCase("Жанр");
         Mockito.verify(genreRepository, Mockito.times(1)).save(genre);
 
@@ -109,14 +101,12 @@ public class GenreServiceImplTest {
         GenreDTO genreDTO = new GenreDTO(1L, "Жанр 1", "Описание");
         Genre updateGenre = GenreMapper.INSTANCE.fromDto(genreDTO);
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findById(1L)).willReturn(Optional.of(foundGenre));
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр 1")).willReturn(new ArrayList<>());
         given(genreRepository.save(updateGenre)).willReturn(updateGenre);
 
         genreService.update(1L, genreDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(genreDTO);
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameEqualsIgnoreCase("Жанр 1");
         Mockito.verify(genreRepository, Mockito.times(1)).save(updateGenre);
 
@@ -142,7 +132,6 @@ public class GenreServiceImplTest {
 
         GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -162,7 +151,6 @@ public class GenreServiceImplTest {
         Genre foundGenre = new Genre(1L, "Жанр", "Описание");
         Genre genre = new Genre(2L, "Жанр 1", "Описание 1");
 
-        Mockito.doNothing().when(validationService).validateDTO(genreDTO);
         given(genreRepository.findById(1L)).willReturn(Optional.of(foundGenre));
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр 1")).willReturn(List.of(genre));
 
@@ -218,14 +206,18 @@ public class GenreServiceImplTest {
     @Test
     void deleteById() {
 
+        Genre genre = new Genre(1L, "Жанр", "Описание");
+
         BooleanExpression predicate = QBook.book.genres.any().id.eq(1L);
 
         given(bookRepository.findAll(predicate)).willReturn(null);
+        given(genreRepository.findById(1L)).willReturn(Optional.of(genre));
         Mockito.doNothing().when(genreRepository).deleteById(1L);
 
         genreService.deleteById(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
+        Mockito.verify(genreRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(genreRepository, Mockito.times(1)).deleteById(1L);
 
     }

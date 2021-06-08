@@ -14,6 +14,7 @@ import ru.otus.homework.domain.BookComment;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.dto.BookCommentDTO;
 import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.BookIdDTO;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.mapper.BookMapper;
 import ru.otus.homework.repository.BookCommentRepository;
@@ -31,9 +32,6 @@ public class BookCommentServiceImplTest {
 
     @Mock
     private BookRepository bookRepository;
-
-    @Mock
-    private ValidationService validationService;
 
     @Mock
     private BookCommentRepository bookCommentRepository;
@@ -54,21 +52,18 @@ public class BookCommentServiceImplTest {
         genres.add(genre);
 
         Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
+        BookIdDTO bookIdDTO = new BookIdDTO(1L);
 
         BookComment bookComment = new BookComment(book, "Комментарий");
         BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
 
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookDTO, "Комментарий");
-
-        Mockito.doNothing().when(validationService).validateDTO(bookCommentDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(bookCommentRepository.save(bookComment)).willReturn(createdBookComment);
 
         bookCommentService.add(bookCommentDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookCommentDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).save(bookComment);
 
@@ -87,15 +82,13 @@ public class BookCommentServiceImplTest {
         genres.add(genre);
 
         Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
+        BookIdDTO bookIdDTO = new BookIdDTO(1L);
 
         BookComment bookComment = new BookComment(book, "Комментарий");
         BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
 
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookDTO, "Комментарий");
-
-        Mockito.doNothing().when(validationService).validateDTO(bookCommentDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -125,16 +118,15 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         BookDTO secondBookDTO = BookMapper.INSTANCE.toDto(secondBook);
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(secondBookDTO, "Комментарий!!!");
+        BookIdDTO bookIdDTO = new BookIdDTO(2L);
+        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий!!!");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookCommentDTO);
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
         given(bookRepository.findById(2L)).willReturn(Optional.of(secondBook));
         given(bookCommentRepository.save(updatedBookComment)).willReturn(updatedBookComment);
 
         bookCommentService.update(1L, bookCommentDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookCommentDTO);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(2L);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).save(updatedBookComment);
@@ -158,9 +150,9 @@ public class BookCommentServiceImplTest {
         BookComment bookComment = new BookComment(book, "Комментарий");
         BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookIdDTO bookIdDTO = new BookIdDTO(1L);
 
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookDTO, "Комментарий");
+        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
@@ -186,11 +178,10 @@ public class BookCommentServiceImplTest {
         BookComment bookComment = new BookComment(1L, book, "Комментарий");
         book.setComments(List.of(bookComment));
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookIdDTO bookIdDTO = new BookIdDTO(1L);
 
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookDTO, "Комментарий");
+        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookCommentDTO);
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
@@ -321,12 +312,10 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
-        given(bookCommentRepository.findAllByBookId(1L)).willReturn(List.of(bookComment));
 
         bookCommentService.findAllByBookId(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(bookCommentRepository, Mockito.times(1)).findAllByBookId(1L);
 
     }
 

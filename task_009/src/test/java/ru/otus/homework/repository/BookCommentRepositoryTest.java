@@ -29,6 +29,9 @@ public class BookCommentRepositoryTest {
     private BookCommentRepository bookCommentRepository;
 
     @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
     private TestEntityManager em;
 
     @DisplayName("возвращать ожидаемое количество комментариев к книге")
@@ -115,7 +118,9 @@ public class BookCommentRepositoryTest {
     @Test
     void shouldFindAllBookCommentsByBookId() {
 
-        List<BookComment> bookComments = bookCommentRepository.findAllByBookId(EXISTING_BOOK_ID);
+        Optional<Book> book = bookRepository.findById(EXISTING_BOOK_ID);
+
+        List<BookComment> bookComments = book.get().getComments();
 
         assertThat(bookComments).hasSize(2);
 

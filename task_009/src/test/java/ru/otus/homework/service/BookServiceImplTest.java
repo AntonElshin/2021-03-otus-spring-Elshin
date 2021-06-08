@@ -10,9 +10,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.domain.Author;
-import ru.otus.homework.domain.QBook;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Genre;
+import ru.otus.homework.domain.QBook;
 import ru.otus.homework.dto.BookDTO;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.mapper.BookMapper;
@@ -40,9 +40,6 @@ public class BookServiceImplTest {
     @Mock
     private BookRepository bookRepository;
 
-    @Mock
-    private ValidationService validationService;
-
     @InjectMocks
     private BookServiceImpl bookService;
 
@@ -65,7 +62,6 @@ public class BookServiceImplTest {
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
@@ -73,7 +69,6 @@ public class BookServiceImplTest {
 
         bookService.add(bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -98,14 +93,12 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
         given(bookRepository.save(book)).willReturn(createdBook);
 
         bookService.add(bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -129,14 +122,12 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
         given(bookRepository.save(book)).willReturn(book);
 
         bookService.add(bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -161,14 +152,12 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
         given(bookRepository.save(book)).willReturn(createdBook);
 
         bookService.add(bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -188,7 +177,6 @@ public class BookServiceImplTest {
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findAll(predicate)).willReturn(books);
 
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -217,7 +205,6 @@ public class BookServiceImplTest {
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(3L))).willReturn(null);
 
@@ -247,7 +234,6 @@ public class BookServiceImplTest {
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(3L))).willReturn(null);
@@ -276,7 +262,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
@@ -284,7 +269,6 @@ public class BookServiceImplTest {
 
         bookService.update(1L, bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -308,7 +292,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
@@ -316,7 +299,6 @@ public class BookServiceImplTest {
 
         bookService.update(1L, bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -340,7 +322,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
@@ -348,7 +329,6 @@ public class BookServiceImplTest {
 
         bookService.update(1L, bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -372,7 +352,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
@@ -382,7 +361,6 @@ public class BookServiceImplTest {
 
         bookService.update(1L, bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -411,7 +389,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(updateBook);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(foundBook));
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
@@ -420,7 +397,6 @@ public class BookServiceImplTest {
 
         bookService.update(1L, bookDTO);
 
-        Mockito.verify(validationService, Mockito.times(1)).validateDTO(bookDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
@@ -468,7 +444,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -498,7 +473,6 @@ public class BookServiceImplTest {
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("1234");
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(foundBook));
         given(bookRepository.findAll(predicate)).willReturn(List.of(foundBook));
 
@@ -526,7 +500,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(2L))).willReturn(null);
 
@@ -554,7 +527,6 @@ public class BookServiceImplTest {
 
         BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
-        Mockito.doNothing().when(validationService).validateDTO(bookDTO);
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(2L))).willReturn(null);
@@ -619,18 +591,14 @@ public class BookServiceImplTest {
     @Test
     void deleteById() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
+        Book book = new Book(1L, "Название", "ISBN", "Описание", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
-
+        given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         Mockito.doNothing().when(bookRepository).deleteById(1L);
 
         bookService.deleteById(1L);
 
+        Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepository, Mockito.times(1)).deleteById(1L);
 
     }

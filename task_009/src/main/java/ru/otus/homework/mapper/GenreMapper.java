@@ -5,6 +5,8 @@ import org.mapstruct.factory.Mappers;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.dto.GenreDTO;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface GenreMapper {
 
@@ -12,5 +14,6 @@ public interface GenreMapper {
 
     GenreDTO toDto(Genre genre);
     Genre fromDto(GenreDTO genreDTO);
+    List<GenreDTO> toListDto(List<Genre> genres);
 
 }

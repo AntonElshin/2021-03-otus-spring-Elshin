@@ -26,12 +26,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
     public AuthorDTO add(AuthorDTO authorDTO) {
-        validationService.validateDTO(authorDTO);
         Author author = authorRepository.save(AuthorMapper.INSTANCE.fromDto(authorDTO));
         return AuthorMapper.INSTANCE.toDto(author);
     }
@@ -44,13 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        validationService.validateDTO(authorDTO);
-
-        Optional<Author> foundAuthor = authorRepository.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
+        authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
 
         Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
         author.setId(id);
@@ -67,13 +59,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        Optional<Author> foundAuthor = authorRepository.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
-
-        Author author = foundAuthor.get();
+        Author author = authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
         return AuthorMapper.INSTANCE.toDto(author);
 
     }
@@ -92,6 +78,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.AUTHOR_HAS_LINKED_BOOKS);
         }
 
+        authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
         authorRepository.deleteById(id);
 
     }
@@ -132,7 +119,7 @@ public class AuthorServiceImpl implements AuthorService {
             authors = authorRepository.findAll(fullPredicate);
         }
 
-        return authors.stream().map(AuthorMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return AuthorMapper.INSTANCE.toListDto(authors);
     }
 
     @Override
@@ -140,7 +127,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorDTO> findAll() {
         List<Author> authors = authorRepository.findAll();
 
-        return authors.stream().map(AuthorMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return AuthorMapper.INSTANCE.toListDto(authors);
     }
 
 }

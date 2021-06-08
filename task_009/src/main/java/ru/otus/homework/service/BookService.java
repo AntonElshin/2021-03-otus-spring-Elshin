@@ -1,6 +1,9 @@
 package ru.otus.homework.service;
 
+import ru.otus.homework.domain.Book;
 import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.BookResDTO;
+import ru.otus.homework.dto.BookWithCommentsDTO;
 
 import java.util.List;
 
@@ -10,12 +13,14 @@ public interface BookService {
 
     BookDTO update(long id, BookDTO bookDTO);
 
-    BookDTO getById(long id);
+    BookWithCommentsDTO getById(long id);
 
     void deleteById(long id);
 
-    List<BookDTO> findAll();
+    List<BookResDTO> findAll();
 
-    List<BookDTO> findByParams(String title, String isbn, Long authorId, Long genreId);
+    List<BookResDTO> findByParams(String title, String isbn, Long authorId, Long genreId);
+
+    Book processLinks(BookDTO bookDTO);
 
 }

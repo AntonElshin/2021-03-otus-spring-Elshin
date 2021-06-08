@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface BookCommentRepository extends JpaRepository<BookComment, Long> {
 
-    @Query("select bc from BookComment bc where bc.book.id = :bookId")
-    List<BookComment> findAllByBookId(@Param("bookId") Long bookId);
-
     @Query("select count(bc) from BookComment bc where bc.book.id = :bookId")
     Long countByBookId(@Param("bookId") Long bookId);
 

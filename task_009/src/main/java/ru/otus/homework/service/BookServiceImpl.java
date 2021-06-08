@@ -3,27 +3,22 @@ package ru.otus.homework.service;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework.dto.AuthorDTO;
-import ru.otus.homework.dto.BookDTO;
-import ru.otus.homework.dto.GenreDTO;
-import ru.otus.homework.mapper.AuthorMapper;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.homework.domain.Author;
+import ru.otus.homework.domain.Book;
+import ru.otus.homework.domain.Genre;
+import ru.otus.homework.domain.QBook;
+import ru.otus.homework.dto.*;
+import ru.otus.homework.exceptions.BusinessException;
+import ru.otus.homework.exceptions.Errors;
 import ru.otus.homework.mapper.BookMapper;
-import ru.otus.homework.mapper.GenreMapper;
+import ru.otus.homework.mapper.BookWithCommentsMapper;
 import ru.otus.homework.repository.AuthorRepository;
 import ru.otus.homework.repository.BookRepository;
 import ru.otus.homework.repository.GenreRepository;
-import ru.otus.homework.domain.Author;
-import ru.otus.homework.domain.QBook;
-import ru.otus.homework.domain.Book;
-import ru.otus.homework.domain.Genre;
-import ru.otus.homework.exceptions.BusinessException;
-import ru.otus.homework.exceptions.Errors;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +27,11 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
     public BookDTO add(BookDTO bookDTO) {
 
-        validationService.validateDTO(bookDTO);
         String isbn = bookDTO.getIsbn();
 
         if(isbn != null && !isbn.trim().isEmpty()) {
@@ -62,15 +55,7 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        validationService.validateDTO(bookDTO);
-
-        Optional<Book> foundBook = bookRepository.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        Book book = foundBook.get();
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
         String isbn = bookDTO.getIsbn();
 
         if(isbn != null && !isbn.trim().isEmpty()) {
@@ -92,20 +77,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookDTO getById(long id) {
+    public BookWithCommentsDTO getById(long id) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepository.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        Book book = foundBook.get();
-        return BookMapper.INSTANCE.toDto(book);
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
+        book.getComments();
+        return BookWithCommentsMapper.INSTANCE.toDto(book);
 
     }
 
@@ -117,13 +97,14 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
+        bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
         bookRepository.deleteById(id);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookDTO> findByParams(String title, String isbn, Long authorId, Long genreId) {
+    public List<BookResDTO> findByParams(String title, String isbn, Long authorId, Long genreId) {
 
         List<BooleanExpression> predicates = new ArrayList<>();
 
@@ -160,28 +141,31 @@ public class BookServiceImpl implements BookService {
             books = bookRepository.findAll(fullPredicate);
         }
 
-        return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
+        //return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return BookMapper.INSTANCE.toListDto(books);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookDTO> findAll() {
+    public List<BookResDTO> findAll() {
         List<Book> books = bookRepository.findAll();
-        return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
+        //return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return BookMapper.INSTANCE.toListDto(books);
     }
 
+    @Override
     public Book processLinks(BookDTO bookDTO) {
 
-        List<AuthorDTO> authors = bookDTO.getAuthors();
-        List<GenreDTO> genres = bookDTO.getGenres();
+        List<AuthorIdDTO> authors = bookDTO.getAuthors();
+        List<GenreIdDTO> genres = bookDTO.getGenres();
 
         List<Long> authorIds = new ArrayList<>();
         List<Long> genreIds = new ArrayList<>();
 
         if(authors != null) {
 
-            for(AuthorDTO authorDTO : authors) {
+            for(AuthorIdDTO authorDTO : authors) {
                 Boolean foundFlag = false;
 
                 for(Long id : authorIds) {
@@ -199,7 +183,7 @@ public class BookServiceImpl implements BookService {
 
         if(genres != null) {
 
-            for(GenreDTO genreDTO : genres) {
+            for(GenreIdDTO genreDTO : genres) {
                 Boolean foundFlag = false;
 
                 for(Long id : genreIds) {

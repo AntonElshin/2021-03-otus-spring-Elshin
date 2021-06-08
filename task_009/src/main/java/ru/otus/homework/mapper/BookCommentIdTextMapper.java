@@ -1,19 +1,18 @@
 package ru.otus.homework.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.otus.homework.domain.BookComment;
-import ru.otus.homework.dto.BookCommentDTO;
 import ru.otus.homework.dto.BookCommentIdTextDTO;
 
-@Mapper(componentModel = "spring")
-public interface BookCommentMapper {
+import java.util.List;
 
-    BookCommentMapper INSTANCE = Mappers.getMapper(BookCommentMapper.class);
+@Mapper(componentModel = "spring")
+public interface BookCommentIdTextMapper {
+
+    BookCommentIdTextMapper INSTANCE = Mappers.getMapper(BookCommentIdTextMapper.class);
 
     BookCommentIdTextDTO toDto(BookComment bookComment);
-    BookComment fromDto(BookCommentDTO bookCommentDTO);
+    List<BookCommentIdTextDTO> toListDto(List<BookComment> bookComments);
 
 }

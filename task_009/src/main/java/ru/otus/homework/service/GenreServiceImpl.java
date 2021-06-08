@@ -23,13 +23,10 @@ public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
     public GenreDTO add(GenreDTO genreDTO) {
-
-        validationService.validateDTO(genreDTO);
 
         List<Genre> genres = genreRepository.findByNameEqualsIgnoreCase(genreDTO.getName());
 
@@ -49,15 +46,7 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        validationService.validateDTO(genreDTO);
-
-        Optional<Genre> foundGenre = genreRepository.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        Genre genre = foundGenre.get();
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
         String name = genreDTO.getName();
 
         if(name != null && !name.trim().isEmpty()) {
@@ -85,13 +74,7 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        Optional<Genre> foundGenre = genreRepository.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        Genre genre = foundGenre.get();
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
         return GenreMapper.INSTANCE.toDto(genre);
 
     }
@@ -110,6 +93,7 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.GENRE_HAS_LINKED_BOOKS);
         }
 
+        genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
         genreRepository.deleteById(id);
 
     }
@@ -126,14 +110,14 @@ public class GenreServiceImpl implements GenreService {
             genres = genreRepository.findAll();
         }
 
-        return genres.stream().map(GenreMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return GenreMapper.INSTANCE.toListDto(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<GenreDTO> findAll() {
         List<Genre> genres = genreRepository.findAll();
-        return genres.stream().map(GenreMapper.INSTANCE::toDto).collect(Collectors.toList());
+        return GenreMapper.INSTANCE.toListDto(genres);
     }
 
 }
