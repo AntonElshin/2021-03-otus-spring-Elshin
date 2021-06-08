@@ -13,7 +13,7 @@ public interface AuthorRepositoryJpa {
 
     Optional<Author> findById(long id);
 
-    void deleteById(long id);
+    void delete(Author author);
 
     List<Author> findAll();
 

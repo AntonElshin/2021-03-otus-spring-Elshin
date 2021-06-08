@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private final GenreRepositoryJpa genreRepositoryJpa;
     private final BookRepositoryJpa bookRepositoryJpa;
 
-    private final PrintService printService;
+    private final PrintBookService printBookService;
 
     @Override
     @Transactional
@@ -73,13 +73,7 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepositoryJpa.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        Book book = foundBook.get();
+        Book book = bookRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
 
         if(title != null && !title.trim().isEmpty()) {
             book.setTitle(title);
@@ -136,13 +130,8 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepositoryJpa.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printBook(foundBook.get());
+        Book book = bookRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
+        printBookService.printBook(book);
 
     }
 
@@ -154,7 +143,8 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        bookRepositoryJpa.deleteById(id);
+        Book book = bookRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
+        bookRepositoryJpa.delete(book);
 
     }
 
@@ -162,20 +152,20 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public void findByParams(String title, String isbn, Long authorId, Long genreId) {
         List<Book> books = bookRepositoryJpa.findByParamsLikeIgnoreCase(title, isbn, authorId, genreId);
-        printService.printBooks(books);
+        printBookService.printBooks(books);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Book> books = bookRepositoryJpa.findAll();
-        printService.printBooks(books);
+        printBookService.printBooks(books);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printBooksCount(bookRepositoryJpa.count());
+        printBookService.printBooksCount(bookRepositoryJpa.count());
     }
 
     @Transactional(readOnly = true)

@@ -32,7 +32,7 @@ public class GenreServiceImplTest {
     BookRepositoryJpa bookRepositoryJpa;
 
     @Mock
-    private PrintService printService;
+    private PrintGenreService printGenreService;
 
     @InjectMocks
     private GenreServiceImpl genreService;
@@ -235,12 +235,12 @@ public class GenreServiceImplTest {
         Genre foundGenre = new Genre(1L, "Жанр", "Описание");
 
         given(genreRepositoryJpa.findById(1L)).willReturn(Optional.of(foundGenre));
-        given(printService.printGenre(foundGenre)).willReturn("");
+        given(printGenreService.printGenre(foundGenre)).willReturn("");
 
         genreService.getById(1L);
 
         Mockito.verify(genreRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printGenre(foundGenre);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenre(foundGenre);
 
     }
 
@@ -274,13 +274,17 @@ public class GenreServiceImplTest {
     @Test
     void deleteById() {
 
+        Genre genre = new Genre(1L, "Жанр", "Описание");
+
         given(bookRepositoryJpa.findByParamsEqualsIgnoreCase(null, null, null, 1L)).willReturn(null);
-        Mockito.doNothing().when(genreRepositoryJpa).deleteById(1L);
+        given(genreRepositoryJpa.findById(1L)).willReturn(Optional.of(genre));
+        Mockito.doNothing().when(genreRepositoryJpa).delete(genre);
 
         genreService.deleteById(1L);
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findByParamsEqualsIgnoreCase(null, null, null, 1L);
-        Mockito.verify(genreRepositoryJpa, Mockito.times(1)).deleteById(1L);
+        Mockito.verify(genreRepositoryJpa, Mockito.times(1)).findById(1L);
+        Mockito.verify(genreRepositoryJpa, Mockito.times(1)).delete(genre);
 
     }
 
@@ -323,12 +327,12 @@ public class GenreServiceImplTest {
         genres.add(genre);
 
         given(genreRepositoryJpa.findByParamsLikeIgnoreCase("Жанр")).willReturn(genres);
-        given(printService.printGenres(genres)).willReturn("");
+        given(printGenreService.printGenres(genres)).willReturn("");
 
         genreService.findByParams("Жанр");
 
         Mockito.verify(genreRepositoryJpa, Mockito.times(1)).findByParamsLikeIgnoreCase("Жанр");
-        Mockito.verify(printService, Mockito.times(1)).printGenres(genres);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenres(genres);
 
     }
 
@@ -341,12 +345,12 @@ public class GenreServiceImplTest {
         genres.add(genre);
 
         given(genreRepositoryJpa.findAll()).willReturn(genres);
-        given(printService.printGenres(genres)).willReturn("");
+        given(printGenreService.printGenres(genres)).willReturn("");
 
         genreService.findAll();
 
         Mockito.verify(genreRepositoryJpa, Mockito.times(1)).findAll();
-        Mockito.verify(printService, Mockito.times(1)).printGenres(genres);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenres(genres);
 
     }
 
@@ -355,12 +359,12 @@ public class GenreServiceImplTest {
     void count() {
 
         given(genreRepositoryJpa.count()).willReturn(0L);
-        given(printService.printGenresCount(0L)).willReturn("");
+        given(printGenreService.printGenresCount(0L)).willReturn("");
 
         genreService.count();
 
         Mockito.verify(genreRepositoryJpa, Mockito.times(1)).count();
-        Mockito.verify(printService, Mockito.times(1)).printGenresCount(0L);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenresCount(0L);
 
     }
 

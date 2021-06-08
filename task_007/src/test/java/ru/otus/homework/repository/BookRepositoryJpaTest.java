@@ -23,16 +23,16 @@ public class BookRepositoryJpaTest {
 
     private static final int EXPECTED_BOOKS_COUNT = 4;
 
-    private static final int EXISTING_BOOK_ID = 2;
+    private static final Long EXISTING_BOOK_ID = 2L;
     private static final String EXISTING_BOOK_NAME = "Повесть о настоящем человеке";
     private static final String EXISTING_BOOK_ISBN = "978-5-17-064314-1";
     private static final String EXISTING_BOOK_DESCRIPTION = "«Повесть о настоящем человеке» рассказывает о подвиге летчика, сбитого в бою во время Великой Отечественной войны. Раненый, обмороженный, он сумел добраться до своих, а после ампутации ног вернулся в строй.";
 
-    private static final int EXISTING_GENRE_ID = 2;
+    private static final Long EXISTING_GENRE_ID = 2L;
     private static final String EXISTING_GENRE_NAME = "Повесть";
     private static final String EXISTING_GENRE_DESCRIPTION = "Средняя форма; произведение, в котором освещается ряд событий в жизни главного героя";
 
-    private static final int EXISTING_AUTHOR_ID = 2;
+    private static final Long EXISTING_AUTHOR_ID = 2L;
     private static final String EXISTING_AUTHOR_LAST_NAME = "Полевой";
     private static final String EXISTING_AUTHOR_FIRST_NAME = "Борис";
     private static final String EXISTING_AUTHOR_MIDDLE_NAME = "Николаевич";
@@ -263,7 +263,6 @@ public class BookRepositoryJpaTest {
 
         Book expectedBook = new Book(bookId, "Название книги 1", "1234", "Описание 1", updatedAuthors, updateGenres, new ArrayList<>());
         expectedBook = bookRepositoryJpa.save(expectedBook);
-        em.flush();
 
         Book actualBook = em.find(Book.class, bookId);
         assertThat(actualBook).isNotNull();
@@ -297,9 +296,7 @@ public class BookRepositoryJpaTest {
 
         assertThat(bookId).isNotEqualTo(0);
 
-        bookRepositoryJpa.deleteById(bookId);
-        em.flush();
-        em.detach(expectedBook);
+        bookRepositoryJpa.delete(expectedBook);
 
         Book book = em.find(Book.class, bookId);
         assertThat(book).isNull();

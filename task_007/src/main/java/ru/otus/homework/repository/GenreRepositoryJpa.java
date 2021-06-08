@@ -13,7 +13,7 @@ public interface GenreRepositoryJpa {
 
     Optional<Genre> findById(long id);
 
-    void deleteById(long id);
+    void delete(Genre genre);
 
     List<Genre> findAll();
 

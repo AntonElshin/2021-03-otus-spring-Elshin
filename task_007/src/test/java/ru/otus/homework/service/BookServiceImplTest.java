@@ -37,7 +37,7 @@ public class BookServiceImplTest {
     private BookRepositoryJpa bookRepositoryJpa;
 
     @Mock
-    private PrintService printService;
+    private PrintBookService printBookService;
 
     @InjectMocks
     private BookServiceImpl bookService;
@@ -647,12 +647,12 @@ public class BookServiceImplTest {
         Book book = new Book(1L, "Название", "123", "Описание", authors, genres, null);
 
         given(bookRepositoryJpa.findById(1L)).willReturn(Optional.of(book));
-        given(printService.printBook(book)).willReturn("");
+        given(printBookService.printBook(book)).willReturn("");
 
         bookService.getById(1L);
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBook(book);
+        Mockito.verify(printBookService, Mockito.times(1)).printBook(book);
 
     }
 
@@ -686,19 +686,15 @@ public class BookServiceImplTest {
     @Test
     void deleteById() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
+        Book book = new Book(1L, "Название", "ISBN", "Описание", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
-
-        Mockito.doNothing().when(bookRepositoryJpa).deleteById(1L);
+        given(bookRepositoryJpa.findById(1L)).willReturn(Optional.of(book));
+        Mockito.doNothing().when(bookRepositoryJpa).delete(book);
 
         bookService.deleteById(1L);
 
-        Mockito.verify(bookRepositoryJpa, Mockito.times(1)).deleteById(1L);
+        Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findById(1L);
+        Mockito.verify(bookRepositoryJpa, Mockito.times(1)).delete(book);
 
     }
 
@@ -731,12 +727,12 @@ public class BookServiceImplTest {
         books.add(book);
 
         given(bookRepositoryJpa.findByParamsLikeIgnoreCase("Название", "123", 1L, 1L)).willReturn(books);
-        given(printService.printBooks(books)).willReturn("");
+        given(printBookService.printBooks(books)).willReturn("");
 
         bookService.findByParams("Название", "123", 1L, 1L);
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findByParamsLikeIgnoreCase("Название", "123", 1L, 1L);
-        Mockito.verify(printService, Mockito.times(1)).printBooks(books);
+        Mockito.verify(printBookService, Mockito.times(1)).printBooks(books);
 
     }
 
@@ -757,12 +753,12 @@ public class BookServiceImplTest {
         books.add(book);
 
         given(bookRepositoryJpa.findAll()).willReturn(books);
-        given(printService.printBooks(books)).willReturn("");
+        given(printBookService.printBooks(books)).willReturn("");
 
         bookService.findAll();
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findAll();
-        Mockito.verify(printService, Mockito.times(1)).printBooks(books);
+        Mockito.verify(printBookService, Mockito.times(1)).printBooks(books);
 
     }
 
@@ -771,12 +767,12 @@ public class BookServiceImplTest {
     void count() {
 
         given(bookRepositoryJpa.count()).willReturn(0L);
-        given(printService.printBooksCount(0L)).willReturn("");
+        given(printBookService.printBooksCount(0L)).willReturn("");
 
         bookService.count();
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).count();
-        Mockito.verify(printService, Mockito.times(1)).printBooksCount(0L);
+        Mockito.verify(printBookService, Mockito.times(1)).printBooksCount(0L);
 
     }
 

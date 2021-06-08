@@ -30,7 +30,7 @@ public class BookCommentServiceImplTest {
     private BookRepositoryJpa bookRepositoryJpa;
 
     @Mock
-    private PrintService printService;
+    private PrintBookCommentService printBookCommentService;
 
     @Mock
     private BookCommentRepositoryJpa bookCommentRepositoryJpa;
@@ -354,12 +354,12 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookCommentRepositoryJpa.findById(1L)).willReturn(Optional.of(bookComment));
-        given(printService.printBookComment(bookComment)).willReturn("");
+        given(printBookCommentService.printBookComment(bookComment)).willReturn("");
 
         bookCommentService.getById(1L);
 
         Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookComment(bookComment);
+        Mockito.verify(printBookCommentService, Mockito.times(1)).printBookComment(bookComment);
 
     }
 
@@ -406,12 +406,12 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookCommentRepositoryJpa.findById(1L)).willReturn(Optional.of(bookComment));
-        Mockito.doNothing().when(bookCommentRepositoryJpa).deleteById(1L);
+        Mockito.doNothing().when(bookCommentRepositoryJpa).delete(bookComment);
 
         bookCommentService.deleteById(1L);
 
         Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).deleteById(1L);
+        Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).delete(bookComment);
 
     }
 
@@ -438,34 +438,6 @@ public class BookCommentServiceImplTest {
             bookCommentService.deleteById(1L);
 
         });
-
-    }
-
-    @DisplayName("найдёт комментарии к книге по идентификатору книги")
-    @Test
-    void findAllByBookId() {
-
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
-
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
-
-        Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
-        BookComment bookComment = new BookComment(1L, book, "Комментарий");
-        book.setComments(List.of(bookComment));
-
-        given(bookRepositoryJpa.findById(1L)).willReturn(Optional.of(book));
-        given(bookCommentRepositoryJpa.findAllByBookId(1L)).willReturn(List.of(bookComment));
-        given(printService.printBookComments(List.of(bookComment))).willReturn("");
-
-        bookCommentService.findAllByBookId(1L);
-
-        Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).findAllByBookId(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookComments(List.of(bookComment));
 
     }
 
@@ -513,13 +485,13 @@ public class BookCommentServiceImplTest {
 
         given(bookRepositoryJpa.findById(1L)).willReturn(Optional.of(book));
         given(bookCommentRepositoryJpa.countByBookId(1L)).willReturn(0L);
-        given(printService.printBookCommentsCount(0L)).willReturn("");
+        given(printBookCommentService.printBookCommentsCount(0L)).willReturn("");
 
         bookCommentService.countByBookId(1L);
 
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findById(1L);
         Mockito.verify(bookCommentRepositoryJpa, Mockito.times(1)).countByBookId(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookCommentsCount(0L);
+        Mockito.verify(printBookCommentService, Mockito.times(1)).printBookCommentsCount(0L);
 
     }
 

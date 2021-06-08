@@ -22,7 +22,7 @@ public class BookCommentRepositoryJpaTest {
 
     private static final int EXPECTED_BOOK_COMMENTS_COUNT = 2;
 
-    private static final int EXISTING_BOOK_COMMENT_ID = 1;
+    private static final Long EXISTING_BOOK_COMMENT_ID = 1L;
     private static final String EXISTING_BOOK_COMMENT_TEXT = "Неожиданная концовка!";
 
     private static final int EXISTING_BOOK_ID = 1;
@@ -104,31 +104,11 @@ public class BookCommentRepositoryJpaTest {
 
         assertThat(bookCommentId).isNotEqualTo(0);
 
-        bookCommentRepositoryJpa.deleteById(bookCommentId);
-        em.flush();
-        em.detach(expectedBookComment);
+        bookCommentRepositoryJpa.delete(expectedBookComment);
 
         BookComment bookComment = em.find(BookComment.class, bookCommentId);
         assertThat(bookComment).isNull();
 
     }
-
-    @DisplayName("вернуть всех комментарий к книге по идентификатору книгу")
-    @Test
-    void shouldFindAllBookCommentsByBookId() {
-
-        List<BookComment> bookComments = bookCommentRepositoryJpa.findAllByBookId(EXISTING_BOOK_ID);
-
-        assertThat(bookComments).hasSize(2);
-
-        assertThat(bookComments.get(0).getId()).isEqualTo(1L);
-        assertThat(bookComments.get(0).getText()).containsIgnoringCase("Увлекательный детектив!");
-
-        assertThat(bookComments.get(1).getId()).isEqualTo(2L);
-        assertThat(bookComments.get(1).getText()).containsIgnoringCase("Неожиданная концовка!");
-
-    }
-
-
 
 }

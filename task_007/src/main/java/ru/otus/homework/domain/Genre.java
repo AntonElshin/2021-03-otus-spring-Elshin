@@ -16,9 +16,11 @@ public class Genre {
     @Column(name = "GENREID")
     @SequenceGenerator( name = "LIB_GENRES_SEQ", sequenceName = "LIB_GENRES_SEQ", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIB_GENRES_SEQ" )
-    private long id;
+    private Long id;
+
     @Column(name = "NAME", nullable = false)
     private String name;
+
     @Column(name = "DESCRIPTION")
     private String description;
 

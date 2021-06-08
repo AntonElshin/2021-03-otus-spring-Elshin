@@ -19,7 +19,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepositoryJpa authorRepositoryJpa;
     private final BookRepositoryJpa bookRepositoryJpa;
-    private final PrintService printService;
+    private final PrintAuthorService printAuthorService;
 
     @Override
     @Transactional
@@ -46,13 +46,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        Optional<Author> foundAuthor = authorRepositoryJpa.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
-
-        Author author = foundAuthor.get();
+        Author author = authorRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
 
         if(lastName != null && !lastName.trim().isEmpty()) {
             author.setLastName(lastName);
@@ -76,13 +70,8 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        Optional<Author> foundAuthor = authorRepositoryJpa.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printAuthor(foundAuthor.get());
+        Author author = authorRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
+        printAuthorService.printAuthor(author);
 
     }
 
@@ -100,7 +89,8 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.AUTHOR_HAS_LINKED_BOOKS);
         }
 
-        authorRepositoryJpa.deleteById(id);
+        Author author = authorRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
+        authorRepositoryJpa.delete(author);
 
     }
 
@@ -108,20 +98,20 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional(readOnly = true)
     public void findByParams(String lastName, String firstName, String middleName) {
         List<Author> authors = authorRepositoryJpa.findByParamsLikeIgnoreCase(lastName, firstName, middleName);
-        printService.printAuthors(authors);
+        printAuthorService.printAuthors(authors);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Author> authors = authorRepositoryJpa.findAll();
-        printService.printAuthors(authors);
+        printAuthorService.printAuthors(authors);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printAuthorsCount(authorRepositoryJpa.count());
+        printAuthorService.printAuthorsCount(authorRepositoryJpa.count());
     }
 
 }

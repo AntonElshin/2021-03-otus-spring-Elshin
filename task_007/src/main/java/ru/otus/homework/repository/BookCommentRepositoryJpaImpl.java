@@ -1,14 +1,11 @@
 package ru.otus.homework.repository;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.BookComment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,7 +23,7 @@ public class BookCommentRepositoryJpaImpl implements BookCommentRepositoryJpa {
 
     @Override
     public BookComment save(BookComment bookComment) {
-        if (bookComment.getId() <= 0) {
+        if (bookComment.getId() == null) {
             em.persist(bookComment);
             return bookComment;
         } else {
@@ -36,24 +33,12 @@ public class BookCommentRepositoryJpaImpl implements BookCommentRepositoryJpa {
 
     @Override
     public Optional<BookComment> findById(long id) {
-        TypedQuery<BookComment> query = em.createQuery("select bc from BookComment bc where bc.id = :id", BookComment.class);
-        query.setParameter("id", id);
-        return Optional.of(query.getSingleResult());
+        return Optional.ofNullable(em.find(BookComment.class, id));
     }
 
     @Override
-    public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from BookComment " +
-                "where id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void delete(BookComment bookComment) {
+        em.remove(bookComment);
     }
 
-    @Override
-    public List<BookComment> findAllByBookId(long bookId) {
-        TypedQuery<BookComment> query = em.createQuery("select bc from BookComment bc where bc.book.id = :bookId", BookComment.class);
-        query.setParameter("bookId", bookId);
-        return query.getResultList();
-    }
 }

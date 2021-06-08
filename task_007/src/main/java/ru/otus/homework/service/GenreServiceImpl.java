@@ -19,7 +19,7 @@ public class GenreServiceImpl implements GenreService {
 
     private final GenreRepositoryJpa genreRepositoryJpa;
     private final BookRepositoryJpa bookRepositoryJpa;
-    private final PrintService printService;
+    private final PrintGenreService printGenreService;
 
     @Override
     @Transactional
@@ -49,13 +49,7 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        Optional<Genre> foundGenre = genreRepositoryJpa.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        Genre genre = foundGenre.get();
+        Genre genre = genreRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
 
         if(name != null && !name.trim().isEmpty()) {
             if (!genre.getName().equalsIgnoreCase(name)) {
@@ -85,13 +79,8 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        Optional<Genre> foundGenre = genreRepositoryJpa.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printGenre(foundGenre.get());
+        Genre genre = genreRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
+        printGenreService.printGenre(genre);
 
     }
 
@@ -109,7 +98,8 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.GENRE_HAS_LINKED_BOOKS);
         }
 
-        genreRepositoryJpa.deleteById(id);
+        Genre genre = genreRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
+        genreRepositoryJpa.delete(genre);
 
     }
 
@@ -117,20 +107,20 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     public void findByParams(String name) {
         List<Genre> genres = genreRepositoryJpa.findByParamsLikeIgnoreCase(name);
-        printService.printGenres(genres);
+        printGenreService.printGenres(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Genre> genres = genreRepositoryJpa.findAll();
-        printService.printGenres(genres);
+        printGenreService.printGenres(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printGenresCount(genreRepositoryJpa.count());
+        printGenreService.printGenresCount(genreRepositoryJpa.count());
     }
 
 }

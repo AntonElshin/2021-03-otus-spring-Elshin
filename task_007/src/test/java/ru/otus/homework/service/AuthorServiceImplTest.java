@@ -1,5 +1,6 @@
 package ru.otus.homework.service;
 
+import liquibase.pro.packaged.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ public class AuthorServiceImplTest {
     private BookRepositoryJpa bookRepositoryJpa;
 
     @Mock
-    private PrintService printService;
+    private PrintAuthorService printAuthorService;
 
     @InjectMocks
     private AuthorServiceImpl authorService;
@@ -213,12 +214,12 @@ public class AuthorServiceImplTest {
         Author foundAuthor = new Author(1L,"Фамилия", "Имя", "Отчество");
 
         given(authorRepositoryJpa.findById(1L)).willReturn(Optional.of(foundAuthor));
-        given(printService.printAuthor(foundAuthor)).willReturn("");
+        given(printAuthorService.printAuthor(foundAuthor)).willReturn("");
 
         authorService.getById(1L);
 
         Mockito.verify(authorRepositoryJpa, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printAuthor(foundAuthor);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthor(foundAuthor);
 
     }
 
@@ -252,13 +253,17 @@ public class AuthorServiceImplTest {
     @Test
     void deleteById() {
 
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
+
+        given(authorRepositoryJpa.findById(1L)).willReturn(Optional.of(author));
         given(bookRepositoryJpa.findByParamsEqualsIgnoreCase(null, null, 1L, null)).willReturn(null);
-        Mockito.doNothing().when(authorRepositoryJpa).deleteById(1L);
+        Mockito.doNothing().when(authorRepositoryJpa).delete(author);
 
         authorService.deleteById(1L);
 
+        Mockito.verify(authorRepositoryJpa, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepositoryJpa, Mockito.times(1)).findByParamsEqualsIgnoreCase(null, null, 1L, null);
-        Mockito.verify(authorRepositoryJpa, Mockito.times(1)).deleteById(1L);
+        Mockito.verify(authorRepositoryJpa, Mockito.times(1)).delete(author);
 
     }
 
@@ -301,12 +306,12 @@ public class AuthorServiceImplTest {
         authors.add(author);
 
         given(authorRepositoryJpa.findByParamsLikeIgnoreCase("Фамилия", "Имя", "Отчество")).willReturn(authors);
-        given(printService.printAuthors(authors)).willReturn("");
+        given(printAuthorService.printAuthors(authors)).willReturn("");
 
         authorService.findByParams("Фамилия", "Имя", "Отчество");
 
         Mockito.verify(authorRepositoryJpa, Mockito.times(1)).findByParamsLikeIgnoreCase("Фамилия", "Имя", "Отчество");
-        Mockito.verify(printService, Mockito.times(1)).printAuthors(authors);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthors(authors);
 
     }
 
@@ -319,12 +324,12 @@ public class AuthorServiceImplTest {
         authors.add(author);
 
         given(authorRepositoryJpa.findAll()).willReturn(authors);
-        given(printService.printAuthors(authors)).willReturn("");
+        given(printAuthorService.printAuthors(authors)).willReturn("");
 
         authorService.findAll();
 
         Mockito.verify(authorRepositoryJpa, Mockito.times(1)).findAll();
-        Mockito.verify(printService, Mockito.times(1)).printAuthors(authors);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthors(authors);
 
     }
 
@@ -333,12 +338,12 @@ public class AuthorServiceImplTest {
     void count() {
 
         given(authorRepositoryJpa.count()).willReturn(0L);
-        given(printService.printAuthorsCount(0L)).willReturn("");
+        given(printAuthorService.printAuthorsCount(0L)).willReturn("");
 
         authorService.count();
 
         Mockito.verify(authorRepositoryJpa, Mockito.times(1)).count();
-        Mockito.verify(printService, Mockito.times(1)).printAuthorsCount(0L);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthorsCount(0L);
 
     }
 

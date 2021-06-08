@@ -1,12 +1,11 @@
 package ru.otus.homework.repository;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.*;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class AuthorRepositoryJpaImpl implements AuthorRepositoryJpa {
 
     @Override
     public Author save(Author author) {
-        if (author.getId() <= 0) {
+        if (author.getId() == null) {
             em.persist(author);
             return author;
         } else {
@@ -34,18 +33,12 @@ public class AuthorRepositoryJpaImpl implements AuthorRepositoryJpa {
 
     @Override
     public Optional<Author> findById(long id) {
-        TypedQuery<Author> query = em.createQuery("select a from Author a where a.id = :id", Author.class);
-        query.setParameter("id", id);
-        return Optional.of(query.getSingleResult());
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
     @Override
-    public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Author " +
-                "where id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void delete(Author author) {
+        em.remove(author);
     }
 
     @Override

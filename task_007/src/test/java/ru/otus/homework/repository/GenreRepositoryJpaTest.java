@@ -21,7 +21,7 @@ public class GenreRepositoryJpaTest {
 
     private static final int EXPECTED_GENRES_COUNT = 3;
 
-    private static final int EXISTING_GENRE_ID = 2;
+    private static final Long EXISTING_GENRE_ID = 2L;
     private static final String EXISTING_GENRE_NAME = "Повесть";
     private static final String EXISTING_GENRE_DESCRIPTION = "Средняя форма; произведение, в котором освещается ряд событий в жизни главного героя";
 
@@ -82,9 +82,7 @@ public class GenreRepositoryJpaTest {
 
         assertThat(genreId).isNotEqualTo(0);
 
-        genreRepositoryJpa.deleteById(genreId);
-        em.flush();
-        em.detach(expectedGenre);
+        genreRepositoryJpa.delete(expectedGenre);
 
         Genre genre = em.find(Genre.class, genreId);
         assertThat(genre).isNull();

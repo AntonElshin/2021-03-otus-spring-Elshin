@@ -1,13 +1,12 @@
 package ru.otus.homework.repository;
 
-import liquibase.util.StringUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.*;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public class GenreRepositoryJpaImpl implements GenreRepositoryJpa {
 
     @Override
     public Genre save(Genre genre) {
-        if (genre.getId() <= 0) {
+        if (genre.getId() == null) {
             em.persist(genre);
             return genre;
         } else {
@@ -35,18 +34,12 @@ public class GenreRepositoryJpaImpl implements GenreRepositoryJpa {
 
     @Override
     public Optional<Genre> findById(long id) {
-        TypedQuery<Genre> query = em.createQuery("select g from Genre g where g.id = :id", Genre.class);
-        query.setParameter("id", id);
-        return Optional.of(query.getSingleResult());
+        return Optional.ofNullable(em.find(Genre.class, id));
     }
 
     @Override
-    public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Genre " +
-                "where id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void delete(Genre genre) {
+        em.remove(genre);
     }
 
     @Override

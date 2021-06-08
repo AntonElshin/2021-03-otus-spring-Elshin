@@ -21,7 +21,7 @@ public class AuthorRepositoryJpaTest {
 
     private static final int EXPECTED_AUTHORS_COUNT = 5;
 
-    private static final int EXISTING_AUTHOR_ID = 3;
+    private static final Long EXISTING_AUTHOR_ID = 3L;
     private static final String EXISTING_AUTHOR_LAST_NAME = "Пушкин";
     private static final String EXISTING_AUTHOR_FIRST_NAME = "Александр";
     private static final String EXISTING_AUTHOR_MIDDLE_NAME = "Сергеевич";
@@ -83,9 +83,7 @@ public class AuthorRepositoryJpaTest {
 
         assertThat(authorId).isNotEqualTo(0);
 
-        authorRepositoryJpa.deleteById(authorId);
-        em.flush();
-        em.detach(expectedAuthor);
+        authorRepositoryJpa.delete(expectedAuthor);
 
         Author author = em.find(Author.class, authorId);
         assertThat(author).isNull();

@@ -25,7 +25,7 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
 
     @Override
     public Book save(Book book) {
-        if (book.getId() <= 0) {
+        if (book.getId() == null) {
             em.persist(book);
             return book;
         } else {
@@ -39,27 +39,20 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
     }
 
     @Override
-    public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Book " +
-                "where id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void delete(Book book) {
+        em.remove(book);
     }
 
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-comments-entity-graph");
-        TypedQuery<Book> query = em.createQuery("select b from Book b left join fetch b.comments order by b.id", Book.class);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
+        TypedQuery<Book> query = em.createQuery("select b from Book b order by b.id", Book.class);
         return query.getResultList();
     }
 
     @Override
     public List<Book> findByParamsEqualsIgnoreCase(String title, String isbn, Long authorId, Long genreId) {
 
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-comments-entity-graph");
-        String queryStr = "select b from Book b left join fetch b.comments";
+        String queryStr = "select b from Book b";
 
         if(authorId != null) {
             queryStr += " inner join b.authors a on a.id = :authorId";
@@ -80,15 +73,13 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
         queryStr += " order by b.id";
 
         TypedQuery<Book> query = prepareConditions(queryStr, title, isbn, authorId, genreId);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
     }
 
     @Override
     public List<Book> findByParamsLikeIgnoreCase(String title, String isbn, Long authorId, Long genreId) {
 
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-comments-entity-graph");
-        String queryStr = "select b from Book b left join fetch b.comments";
+        String queryStr = "select b from Book b";
 
         if(authorId != null) {
             queryStr += " inner join b.authors a on a.id = :authorId";
@@ -111,7 +102,6 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
         queryStr += " order by b.id";
 
         TypedQuery<Book> query = prepareConditions(queryStr, title, isbn, authorId, genreId);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
 
     }

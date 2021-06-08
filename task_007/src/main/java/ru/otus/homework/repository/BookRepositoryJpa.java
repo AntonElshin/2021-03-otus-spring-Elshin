@@ -13,7 +13,7 @@ public interface BookRepositoryJpa {
 
     Optional<Book> findById(long id);
 
-    void deleteById(long id);
+    void delete(Book book);
 
     List<Book> findAll();
 

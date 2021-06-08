@@ -13,8 +13,6 @@ public interface BookCommentRepositoryJpa {
 
     Optional<BookComment> findById(long id);
 
-    void deleteById(long id);
-
-    List<BookComment> findAllByBookId(long bookId);
+    void delete(BookComment bookComment);
 
 }
