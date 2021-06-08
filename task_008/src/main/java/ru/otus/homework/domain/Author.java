@@ -15,11 +15,14 @@ public class Author {
     @Column(name = "AUTHORID")
     @SequenceGenerator( name = "LIB_AUTHORS_SEQ", sequenceName = "LIB_AUTHORS_SEQ", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIB_AUTHORS_SEQ" )
-    private long id;
+    private Long id;
+
     @Column(name = "LASTNAME", nullable = false)
     private String lastName;
+
     @Column(name = "FIRSTNAME", nullable = false)
     private String firstName;
+
     @Column(name = "MIDDLENAME")
     private String middleName;
 

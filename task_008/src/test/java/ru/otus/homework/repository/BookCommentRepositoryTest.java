@@ -23,13 +23,13 @@ public class BookCommentRepositoryTest {
 
     private static final int EXPECTED_BOOK_COMMENTS_COUNT = 2;
 
-    private static final Long EXISTING_BOOK_COMMENT_ID = 1L;
-    private static final String EXISTING_BOOK_COMMENT_TEXT = "Неожиданная концовка!";
-
     private static final Long EXISTING_BOOK_ID = 1L;
 
     @Autowired
     private BookCommentRepository bookCommentRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -118,7 +118,9 @@ public class BookCommentRepositoryTest {
     @Test
     void shouldFindAllBookCommentsByBookId() {
 
-        List<BookComment> bookComments = bookCommentRepository.findAllByBookId(EXISTING_BOOK_ID);
+        Optional<Book> book = bookRepository.findById(EXISTING_BOOK_ID);
+
+        List<BookComment> bookComments = book.get().getComments();
 
         assertThat(bookComments).hasSize(2);
 

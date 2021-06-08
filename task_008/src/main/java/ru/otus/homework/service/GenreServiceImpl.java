@@ -21,7 +21,7 @@ public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
-    private final PrintService printService;
+    private final PrintGenreService printGenreService;
 
     @Override
     @Transactional
@@ -51,13 +51,7 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        Optional<Genre> foundGenre = genreRepository.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        Genre genre = foundGenre.get();
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
 
         if(name != null && !name.trim().isEmpty()) {
             if (!genre.getName().equalsIgnoreCase(name)) {
@@ -87,13 +81,8 @@ public class GenreServiceImpl implements GenreService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
-        Optional<Genre> foundGenre = genreRepository.findById(id);
-
-        if(!foundGenre.isPresent()) {
-            throw new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printGenre(foundGenre.get());
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
+        printGenreService.printGenre(genre);
 
     }
 
@@ -107,10 +96,7 @@ public class GenreServiceImpl implements GenreService {
 
         List<Book> books = bookRepository.findAll(QBook.book.genres.any().id.eq(id));
 
-        if(books != null && books.size() > 0) {
-            throw new BusinessException(Errors.GENRE_HAS_LINKED_BOOKS);
-        }
-
+        genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
         genreRepository.deleteById(id);
 
     }
@@ -119,20 +105,20 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     public void findByParams(String name) {
         List<Genre> genres = genreRepository.findByNameContainingIgnoreCase(name);
-        printService.printGenres(genres);
+        printGenreService.printGenres(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Genre> genres = genreRepository.findAll();
-        printService.printGenres(genres);
+        printGenreService.printGenres(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printGenresCount(genreRepository.count());
+        printGenreService.printGenresCount(genreRepository.count());
     }
 
 }

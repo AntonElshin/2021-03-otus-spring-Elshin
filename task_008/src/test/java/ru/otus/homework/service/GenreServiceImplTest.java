@@ -34,7 +34,7 @@ public class GenreServiceImplTest {
     BookRepository bookRepository;
 
     @Mock
-    private PrintService printService;
+    private PrintGenreService printGenreService;
 
     @InjectMocks
     private GenreServiceImpl genreService;
@@ -237,12 +237,12 @@ public class GenreServiceImplTest {
         Genre foundGenre = new Genre(1L, "Жанр", "Описание");
 
         given(genreRepository.findById(1L)).willReturn(Optional.of(foundGenre));
-        given(printService.printGenre(foundGenre)).willReturn("");
+        given(printGenreService.printGenre(foundGenre)).willReturn("");
 
         genreService.getById(1L);
 
         Mockito.verify(genreRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printGenre(foundGenre);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenre(foundGenre);
 
     }
 
@@ -276,14 +276,18 @@ public class GenreServiceImplTest {
     @Test
     void deleteById() {
 
+        Genre genre = new Genre(1L, "Жанр", "Описание");
+
         BooleanExpression predicate = QBook.book.genres.any().id.eq(1L);
 
         given(bookRepository.findAll(predicate)).willReturn(null);
+        given(genreRepository.findById(1L)).willReturn(Optional.of(genre));
         Mockito.doNothing().when(genreRepository).deleteById(1L);
 
         genreService.deleteById(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
+        Mockito.verify(genreRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(genreRepository, Mockito.times(1)).deleteById(1L);
 
     }
@@ -329,12 +333,12 @@ public class GenreServiceImplTest {
         genres.add(genre);
 
         given(genreRepository.findByNameContainingIgnoreCase(("Жанр"))).willReturn(genres);
-        given(printService.printGenres(genres)).willReturn("");
+        given(printGenreService.printGenres(genres)).willReturn("");
 
         genreService.findByParams("Жанр");
 
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameContainingIgnoreCase("Жанр");
-        Mockito.verify(printService, Mockito.times(1)).printGenres(genres);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenres(genres);
 
     }
 
@@ -347,12 +351,12 @@ public class GenreServiceImplTest {
         genres.add(genre);
 
         given(genreRepository.findAll()).willReturn(genres);
-        given(printService.printGenres(genres)).willReturn("");
+        given(printGenreService.printGenres(genres)).willReturn("");
 
         genreService.findAll();
 
         Mockito.verify(genreRepository, Mockito.times(1)).findAll();
-        Mockito.verify(printService, Mockito.times(1)).printGenres(genres);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenres(genres);
 
     }
 
@@ -361,12 +365,12 @@ public class GenreServiceImplTest {
     void count() {
 
         given(genreRepository.count()).willReturn(0L);
-        given(printService.printGenresCount(0L)).willReturn("");
+        given(printGenreService.printGenresCount(0L)).willReturn("");
 
         genreService.count();
 
         Mockito.verify(genreRepository, Mockito.times(1)).count();
-        Mockito.verify(printService, Mockito.times(1)).printGenresCount(0L);
+        Mockito.verify(printGenreService, Mockito.times(1)).printGenresCount(0L);
 
     }
 

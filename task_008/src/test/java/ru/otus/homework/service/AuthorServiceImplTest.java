@@ -34,7 +34,7 @@ public class AuthorServiceImplTest {
     private BookRepository bookRepository;
 
     @Mock
-    private PrintService printService;
+    private PrintAuthorService printAuthorService;
 
     @InjectMocks
     private AuthorServiceImpl authorService;
@@ -216,12 +216,12 @@ public class AuthorServiceImplTest {
         Author foundAuthor = new Author(1L,"Фамилия", "Имя", "Отчество");
 
         given(authorRepository.findById(1L)).willReturn(Optional.of(foundAuthor));
-        given(printService.printAuthor(foundAuthor)).willReturn("");
+        given(printAuthorService.printAuthor(foundAuthor)).willReturn("");
 
         authorService.getById(1L);
 
         Mockito.verify(authorRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printAuthor(foundAuthor);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthor(foundAuthor);
 
     }
 
@@ -255,13 +255,17 @@ public class AuthorServiceImplTest {
     @Test
     void deleteById() {
 
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
+
         BooleanExpression predicate = QBook.book.authors.any().id.eq(1L);
 
+        given(authorRepository.findById(1L)).willReturn(Optional.of(author));
         given(bookRepository.findAll(predicate)).willReturn(null);
         Mockito.doNothing().when(authorRepository).deleteById(1L);
 
         authorService.deleteById(1L);
 
+        Mockito.verify(authorRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).deleteById(1L);
 
@@ -311,12 +315,12 @@ public class AuthorServiceImplTest {
                 .and(QAuthor.author.middleName.containsIgnoreCase("Отчество"));
 
         given(authorRepository.findAll(predicate)).willReturn(authors);
-        given(printService.printAuthors(authors)).willReturn("");
+        given(printAuthorService.printAuthors(authors)).willReturn("");
 
         authorService.findByParams("Фамилия", "Имя", "Отчество");
 
         Mockito.verify(authorRepository, Mockito.times(1)).findAll(predicate);
-        Mockito.verify(printService, Mockito.times(1)).printAuthors(authors);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthors(authors);
 
     }
 
@@ -329,12 +333,12 @@ public class AuthorServiceImplTest {
         authors.add(author);
 
         given(authorRepository.findAll()).willReturn(authors);
-        given(printService.printAuthors(authors)).willReturn("");
+        given(printAuthorService.printAuthors(authors)).willReturn("");
 
         authorService.findAll();
 
         Mockito.verify(authorRepository, Mockito.times(1)).findAll();
-        Mockito.verify(printService, Mockito.times(1)).printAuthors(authors);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthors(authors);
 
     }
 
@@ -343,12 +347,12 @@ public class AuthorServiceImplTest {
     void count() {
 
         given(authorRepository.count()).willReturn(0L);
-        given(printService.printAuthorsCount(0L)).willReturn("");
+        given(printAuthorService.printAuthorsCount(0L)).willReturn("");
 
         authorService.count();
 
         Mockito.verify(authorRepository, Mockito.times(1)).count();
-        Mockito.verify(printService, Mockito.times(1)).printAuthorsCount(0L);
+        Mockito.verify(printAuthorService, Mockito.times(1)).printAuthorsCount(0L);
 
     }
 

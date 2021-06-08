@@ -24,7 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    private final PrintService printService;
+    private final PrintAuthorService printAuthorService;
 
     @Override
     @Transactional
@@ -51,13 +51,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        Optional<Author> foundAuthor = authorRepository.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
-
-        Author author = foundAuthor.get();
+        Author author = authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
 
         if(lastName != null && !lastName.trim().isEmpty()) {
             author.setLastName(lastName);
@@ -81,13 +75,8 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
-        Optional<Author> foundAuthor = authorRepository.findById(id);
-
-        if(!foundAuthor.isPresent()) {
-            throw new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printAuthor(foundAuthor.get());
+        Author author = authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
+        printAuthorService.printAuthor(author);
 
     }
 
@@ -105,6 +94,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new BusinessException(Errors.AUTHOR_HAS_LINKED_BOOKS);
         }
 
+        authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
         authorRepository.deleteById(id);
 
     }
@@ -145,20 +135,20 @@ public class AuthorServiceImpl implements AuthorService {
             authors = authorRepository.findAll(fullPredicate);
         }
 
-        printService.printAuthors(authors);
+        printAuthorService.printAuthors(authors);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Author> authors = authorRepository.findAll();
-        printService.printAuthors(authors);
+        printAuthorService.printAuthors(authors);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printAuthorsCount(authorRepository.count());
+        printAuthorService.printAuthorsCount(authorRepository.count());
     }
 
 }

@@ -27,7 +27,7 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
 
-    private final PrintService printService;
+    private final PrintBookService printBookService;
 
     @Override
     @Transactional
@@ -75,13 +75,7 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepository.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        Book book = foundBook.get();
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
 
         if(title != null && !title.trim().isEmpty()) {
             book.setTitle(title);
@@ -138,13 +132,8 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
-        Optional<Book> foundBook = bookRepository.findById(id);
-
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id);
-        }
-
-        printService.printBook(foundBook.get());
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
+        printBookService.printBook(book);
 
     }
 
@@ -156,6 +145,7 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
+        bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
         bookRepository.deleteById(id);
 
     }
@@ -199,20 +189,20 @@ public class BookServiceImpl implements BookService {
             books = bookRepository.findAll(fullPredicate);
         }
 
-        printService.printBooks(books);
+        printBookService.printBooks(books);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void findAll() {
         List<Book> books = bookRepository.findAll();
-        printService.printBooks(books);
+        printBookService.printBooks(books);
     }
 
     @Override
     @Transactional(readOnly = true)
     public void count() {
-        printService.printBooksCount(bookRepository.count());
+        printBookService.printBooksCount(bookRepository.count());
     }
 
     @Transactional(readOnly = true)

@@ -30,7 +30,7 @@ public class BookCommentServiceImplTest {
     private BookRepository bookRepository;
 
     @Mock
-    private PrintService printService;
+    private PrintBookCommentService printBookCommentService;
 
     @Mock
     private BookCommentRepository bookCommentRepository;
@@ -354,12 +354,12 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
-        given(printService.printBookComment(bookComment)).willReturn("");
+        given(printBookCommentService.printBookComment(bookComment)).willReturn("");
 
         bookCommentService.getById(1L);
 
         Mockito.verify(bookCommentRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookComment(bookComment);
+        Mockito.verify(printBookCommentService, Mockito.times(1)).printBookComment(bookComment);
 
     }
 
@@ -458,14 +458,12 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
-        given(bookCommentRepository.findAllByBookId(1L)).willReturn(List.of(bookComment));
-        given(printService.printBookComments(List.of(bookComment))).willReturn("");
+        given(printBookCommentService.printBookComments(List.of(bookComment))).willReturn("");
 
         bookCommentService.findAllByBookId(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(bookCommentRepository, Mockito.times(1)).findAllByBookId(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookComments(List.of(bookComment));
+        Mockito.verify(printBookCommentService, Mockito.times(1)).printBookComments(List.of(bookComment));
 
     }
 
@@ -513,13 +511,13 @@ public class BookCommentServiceImplTest {
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(bookCommentRepository.countByBookId(1L)).willReturn(0L);
-        given(printService.printBookCommentsCount(0L)).willReturn("");
+        given(printBookCommentService.printBookCommentsCount(0L)).willReturn("");
 
         bookCommentService.countByBookId(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).countByBookId(1L);
-        Mockito.verify(printService, Mockito.times(1)).printBookCommentsCount(0L);
+        Mockito.verify(printBookCommentService, Mockito.times(1)).printBookCommentsCount(0L);
 
     }
 
