@@ -32,13 +32,9 @@ public class BookCommentServiceImpl implements BookCommentService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_TEXT);
         }
 
-        Optional<Book> foundBook = bookRepositoryJpa.findById(bookId);
+        Book book = bookRepositoryJpa.findById(bookId).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId));
 
-        if(!foundBook.isPresent()) {
-            throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId);
-        }
-
-        BookComment bookComment = new BookComment(foundBook.get(), text);
+        BookComment bookComment = new BookComment(book, text);
         bookCommentRepositoryJpa.save(bookComment);
         return bookComment;
     }
@@ -51,21 +47,11 @@ public class BookCommentServiceImpl implements BookCommentService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_ID);
         }
 
-        Optional<BookComment> foundBookComment = bookCommentRepositoryJpa.findById(id);
-
-        if(!foundBookComment.isPresent()) {
-            throw new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id);
-        }
-
-        BookComment bookComment = foundBookComment.get();
+        BookComment bookComment = bookCommentRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id));
 
         if(bookId != null) {
-            Optional<Book> foundBook = bookRepositoryJpa.findById(bookId);
-
-            if (!foundBook.isPresent()) {
-                throw new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId);
-            }
-            bookComment.setBook(foundBook.get());
+            Book book = bookRepositoryJpa.findById(bookId).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, bookId));
+            bookComment.setBook(book);
         }
 
         if(text != null && !text.trim().isEmpty()) {
@@ -84,14 +70,7 @@ public class BookCommentServiceImpl implements BookCommentService {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_COMMENT_ID);
         }
 
-        Optional<BookComment> foundBookComment = bookCommentRepositoryJpa.findById(id);
-
-        if(!foundBookComment.isPresent()) {
-            throw new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id);
-        }
-
-        BookComment bookComment = foundBookComment.get();
-
+        BookComment bookComment = bookCommentRepositoryJpa.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_COMMENT_NOT_FOUND_BY_ID, id));
         printBookCommentService.printBookComment(bookComment);
 
     }

@@ -22,9 +22,6 @@ public class BookCommentRepositoryJpaTest {
 
     private static final int EXPECTED_BOOK_COMMENTS_COUNT = 2;
 
-    private static final Long EXISTING_BOOK_COMMENT_ID = 1L;
-    private static final String EXISTING_BOOK_COMMENT_TEXT = "Неожиданная концовка!";
-
     private static final int EXISTING_BOOK_ID = 1;
 
     @Autowired
