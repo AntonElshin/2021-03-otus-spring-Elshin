@@ -1,21 +1,23 @@
 package ru.otus.homework.service;
 
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
 
 import java.util.List;
 
 public interface GenreService {
 
-    GenreDTO add(GenreDTO genreDTO);
+    GenreResDTO add(GenreReqDTO genreReqDTO);
 
-    GenreDTO update(long id, GenreDTO genreDTO);
+    GenreResDTO update(long id, GenreReqDTO genreReqDTO);
 
-    GenreDTO getById(long id);
+    GenreResDTO getById(long id);
 
     void deleteById(long id);
 
-    List<GenreDTO> findAll();
+    List<GenreResListDTO> findAll();
 
-    List<GenreDTO> findByParams(String name);
+    List<GenreResListDTO> findByParams(String name);
 
 }

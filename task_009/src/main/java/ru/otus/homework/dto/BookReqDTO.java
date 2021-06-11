@@ -12,9 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookDTO {
-
-    private Long id;
+public class BookReqDTO {
 
     @NotNull(message="Необходимо указать название книги")
     @NotBlank(message="Название книги не может быть пустой строкой")
@@ -25,16 +23,9 @@ public class BookDTO {
     private String description;
 
     @Size(min=1, message = "У книги должен быть хотя бы один автор")
-    private List<AuthorIdDTO> authors;
+    private List<AuthorReqIdDTO> authors;
 
     @Size(min=1, message = "У книги должен быть хотя бы один жанр")
-    private List<GenreIdDTO> genres;
+    private List<GenreReqIdDTO> genres;
 
-    public BookDTO(String title, String isbn, String description, List<AuthorIdDTO> authors, List<GenreIdDTO> genres) {
-        this.title = title;
-        this.isbn = isbn;
-        this.description = description;
-        this.authors = authors;
-        this.genres = genres;
-    }
 }

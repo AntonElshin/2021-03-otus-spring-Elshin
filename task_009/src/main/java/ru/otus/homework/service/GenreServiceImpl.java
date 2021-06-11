@@ -3,19 +3,19 @@ package ru.otus.homework.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.homework.domain.QBook;
 import ru.otus.homework.domain.Book;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.domain.Genre;
+import ru.otus.homework.domain.QBook;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
+import ru.otus.homework.exceptions.BusinessException;
+import ru.otus.homework.exceptions.Errors;
 import ru.otus.homework.mapper.GenreMapper;
 import ru.otus.homework.repository.BookRepository;
 import ru.otus.homework.repository.GenreRepository;
-import ru.otus.homework.domain.Genre;
-import ru.otus.homework.exceptions.BusinessException;
-import ru.otus.homework.exceptions.Errors;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,31 +23,32 @@ public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
+    private final GenreMapper genreMapper;
 
     @Override
     @Transactional
-    public GenreDTO add(GenreDTO genreDTO) {
+    public GenreResDTO add(GenreReqDTO genreReqDTO) {
 
-        List<Genre> genres = genreRepository.findByNameEqualsIgnoreCase(genreDTO.getName());
+        List<Genre> genres = genreRepository.findByNameEqualsIgnoreCase(genreReqDTO.getName());
 
         if(genres != null && genres.size() > 0) {
-            throw new BusinessException(Errors.GENRE_WITH_NAME_EXISTS, genreDTO.getName());
+            throw new BusinessException(Errors.GENRE_WITH_NAME_EXISTS, genreReqDTO.getName());
         }
 
-        Genre genre = genreRepository.save(GenreMapper.INSTANCE.fromDto(genreDTO));
-        return GenreMapper.INSTANCE.toDto(genre);
+        Genre genre = genreRepository.save(genreMapper.fromDto(genreReqDTO));
+        return genreMapper.toDto(genre);
     }
 
     @Override
     @Transactional
-    public GenreDTO update(long id, GenreDTO genreDTO) {
+    public GenreResDTO update(long id, GenreReqDTO genreReqDTO) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
-        String name = genreDTO.getName();
+        String name = genreReqDTO.getName();
 
         if(name != null && !name.trim().isEmpty()) {
             if (!genre.getName().equalsIgnoreCase(name)) {
@@ -58,24 +59,24 @@ public class GenreServiceImpl implements GenreService {
             }
         }
 
-        Genre updateGenre = GenreMapper.INSTANCE.fromDto(genreDTO);
+        Genre updateGenre = genreMapper.fromDto(genreReqDTO);
         updateGenre.setId(id);
 
         genreRepository.save(updateGenre);
-        return GenreMapper.INSTANCE.toDto(updateGenre);
+        return genreMapper.toDto(updateGenre);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public GenreDTO getById(long id) {
+    public GenreResDTO getById(long id) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_GENRE_ID);
         }
 
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.GENRE_NOT_FOUND_BY_ID, id));
-        return GenreMapper.INSTANCE.toDto(genre);
+        return genreMapper.toDto(genre);
 
     }
 
@@ -100,7 +101,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreDTO> findByParams(String name) {
+    public List<GenreResListDTO> findByParams(String name) {
         List<Genre> genres;
 
         if(name != null && !name.isEmpty()) {
@@ -110,14 +111,14 @@ public class GenreServiceImpl implements GenreService {
             genres = genreRepository.findAll();
         }
 
-        return GenreMapper.INSTANCE.toListDto(genres);
+        return genreMapper.toListDto(genres);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreDTO> findAll() {
+    public List<GenreResListDTO> findAll() {
         List<Genre> genres = genreRepository.findAll();
-        return GenreMapper.INSTANCE.toListDto(genres);
+        return genreMapper.toListDto(genres);
     }
 
 }

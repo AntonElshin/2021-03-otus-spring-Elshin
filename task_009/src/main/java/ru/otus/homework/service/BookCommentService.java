@@ -1,20 +1,21 @@
 package ru.otus.homework.service;
 
-import ru.otus.homework.dto.BookCommentDTO;
-import ru.otus.homework.dto.BookCommentIdTextDTO;
+import ru.otus.homework.dto.BookCommentReqDTO;
+import ru.otus.homework.dto.BookCommentResDTO;
+import ru.otus.homework.dto.BookCommentResListDTO;
 
 import java.util.List;
 
 public interface BookCommentService {
 
-    BookCommentIdTextDTO add(BookCommentDTO bookCommentDTO);
+    BookCommentResDTO add(BookCommentReqDTO bookCommentReqDTO);
 
-    BookCommentIdTextDTO update(long id, BookCommentDTO bookCommentDTO);
+    BookCommentResDTO update(long id, BookCommentReqDTO bookCommentReqDTO);
 
-    BookCommentIdTextDTO getById(long id);
+    BookCommentResDTO getById(long id);
 
     void deleteById(long id);
 
-    List<BookCommentIdTextDTO> findAllByBookId(long bookId);
+    List<BookCommentResListDTO> findAllByBookId(long bookId);
 
 }

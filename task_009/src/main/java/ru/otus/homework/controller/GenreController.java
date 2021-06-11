@@ -3,7 +3,9 @@ package ru.otus.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
 import ru.otus.homework.service.GenreService;
 
 import javax.validation.Valid;
@@ -16,37 +18,37 @@ public class GenreController {
     private final GenreService genreService;
 
     @GetMapping(value = "/api/genres/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GenreDTO> getAllGenres() {
+    public List<GenreResListDTO> getAllGenres() {
         return genreService.findAll();
     }
 
     @GetMapping(value = "/api/genres", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GenreDTO> findGenresByParams(
+    public List<GenreResListDTO> findGenresByParams(
             @RequestParam(value = "name", required = false) String name
     ) {
         return genreService.findByParams(name);
     }
 
     @GetMapping(value = "/api/genres/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GenreDTO getGenre (
+    public GenreResDTO getGenre (
             @PathVariable(name = "id") Long id
     ) {
         return genreService.getById(id);
     }
 
     @PostMapping(value = "/api/genres", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public GenreDTO createGenre (
-            @Valid @RequestBody GenreDTO genreDTO
+    public GenreResDTO createGenre (
+            @Valid @RequestBody GenreReqDTO genreReqDTO
     ) {
-        return genreService.add(genreDTO);
+        return genreService.add(genreReqDTO);
     }
 
     @PutMapping(path = "/api/genres/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public GenreDTO modifyGenre (
+    public GenreResDTO modifyGenre (
             @PathVariable(name = "id") Long id,
-            @Valid @RequestBody GenreDTO genreDTO
+            @Valid @RequestBody GenreReqDTO genreReqDTO
     ) {
-        return genreService.update(id, genreDTO);
+        return genreService.update(id, genreReqDTO);
     }
 
     @DeleteMapping(value = "/api/genres/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

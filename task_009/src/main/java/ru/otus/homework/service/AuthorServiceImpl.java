@@ -4,21 +4,21 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.homework.domain.QBook;
-import ru.otus.homework.domain.Book;
-import ru.otus.homework.dto.AuthorDTO;
-import ru.otus.homework.mapper.AuthorMapper;
-import ru.otus.homework.repository.AuthorRepository;
-import ru.otus.homework.domain.QAuthor;
 import ru.otus.homework.domain.Author;
+import ru.otus.homework.domain.Book;
+import ru.otus.homework.domain.QAuthor;
+import ru.otus.homework.domain.QBook;
+import ru.otus.homework.dto.AuthorReqDTO;
+import ru.otus.homework.dto.AuthorResDTO;
+import ru.otus.homework.dto.AuthorResListDTO;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.exceptions.Errors;
+import ru.otus.homework.mapper.AuthorMapper;
+import ru.otus.homework.repository.AuthorRepository;
 import ru.otus.homework.repository.BookRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +26,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final AuthorMapper authorMapper;
 
     @Override
     @Transactional
-    public AuthorDTO add(AuthorDTO authorDTO) {
-        Author author = authorRepository.save(AuthorMapper.INSTANCE.fromDto(authorDTO));
-        return AuthorMapper.INSTANCE.toDto(author);
+    public AuthorResDTO add(AuthorReqDTO authorReqDTO) {
+        Author author = authorRepository.save(authorMapper.fromDto(authorReqDTO));
+        return authorMapper.toDto(author);
     }
 
     @Override
     @Transactional
-    public AuthorDTO update(long id, AuthorDTO authorDTO) {
+    public AuthorResDTO update(long id, AuthorReqDTO authorReqDTO) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
@@ -44,23 +45,23 @@ public class AuthorServiceImpl implements AuthorService {
 
         authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
 
-        Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
+        Author author = authorMapper.fromDto(authorReqDTO);
         author.setId(id);
 
         authorRepository.save(author);
-        return AuthorMapper.INSTANCE.toDto(author);
+        return authorMapper.toDto(author);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AuthorDTO getById(long id) {
+    public AuthorResDTO getById(long id) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_AUTHOR_ID);
         }
 
         Author author = authorRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.AUTHOR_NOT_FOUND_BY_ID, id));
-        return AuthorMapper.INSTANCE.toDto(author);
+        return authorMapper.toDto(author);
 
     }
 
@@ -85,7 +86,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthorDTO> findByParams(String lastName, String firstName, String middleName) {
+    public List<AuthorResListDTO> findByParams(String lastName, String firstName, String middleName) {
 
         List<BooleanExpression> predicates = new ArrayList<>();
 
@@ -119,15 +120,14 @@ public class AuthorServiceImpl implements AuthorService {
             authors = authorRepository.findAll(fullPredicate);
         }
 
-        return AuthorMapper.INSTANCE.toListDto(authors);
+        return authorMapper.toListDto(authors);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuthorDTO> findAll() {
+    public List<AuthorResListDTO> findAll() {
         List<Author> authors = authorRepository.findAll();
-
-        return AuthorMapper.INSTANCE.toListDto(authors);
+        return authorMapper.toListDto(authors);
     }
 
 }

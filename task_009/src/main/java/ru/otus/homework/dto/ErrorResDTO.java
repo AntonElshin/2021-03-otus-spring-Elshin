@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ErrorDTO {
+public class ErrorResDTO {
 
   private Long code;
 

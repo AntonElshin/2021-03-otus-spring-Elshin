@@ -1,21 +1,23 @@
 package ru.otus.homework.service;
 
-import ru.otus.homework.dto.AuthorDTO;
+import ru.otus.homework.dto.AuthorReqDTO;
+import ru.otus.homework.dto.AuthorResDTO;
+import ru.otus.homework.dto.AuthorResListDTO;
 
 import java.util.List;
 
 public interface AuthorService {
 
-    AuthorDTO add(AuthorDTO authorDTO);
+    AuthorResDTO add(AuthorReqDTO authorReqDTO);
 
-    AuthorDTO update(long id, AuthorDTO authorDTO);
+    AuthorResDTO update(long id, AuthorReqDTO authorReqDTO);
 
-    AuthorDTO getById(long id);
+    AuthorResDTO getById(long id);
 
     void deleteById(long id);
 
-    List<AuthorDTO> findAll();
+    List<AuthorResListDTO> findAll();
 
-    List<AuthorDTO> findByParams(String lastName, String firstName, String middleName);
+    List<AuthorResListDTO> findByParams(String lastName, String firstName, String middleName);
 
 }

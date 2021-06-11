@@ -13,9 +13,11 @@ import ru.otus.homework.domain.QAuthor;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.QBook;
 import ru.otus.homework.domain.Book;
-import ru.otus.homework.dto.AuthorDTO;
+import ru.otus.homework.dto.AuthorReqDTO;
+import ru.otus.homework.dto.AuthorResDTO;
+import ru.otus.homework.dto.AuthorResListDTO;
 import ru.otus.homework.exceptions.BusinessException;
-import ru.otus.homework.mapper.AuthorMapper;
+import ru.otus.homework.mapper.AuthorMapperImpl;
 import ru.otus.homework.repository.AuthorRepository;
 import ru.otus.homework.repository.BookRepository;
 
@@ -35,6 +37,9 @@ public class AuthorServiceImplTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private AuthorMapperImpl authorMapper;
+
     @InjectMocks
     private AuthorServiceImpl authorService;
 
@@ -42,31 +47,43 @@ public class AuthorServiceImplTest {
     @Test
     void addAuthor() {
 
-        AuthorDTO authorDTO = new AuthorDTO("Фамилия", "Имя", "Отчество");
-        Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Фамилия", "Имя", "Отчество");
+        AuthorResDTO authorResDTO = new AuthorResDTO(1L,"Фамилия", "Имя", "Отчество");
+
+        Author author = new Author("Фамилия", "Имя", "Отчество");
         Author createdAuthor = new Author(1L,"Фамилия", "Имя", "Отчество");
 
+        given(authorMapper.fromDto(authorReqDTO)).willReturn(author);
         given(authorRepository.save(author)).willReturn(createdAuthor);
+        given(authorMapper.toDto(createdAuthor)).willReturn(authorResDTO);
 
-        authorService.add(authorDTO);
+        authorService.add(authorReqDTO);
 
+        Mockito.verify(authorMapper, Mockito.times(1)).fromDto(authorReqDTO);
         Mockito.verify(authorRepository, Mockito.times(1)).save(author);
-
+        Mockito.verify(authorMapper, Mockito.times(1)).toDto(createdAuthor);
     }
 
     @DisplayName("изменить автора")
     @Test
-    void updateAuthorWithoutNameCheck() {
+    void updateAuthor() {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, "Фамилия", "Имя", "Отчество");
-        Author author = AuthorMapper.INSTANCE.fromDto(authorDTO);
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Фамилия", "Имя", "Отчество");
+        AuthorResDTO authorResDTO = new AuthorResDTO(1L,"Фамилия", "Имя", "Отчество");
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
 
         given(authorRepository.findById(1L)).willReturn(Optional.of(author));
+        given(authorMapper.fromDto(authorReqDTO)).willReturn(author);
         given(authorRepository.save(author)).willReturn(author);
+        given(authorMapper.toDto(author)).willReturn(authorResDTO);
 
-        authorService.update(1L, authorDTO);
+        authorService.update(1L, authorReqDTO);
 
+        Mockito.verify(authorRepository, Mockito.times(1)).findById(1L);
+        Mockito.verify(authorMapper, Mockito.times(1)).fromDto(authorReqDTO);
         Mockito.verify(authorRepository, Mockito.times(1)).save(author);
+        Mockito.verify(authorMapper, Mockito.times(1)).toDto(author);
 
     }
 
@@ -74,11 +91,11 @@ public class AuthorServiceImplTest {
     @Test
     void updateAuthorZeroIdError() {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, "Фамилия", "Имя", "Отчество");
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Фамилия", "Имя", "Отчество");
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            authorService.update(0, authorDTO);
+            authorService.update(0, authorReqDTO);
 
         });
 
@@ -88,13 +105,13 @@ public class AuthorServiceImplTest {
     @Test
     void updateAuthorInvalidIdError() {
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, "Фамилия", "Имя", "Отчество");
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Фамилия", "Имя", "Отчество");
 
         given(authorRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            authorService.update(1, authorDTO);
+            authorService.update(1, authorReqDTO);
 
         });
 
@@ -104,13 +121,17 @@ public class AuthorServiceImplTest {
     @Test
     void getById() {
 
+        AuthorResDTO authorResDTO = new AuthorResDTO(1L,"Фамилия", "Имя", "Отчество");
+
         Author foundAuthor = new Author(1L,"Фамилия", "Имя", "Отчество");
 
         given(authorRepository.findById(1L)).willReturn(Optional.of(foundAuthor));
+        given(authorMapper.toDto(foundAuthor)).willReturn(authorResDTO);
 
         authorService.getById(1L);
 
         Mockito.verify(authorRepository, Mockito.times(1)).findById(1L);
+        Mockito.verify(authorMapper, Mockito.times(1)).toDto(foundAuthor);
 
     }
 
@@ -195,6 +216,10 @@ public class AuthorServiceImplTest {
     @Test
     void findByParams() {
 
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L,"Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
@@ -204,10 +229,12 @@ public class AuthorServiceImplTest {
                 .and(QAuthor.author.middleName.containsIgnoreCase("Отчество"));
 
         given(authorRepository.findAll(predicate)).willReturn(authors);
+        given(authorMapper.toListDto(authors)).willReturn(authorsResListDTO);
 
         authorService.findByParams("Фамилия", "Имя", "Отчество");
 
         Mockito.verify(authorRepository, Mockito.times(1)).findAll(predicate);
+        Mockito.verify(authorMapper, Mockito.times(1)).toListDto(authors);
 
     }
 
@@ -215,15 +242,21 @@ public class AuthorServiceImplTest {
     @Test
     void findAll() {
 
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L,"Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
         given(authorRepository.findAll()).willReturn(authors);
+        given(authorMapper.toListDto(authors)).willReturn(authorsResListDTO);
 
         authorService.findAll();
 
         Mockito.verify(authorRepository, Mockito.times(1)).findAll();
+        Mockito.verify(authorMapper, Mockito.times(1)).toListDto(authors);
 
     }
 

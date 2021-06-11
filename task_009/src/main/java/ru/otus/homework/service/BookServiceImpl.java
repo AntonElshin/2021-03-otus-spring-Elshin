@@ -12,7 +12,6 @@ import ru.otus.homework.dto.*;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.exceptions.Errors;
 import ru.otus.homework.mapper.BookMapper;
-import ru.otus.homework.mapper.BookWithCommentsMapper;
 import ru.otus.homework.repository.AuthorRepository;
 import ru.otus.homework.repository.BookRepository;
 import ru.otus.homework.repository.GenreRepository;
@@ -28,11 +27,13 @@ public class BookServiceImpl implements BookService {
     private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
 
+    private final BookMapper bookMapper;
+
     @Override
     @Transactional
-    public BookDTO add(BookDTO bookDTO) {
+    public BookResDTO add(BookReqDTO bookReqDTO) {
 
-        String isbn = bookDTO.getIsbn();
+        String isbn = bookReqDTO.getIsbn();
 
         if(isbn != null && !isbn.trim().isEmpty()) {
             List<Book> books = bookRepository.findAll(QBook.book.isbn.equalsIgnoreCase(isbn));
@@ -41,22 +42,22 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        Book book = processLinks(bookDTO);
+        Book book = processLinks(bookReqDTO);
 
-        bookRepository.save(book);
-        return BookMapper.INSTANCE.toDto(book);
+        book = bookRepository.save(book);
+        return bookMapper.toDto(book);
     }
 
     @Override
     @Transactional
-    public BookDTO update(long id, BookDTO bookDTO) {
+    public BookResDTO update(long id, BookReqDTO bookReqDTO) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
         }
 
         Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
-        String isbn = bookDTO.getIsbn();
+        String isbn = bookReqDTO.getIsbn();
 
         if(isbn != null && !isbn.trim().isEmpty()) {
             if(!book.getIsbn().equalsIgnoreCase(isbn)) {
@@ -67,17 +68,17 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        Book updateBook = processLinks(bookDTO);
+        Book updateBook = processLinks(bookReqDTO);
         updateBook.setId(id);
 
         bookRepository.save(updateBook);
-        return BookMapper.INSTANCE.toDto(updateBook);
+        return bookMapper.toDto(updateBook);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BookWithCommentsDTO getById(long id) {
+    public BookResWithCommentsDTO getById(long id) {
 
         if(id == 0) {
             throw new BusinessException(Errors.MISSING_REQUIRED_PARAM_BOOK_ID);
@@ -85,7 +86,7 @@ public class BookServiceImpl implements BookService {
 
         Book book = bookRepository.findById(id).orElseThrow(() -> new BusinessException(Errors.BOOK_NOT_FOUND_BY_ID, id));
         book.getComments();
-        return BookWithCommentsMapper.INSTANCE.toDto(book);
+        return bookMapper.toWithCommentsDto(book);
 
     }
 
@@ -104,7 +105,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookResDTO> findByParams(String title, String isbn, Long authorId, Long genreId) {
+    public List<BookResListDTO> findByParams(String title, String isbn, Long authorId, Long genreId) {
 
         List<BooleanExpression> predicates = new ArrayList<>();
 
@@ -141,31 +142,29 @@ public class BookServiceImpl implements BookService {
             books = bookRepository.findAll(fullPredicate);
         }
 
-        //return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
-        return BookMapper.INSTANCE.toListDto(books);
+        return bookMapper.toListDto(books);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookResDTO> findAll() {
+    public List<BookResListDTO> findAll() {
         List<Book> books = bookRepository.findAll();
-        //return books.stream().map(BookMapper.INSTANCE::toDto).collect(Collectors.toList());
-        return BookMapper.INSTANCE.toListDto(books);
+        return bookMapper.toListDto(books);
     }
 
     @Override
-    public Book processLinks(BookDTO bookDTO) {
+    public Book processLinks(BookReqDTO bookReqDTO) {
 
-        List<AuthorIdDTO> authors = bookDTO.getAuthors();
-        List<GenreIdDTO> genres = bookDTO.getGenres();
+        List<AuthorReqIdDTO> authors = bookReqDTO.getAuthors();
+        List<GenreReqIdDTO> genres = bookReqDTO.getGenres();
 
         List<Long> authorIds = new ArrayList<>();
         List<Long> genreIds = new ArrayList<>();
 
         if(authors != null) {
 
-            for(AuthorIdDTO authorDTO : authors) {
+            for(AuthorReqIdDTO authorDTO : authors) {
                 Boolean foundFlag = false;
 
                 for(Long id : authorIds) {
@@ -183,7 +182,7 @@ public class BookServiceImpl implements BookService {
 
         if(genres != null) {
 
-            for(GenreIdDTO genreDTO : genres) {
+            for(GenreReqIdDTO genreDTO : genres) {
                 Boolean foundFlag = false;
 
                 for(Long id : genreIds) {
@@ -225,10 +224,10 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException(Errors.BOOK_SHOULD_HAVE_LEAST_ONE_GENRE);
         }
 
-        bookDTO.setAuthors(new ArrayList<>());
-        bookDTO.setGenres(new ArrayList<>());
+        bookReqDTO.setAuthors(new ArrayList<>());
+        bookReqDTO.setGenres(new ArrayList<>());
 
-        Book book = BookMapper.INSTANCE.fromDto(bookDTO);
+        Book book = bookMapper.fromDto(bookReqDTO);
         book.setAuthors(foundAuthors);
         book.setGenres(foundGenres);
 

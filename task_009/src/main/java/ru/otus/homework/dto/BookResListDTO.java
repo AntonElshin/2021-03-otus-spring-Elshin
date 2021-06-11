@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookWithCommentsDTO {
+public class BookResListDTO {
 
     private Long id;
 
@@ -17,12 +17,8 @@ public class BookWithCommentsDTO {
 
     private String isbn;
 
-    private String description;
+    private List<AuthorResListDTO> authors;
 
-    private List<AuthorDTO> authors;
-
-    private List<GenreDTO> genres;
-
-    private List<BookCommentIdTextDTO> comments;
+    private List<GenreResListDTO> genres;
 
 }

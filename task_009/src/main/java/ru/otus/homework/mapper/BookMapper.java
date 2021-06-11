@@ -1,12 +1,12 @@
 package ru.otus.homework.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.otus.homework.domain.Book;
-import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.BookReqDTO;
 import ru.otus.homework.dto.BookResDTO;
+import ru.otus.homework.dto.BookResListDTO;
+import ru.otus.homework.dto.BookResWithCommentsDTO;
 
 import java.util.List;
 
@@ -15,8 +15,10 @@ public interface BookMapper {
 
     BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
-    BookDTO toDto(Book book);
-    Book fromDto(BookDTO bookDTO);
-    List<BookResDTO> toListDto(List<Book> books);
+    Book fromDto(BookReqDTO bookReqDTO);
+
+    BookResDTO toDto(Book book);
+    BookResWithCommentsDTO toWithCommentsDto(Book book);
+    List<BookResListDTO> toListDto(List<Book> books);
 
 }

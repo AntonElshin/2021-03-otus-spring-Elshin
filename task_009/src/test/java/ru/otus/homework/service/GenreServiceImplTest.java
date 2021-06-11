@@ -12,9 +12,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.domain.QBook;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Genre;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
 import ru.otus.homework.exceptions.BusinessException;
-import ru.otus.homework.mapper.GenreMapper;
+import ru.otus.homework.mapper.GenreMapperImpl;
 import ru.otus.homework.repository.BookRepository;
 import ru.otus.homework.repository.GenreRepository;
 
@@ -32,8 +34,10 @@ public class GenreServiceImplTest {
     private GenreRepository genreRepository;
 
     @Mock
-    private
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
+
+    @Mock
+    private GenreMapperImpl genreMapper;
 
     @InjectMocks
     private GenreServiceImpl genreService;
@@ -42,17 +46,23 @@ public class GenreServiceImplTest {
     @Test
     void addGenre() {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
-        Genre genre = GenreMapper.INSTANCE.fromDto(genreDTO);
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
+        GenreResDTO genreResDTO = new GenreResDTO(1L, "Жанр", "Описание");
+
+        Genre genre = new Genre("Жанр", "Описание");
         Genre createdGenre = new Genre(1L, "Жанр", "Описание");
 
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр")).willReturn(new ArrayList<>());
+        given(genreMapper.fromDto(genreReqDTO)).willReturn(genre);
         given(genreRepository.save(genre)).willReturn(createdGenre);
+        given(genreMapper.toDto(createdGenre)).willReturn(genreResDTO);
 
-        genreService.add(genreDTO);
+        genreService.add(genreReqDTO);
 
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameEqualsIgnoreCase("Жанр");
+        Mockito.verify(genreMapper, Mockito.times(1)).fromDto(genreReqDTO);
         Mockito.verify(genreRepository, Mockito.times(1)).save(genre);
+        Mockito.verify(genreMapper, Mockito.times(1)).toDto(createdGenre);
 
     }
 
@@ -60,8 +70,9 @@ public class GenreServiceImplTest {
     @Test
     void addGenreNotUniqueNameError() {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
-        Genre genre = GenreMapper.INSTANCE.fromDto(genreDTO);
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
+
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
@@ -69,7 +80,7 @@ public class GenreServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            genreService.add(genreDTO);
+            genreService.add(genreReqDTO);
 
         });
 
@@ -79,16 +90,22 @@ public class GenreServiceImplTest {
     @Test
     void updateGenreWithoutNameCheck() {
 
-        GenreDTO genreDTO = new GenreDTO(1L, "Жанр", "Описание");
-        Genre genre = GenreMapper.INSTANCE.fromDto(genreDTO);
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
+        GenreResDTO genreResDTO = new GenreResDTO(1L, "Жанр", "Описание");
+
+        Genre genre = new Genre(1L, "Жанр", "Описание");
 
         given(genreRepository.findById(1L)).willReturn(Optional.of(genre));
+        given(genreMapper.fromDto(genreReqDTO)).willReturn(genre);
         given(genreRepository.save(genre)).willReturn(genre);
+        given(genreMapper.toDto(genre)).willReturn(genreResDTO);
 
-        genreService.update(1L, genreDTO);
+        genreService.update(1L, genreReqDTO);
 
         Mockito.verify(genreRepository, Mockito.times(0)).findByNameEqualsIgnoreCase("Жанр");
+        Mockito.verify(genreMapper, Mockito.times(1)).fromDto(genreReqDTO);
         Mockito.verify(genreRepository, Mockito.times(1)).save(genre);
+        Mockito.verify(genreMapper, Mockito.times(1)).toDto(genre);
 
     }
 
@@ -96,19 +113,25 @@ public class GenreServiceImplTest {
     @Test
     void updateGenreWithNameCheck() {
 
-        Genre foundGenre = new Genre(1L, "Жанр", "Описание");
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр 1", "Описание");
+        GenreResDTO genreResDTO = new GenreResDTO(1L, "Жанр 1", "Описание");
 
-        GenreDTO genreDTO = new GenreDTO(1L, "Жанр 1", "Описание");
-        Genre updateGenre = GenreMapper.INSTANCE.fromDto(genreDTO);
+        Genre foundGenre = new Genre(1L, "Жанр", "Описание");
+        Genre updateGenre = new Genre(1L, "Жанр 1", "Описание");
 
         given(genreRepository.findById(1L)).willReturn(Optional.of(foundGenre));
         given(genreRepository.findByNameEqualsIgnoreCase("Жанр 1")).willReturn(new ArrayList<>());
+        given(genreMapper.fromDto(genreReqDTO)).willReturn(updateGenre);
         given(genreRepository.save(updateGenre)).willReturn(updateGenre);
+        given(genreMapper.toDto(updateGenre)).willReturn(genreResDTO);
 
-        genreService.update(1L, genreDTO);
+        genreService.update(1L, genreReqDTO);
 
+        Mockito.verify(genreRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameEqualsIgnoreCase("Жанр 1");
+        Mockito.verify(genreMapper, Mockito.times(1)).fromDto(genreReqDTO);
         Mockito.verify(genreRepository, Mockito.times(1)).save(updateGenre);
+        Mockito.verify(genreMapper, Mockito.times(1)).toDto(updateGenre);
 
     }
 
@@ -116,11 +139,11 @@ public class GenreServiceImplTest {
     @Test
     void updateGenreZeroIdError() {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            genreService.update(0, genreDTO);
+            genreService.update(0, genreReqDTO);
 
         });
 
@@ -130,13 +153,13 @@ public class GenreServiceImplTest {
     @Test
     void updateGenreInvalidIdError() {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
 
         given(genreRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            genreService.update(1, genreDTO);
+            genreService.update(1, genreReqDTO);
 
         });
 
@@ -146,7 +169,7 @@ public class GenreServiceImplTest {
     @Test
     void updateGenreNotUniqueNameError() {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр 1", "Описание");
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр 1", "Описание");
 
         Genre foundGenre = new Genre(1L, "Жанр", "Описание");
         Genre genre = new Genre(2L, "Жанр 1", "Описание 1");
@@ -156,7 +179,7 @@ public class GenreServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            genreService.update(1, genreDTO);
+            genreService.update(1, genreReqDTO);
 
         });
 
@@ -258,15 +281,21 @@ public class GenreServiceImplTest {
     @Test
     void findByParams() {
 
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
         Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         given(genreRepository.findByNameContainingIgnoreCase(("Жанр"))).willReturn(genres);
+        given(genreMapper.toListDto(genres)).willReturn(genresResListDTO);
 
         genreService.findByParams("Жанр");
 
         Mockito.verify(genreRepository, Mockito.times(1)).findByNameContainingIgnoreCase("Жанр");
+        Mockito.verify(genreMapper, Mockito.times(1)).toListDto(genres);
 
     }
 
@@ -274,15 +303,21 @@ public class GenreServiceImplTest {
     @Test
     void findAll() {
 
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
         Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         given(genreRepository.findAll()).willReturn(genres);
+        given(genreMapper.toListDto(genres)).willReturn(genresResListDTO);
 
         genreService.findAll();
 
         Mockito.verify(genreRepository, Mockito.times(1)).findAll();
+        Mockito.verify(genreMapper, Mockito.times(1)).toListDto(genres);
 
     }
 

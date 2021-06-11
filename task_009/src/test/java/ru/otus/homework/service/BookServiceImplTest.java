@@ -13,7 +13,7 @@ import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.domain.QBook;
-import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.*;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.mapper.BookMapper;
 import ru.otus.homework.repository.AuthorRepository;
@@ -40,6 +40,9 @@ public class BookServiceImplTest {
     @Mock
     private BookRepository bookRepository;
 
+    @Mock
+    private BookMapper bookMapper;
+
     @InjectMocks
     private BookServiceImpl bookService;
 
@@ -47,32 +50,54 @@ public class BookServiceImplTest {
     @Test
     void addBookWithIsbnCheck() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "123", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book("Название", "123", "Описание", authors, genres, null);
         Book createdBook = new Book(1L, "Название", "123", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
         given(bookRepository.save(book)).willReturn(createdBook);
+        given(bookMapper.toDto(createdBook)).willReturn(bookResDTO);
 
-        bookService.add(bookDTO);
+        bookService.add(bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(createdBook);
 
     }
 
@@ -80,58 +105,105 @@ public class BookServiceImplTest {
     @Test
     void addBookWithoutIsbnCheckNullIsbn() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", null, "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", null, "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book("Название", null, "Описание", authors, genres, null);
-        Book createdBook = new Book(1L, "Название", null, "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        Book createdBook = new Book(1L, "Название", null, "Описание", authors, genres, null);
 
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
         given(bookRepository.save(book)).willReturn(createdBook);
+        given(bookMapper.toDto(createdBook)).willReturn(bookResDTO);
 
-        bookService.add(bookDTO);
+        bookService.add(bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(createdBook);
 
     }
 
-    @DisplayName("добавить книгу без проверкой ISBN со пустым значением ISBN")
+    @DisplayName("добавить книгу без проверкой ISBN с пустым значением ISBN")
     @Test
     void addBookWithoutIsbnCheckEmptyIsbn() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book("Название", "", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        Book createdBook = new Book(1L, "Название", null, "Описание", authors, genres, null);
 
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(book)).willReturn(createdBook);
+        given(bookMapper.toDto(createdBook)).willReturn(bookResDTO);
 
-        bookService.add(bookDTO);
+        bookService.add(bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(createdBook);
 
     }
 
@@ -139,29 +211,52 @@ public class BookServiceImplTest {
     @Test
     void addBookWithoutIsbnCheckEmptyIsbnIgnoreSpaces() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "  ", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "  ", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book("Название", "  ", "Описание", authors, genres, null);
-        Book createdBook = new Book("Название", "  ", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        Book createdBook = new Book(1L, "Название", null, "Описание", authors, genres, null);
 
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
         given(bookRepository.save(book)).willReturn(createdBook);
+        given(bookMapper.toDto(createdBook)).willReturn(bookResDTO);
 
-        bookService.add(bookDTO);
+        bookService.add(bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(createdBook);
 
     }
 
@@ -169,11 +264,19 @@ public class BookServiceImplTest {
     @Test
     void addBookNotUniqueIsbnError() {
 
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
         Book book = new Book("Название", "123", "Описание", new ArrayList<>(), new ArrayList<>(), null);
         List<Book> books = new ArrayList<>();
         books.add(book);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
@@ -181,7 +284,7 @@ public class BookServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.add(bookDTO);
+            bookService.add(bookReqDTO);
 
         });
 
@@ -191,17 +294,25 @@ public class BookServiceImplTest {
     @Test
     void addBookNotInvalidAuthors() {
 
-        Author author = new Author(3L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(3L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(3L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book("Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
@@ -210,7 +321,7 @@ public class BookServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.add(bookDTO);
+            bookService.add(bookReqDTO);
 
         });
 
@@ -220,17 +331,23 @@ public class BookServiceImplTest {
     @Test
     void addBookNotInvalidGenres() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(3L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(3L,"Жанр", "Описание");
+        Genre genre = new Genre(3L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
-
-        Book book = new Book("Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("123");
 
@@ -240,7 +357,7 @@ public class BookServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.add(bookDTO);
+            bookService.add(bookReqDTO);
 
         });
 
@@ -250,29 +367,52 @@ public class BookServiceImplTest {
     @Test
     void updateBookWithoutIsbnCheckNullIsbn() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", null, "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", null, "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
+        Book book = new Book("Название", null, "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", null, "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
-        given(bookRepository.findById(1L)).willReturn(Optional.of(book));
+        given(bookRepository.findById(1L)).willReturn(Optional.of(updatedBook));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(updatedBook)).willReturn(updatedBook);
+        given(bookMapper.toDto(updatedBook)).willReturn(bookResDTO);
 
-        bookService.update(1L, bookDTO);
+        bookService.update(1L, bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(updatedBook);
 
     }
 
@@ -280,29 +420,52 @@ public class BookServiceImplTest {
     @Test
     void updateBookWithoutIsbnCheckEmptyIsbn() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Book book = new Book(1L,"Название", "", "Описание", authors, genres, null);
+        Book book = new Book("Название", "", "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", "", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
-        given(bookRepository.findById(1L)).willReturn(Optional.of(book));
+        given(bookRepository.findById(1L)).willReturn(Optional.of(updatedBook));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(updatedBook)).willReturn(updatedBook);
+        given(bookMapper.toDto(updatedBook)).willReturn(bookResDTO);
 
-        bookService.update(1L, bookDTO);
+        bookService.update(1L, bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(updatedBook);
 
     }
 
@@ -310,29 +473,52 @@ public class BookServiceImplTest {
     @Test
     void updateBookWithoutIsbnCheckEmptyIsbnIgnoreSpaces() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "  ", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "  ", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Book book = new Book(1L,"Название", "  ", "Описание", authors, genres, null);
+        Book book = new Book("Название", "  ", "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", "  ", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
-        given(bookRepository.findById(1L)).willReturn(Optional.of(book));
+        given(bookRepository.findById(1L)).willReturn(Optional.of(updatedBook));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(updatedBook)).willReturn(updatedBook);
+        given(bookMapper.toDto(updatedBook)).willReturn(bookResDTO);
 
-        bookService.update(1L, bookDTO);
+        bookService.update(1L, bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(Mockito.any(BooleanExpression.class));
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(updatedBook);
 
     }
 
@@ -340,31 +526,54 @@ public class BookServiceImplTest {
     @Test
     void updateBookWithoutIsbnCheck() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "123", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Book book = new Book(1L,"Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        Book book = new Book("Название", "123", "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", "123", "Описание", authors, genres, null);
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(updatedBook)).willReturn(updatedBook);
+        given(bookMapper.toDto(updatedBook)).willReturn(bookResDTO);
 
         BooleanExpression predicate = QBook.book.isbn.containsIgnoreCase("123");
 
-        bookService.update(1L, bookDTO);
+        bookService.update(1L, bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(0)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(updatedBook);
 
     }
 
@@ -372,35 +581,59 @@ public class BookServiceImplTest {
     @Test
     void updateBookWithIsbnCheck() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "1234", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "123", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
+        Book book = new Book("Название", "1234", "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", "1234", "Описание", authors, genres, null);
+
         Book foundBook = new Book(1L, "Название", "123", "Описание", authors, genres, null);
-        Book updateBook = new Book(1L, "Название", "1234", "Описание", authors, genres, null);
         List<Book> books = new ArrayList<>();
         books.add(foundBook);
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("1234");
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(updateBook);
-
         given(bookRepository.findById(1L)).willReturn(Optional.of(foundBook));
         given(bookRepository.findAll(predicate)).willReturn(new ArrayList<>());
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L))).willReturn(genres);
-        given(bookRepository.save(updateBook)).willReturn(updateBook);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
+        given(bookRepository.save(updatedBook)).willReturn(updatedBook);
+        given(bookMapper.toDto(updatedBook)).willReturn(bookResDTO);
 
-        bookService.update(1L, bookDTO);
+        bookService.update(1L, bookReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
         Mockito.verify(authorRepository, Mockito.times(1)).findByIds(List.of(1L));
         Mockito.verify(genreRepository, Mockito.times(1)).findByIds(List.of(1L));
-        Mockito.verify(bookRepository, Mockito.times(1)).save(updateBook);
+        Mockito.verify(bookMapper, Mockito.times(1)).fromDto(bookReqDTO);
+        Mockito.verify(bookRepository, Mockito.times(1)).save(updatedBook);
+        Mockito.verify(bookMapper, Mockito.times(1)).toDto(updatedBook);
 
     }
 
@@ -408,21 +641,19 @@ public class BookServiceImplTest {
     @Test
     void updateBookZeroIdError() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
 
-        Book book = new Book(1L,"Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.update(0, bookDTO);
+            bookService.update(0, bookReqDTO);
 
         });
 
@@ -432,23 +663,21 @@ public class BookServiceImplTest {
     @Test
     void updateBookInvalidIdError() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
 
-        Book book = new Book(1L,"Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
 
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.update(1, bookDTO);
+            bookService.update(1, bookReqDTO);
 
         });
 
@@ -458,18 +687,40 @@ public class BookServiceImplTest {
     @Test
     void updateBookNotUniqueNameError() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "1234", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResDTO bookResDTO = new BookResDTO(1L, "Название", "123", "Описание", authorsResListDTO, genresResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
-        Book foundBook = new Book(1L, "Название", "123", "Описание", authors, genres, null);
-        Book book = new Book(1L, "Название", "1234", "Описание", authors, genres, null);
+        Book book = new Book("Название", "123", "Описание", authors, genres, null);
+        Book updatedBook = new Book(1L, "Название", "1234", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
+        Book foundBook = new Book(1L, "Название", "123", "Описание", authors, genres, null);
+        List<Book> books = new ArrayList<>();
+        books.add(foundBook);
 
         BooleanExpression predicate = QBook.book.isbn.equalsIgnoreCase("1234");
 
@@ -478,7 +729,7 @@ public class BookServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.update(1, bookDTO);
+            bookService.update(1, bookReqDTO);
 
         });
 
@@ -488,24 +739,32 @@ public class BookServiceImplTest {
     @Test
     void updateBookNotInvalidAuthors() {
 
-        Author author = new Author(2L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(2L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(2L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book(1L, "Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(2L))).willReturn(null);
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.update(1L, bookDTO);
+            bookService.update(1L, bookReqDTO);
 
         });
 
@@ -515,17 +774,25 @@ public class BookServiceImplTest {
     @Test
     void updateBookNotInvalidGenres() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(2L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(2L,"Жанр", "Описание");
+        Genre genre = new Genre(2L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book(1L, "Название", "123", "Описание", authors, genres, null);
-
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(authorRepository.findByIds(List.of(1L))).willReturn(authors);
@@ -533,7 +800,7 @@ public class BookServiceImplTest {
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.update(1L, bookDTO);
+            bookService.update(1L, bookReqDTO);
 
         });
 
@@ -543,11 +810,11 @@ public class BookServiceImplTest {
     @Test
     void getById() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
@@ -619,11 +886,23 @@ public class BookServiceImplTest {
     @Test
     void findByParams() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResListDTO bookResListDTO = new BookResListDTO(1L, "Название", "123", authorsResListDTO, genresResListDTO);
+        List<BookResListDTO> booksResListDTO = new ArrayList<>();
+        booksResListDTO.add(bookResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
@@ -634,14 +913,15 @@ public class BookServiceImplTest {
         BooleanExpression predicate = QBook.book.title.containsIgnoreCase("Название")
                 .and(QBook.book.isbn.containsIgnoreCase("123"))
                 .and(QBook.book.authors.any().id.eq(1L))
-                .and(QBook.book.genres.any().id.eq(1L))
-                ;
+                .and(QBook.book.genres.any().id.eq(1L));
 
         given(bookRepository.findAll(predicate)).willReturn(books);
+        given(bookMapper.toListDto(books)).willReturn(booksResListDTO);
 
         bookService.findByParams("Название", "123", 1L, 1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(predicate);
+        Mockito.verify(bookMapper, Mockito.times(1)).toListDto(books);
 
     }
 
@@ -649,11 +929,23 @@ public class BookServiceImplTest {
     @Test
     void findAll() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorResListDTO authorResListDTO = new AuthorResListDTO(1L, "Фамилия", "Имя", "Отчество");
+        List<AuthorResListDTO> authorsResListDTO = new ArrayList<>();
+        authorsResListDTO.add(authorResListDTO);
+
+        GenreResListDTO genreResListDTO = new GenreResListDTO(1L, "Жанр");
+        List<GenreResListDTO> genresResListDTO = new ArrayList<>();
+        genresResListDTO.add(genreResListDTO);
+
+        BookResListDTO bookResListDTO = new BookResListDTO(1L, "Название", "123", authorsResListDTO, genresResListDTO);
+        List<BookResListDTO> booksResListDTO = new ArrayList<>();
+        booksResListDTO.add(bookResListDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
@@ -662,10 +954,12 @@ public class BookServiceImplTest {
         books.add(book);
 
         given(bookRepository.findAll()).willReturn(books);
+        given(bookMapper.toListDto(books)).willReturn(booksResListDTO);
 
         bookService.findAll();
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll();
+        Mockito.verify(bookMapper, Mockito.times(1)).toListDto(books);
 
     }
 
@@ -673,26 +967,39 @@ public class BookServiceImplTest {
     @Test
     void processLinks() {
 
-        Author author_1 = new Author(1L,"Фамилия", "Имя", "Отчество");
-        Author author_2 = new Author(2L,"Last", "First", "Middle");
+        AuthorReqIdDTO authorReqIdDTO_1 = new AuthorReqIdDTO(1L);
+        AuthorReqIdDTO authorReqIdDTO_2 = new AuthorReqIdDTO(2L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO_1);
+        authorsReqIdDTO.add(authorReqIdDTO_2);
+
+        GenreReqIdDTO genreReqIdDTO_1 = new GenreReqIdDTO(1L);
+        GenreReqIdDTO genreReqIdDTO_2 = new GenreReqIdDTO(2L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO_1);
+        genresReqIdDTO.add(genreReqIdDTO_2);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author_1 = new Author(1L, "Фамилия", "Имя", "Отчество");
+        Author author_2 = new Author(2L, "Last", "First", "Middle");
         List<Author> authors = new ArrayList<>();
         authors.add(author_1);
         authors.add(author_2);
 
-        Genre genre_1 = new Genre(1L,"Жанр", "Описание");
-        Genre genre_2 = new Genre(2L,"Genre", "Description");
+        Genre genre_1 = new Genre(1L, "Жанр", "Описание");
+        Genre genre_2 = new Genre(2L, "Genre", "Description");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre_1);
         genres.add(genre_2);
 
         Book book = new Book(1L, "Название", "123", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
         given(authorRepository.findByIds(List.of(1L, 2L))).willReturn(authors);
         given(genreRepository.findByIds(List.of(1L, 2L))).willReturn(genres);
+        given(bookMapper.fromDto(bookReqDTO)).willReturn(book);
 
-        book = bookService.processLinks(bookDTO);
+        book = bookService.processLinks(bookReqDTO);
 
         assertThat(book.getAuthors()).hasSize(2);
         assertThat(book.getAuthors().get(0).getId()).isEqualTo(1L);
@@ -718,25 +1025,17 @@ public class BookServiceImplTest {
     @Test
     void processLinksNullAuthorsAndGenres() {
 
-        Author author_1 = new Author(1L,"Фамилия", "Имя", "Отчество");
-        Author author_2 = new Author(2L,"Last", "First", "Middle");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author_1);
-        authors.add(author_2);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
 
-        Genre genre_1 = new Genre(1L,"Жанр", "Описание");
-        Genre genre_2 = new Genre(2L,"Genre", "Description");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre_1);
-        genres.add(genre_2);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
 
         Book book = new Book(1L, "Название", "123", "Описание", new ArrayList<>(), new ArrayList<>(), null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.processLinks(bookDTO);
+            bookService.processLinks(bookReqDTO);
 
         });
 
@@ -746,19 +1045,27 @@ public class BookServiceImplTest {
     @Test
     void processLinksInvalidAuthors() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
         Book book = new Book(1L, "Название", "123", "Описание", authors, new ArrayList<>(), null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
         given(authorRepository.findByIds(List.of(1L))).willReturn(null);
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.processLinks(bookDTO);
+            bookService.processLinks(bookReqDTO);
 
         });
 
@@ -768,23 +1075,31 @@ public class BookServiceImplTest {
     @Test
     void processLinksInvalidGenres() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
+        AuthorReqIdDTO authorReqIdDTO = new AuthorReqIdDTO(1L);
+        List<AuthorReqIdDTO> authorsReqIdDTO = new ArrayList<>();
+        authorsReqIdDTO.add(authorReqIdDTO);
+
+        GenreReqIdDTO genreReqIdDTO = new GenreReqIdDTO(1L);
+        List<GenreReqIdDTO> genresReqIdDTO = new ArrayList<>();
+        genresReqIdDTO.add(genreReqIdDTO);
+
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "123", "Описание", authorsReqIdDTO, genresReqIdDTO);
+
+        Author author = new Author(1L, "Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Genre genre = new Genre(1L,"Жанр", "Описание");
+        Genre genre = new Genre(1L, "Жанр", "Описание");
         List<Genre> genres = new ArrayList<>();
         genres.add(genre);
 
         Book book = new Book(1L, "Название", "123", "Описание", authors, genres, null);
 
-        BookDTO bookDTO = BookMapper.INSTANCE.toDto(book);
-
         given(genreRepository.findByIds(List.of(1L))).willReturn(null);
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookService.processLinks(bookDTO);
+            bookService.processLinks(bookReqDTO);
 
         });
 

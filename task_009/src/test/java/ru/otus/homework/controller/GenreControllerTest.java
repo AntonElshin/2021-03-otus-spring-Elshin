@@ -11,7 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
 import ru.otus.homework.service.GenreService;
 
 import java.util.List;
@@ -42,11 +44,8 @@ public class GenreControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Детектив")))
-                .andExpect(content().string(containsString("Преимущественно")))
                 .andExpect(content().string(containsString("Повесть")))
-                .andExpect(content().string(containsString("Средняя")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
 
     }
@@ -59,7 +58,6 @@ public class GenreControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Детектив")))
-                .andExpect(content().string(containsString("Преимущественно")))
         ;
     }
 
@@ -81,14 +79,14 @@ public class GenreControllerTest {
     @Test
     public void create() throws Exception {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
 
-        String json = new ObjectMapper().writeValueAsString(genreDTO);
+        String json = new ObjectMapper().writeValueAsString(genreReqDTO);
 
         mockMvc.perform(post("/api/genres").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
 
-        List<GenreDTO> genres = genreService.findByParams("Жанр");
+        List<GenreResListDTO> genres = genreService.findByParams("Жанр");
         assertThat(genres.size()).isEqualTo(1);
         if(genres != null && genres.size() == 1) {
             Long id = genres.get(0).getId();
@@ -101,22 +99,22 @@ public class GenreControllerTest {
     @Test
     public void update() throws Exception {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
-        genreDTO = genreService.add(genreDTO);
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
+        GenreResDTO genreResDTO = genreService.add(genreReqDTO);
 
-        GenreDTO updateGenreDTO = new GenreDTO("Жанр 1", "Описание 1");
+        GenreReqDTO updateGenreReqDTO = new GenreReqDTO("Жанр 1", "Описание 1");
 
-        String json = new ObjectMapper().writeValueAsString(updateGenreDTO);
+        String json = new ObjectMapper().writeValueAsString(updateGenreReqDTO);
 
-        this.mockMvc.perform(put("/api/genres/" + genreDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(put("/api/genres/" + genreResDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(genreDTO.getId()))
+                .andExpect(jsonPath("$.id").value(genreResDTO.getId()))
                 .andExpect(content().string(containsString("Жанр 1")))
                 .andExpect(content().string(containsString("Описание 1")))
         ;
 
-        genreService.deleteById(genreDTO.getId());
+        genreService.deleteById(genreResDTO.getId());
 
     }
 
@@ -124,13 +122,13 @@ public class GenreControllerTest {
     @Test
     public void delete() throws Exception {
 
-        GenreDTO genreDTO = new GenreDTO("Жанр", "Описание");
-        genreDTO = genreService.add(genreDTO);
+        GenreReqDTO genreReqDTO = new GenreReqDTO("Жанр", "Описание");
+        GenreResDTO genreResDTO = genreService.add(genreReqDTO);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/genres/" + genreDTO.getId()))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/genres/" + genreResDTO.getId()))
                 .andDo(print());
 
-        List<GenreDTO> authors = genreService.findByParams("Жанр");
+        List<GenreResListDTO> authors = genreService.findByParams("Жанр");
 
         assertThat(authors.size()).isEqualTo(0);
 

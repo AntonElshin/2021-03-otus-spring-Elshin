@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookIdDTO {
+public class GenreResDTO {
 
-    @NotNull(message="Необходимо указать идентификатор книги")
     private Long id;
+
+    private String name;
+
+    private String description;
 
 }

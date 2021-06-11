@@ -3,9 +3,10 @@ package ru.otus.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.homework.dto.BookDTO;
+import ru.otus.homework.dto.BookResListDTO;
+import ru.otus.homework.dto.BookReqDTO;
 import ru.otus.homework.dto.BookResDTO;
-import ru.otus.homework.dto.BookWithCommentsDTO;
+import ru.otus.homework.dto.BookResWithCommentsDTO;
 import ru.otus.homework.service.BookService;
 
 import javax.validation.Valid;
@@ -18,12 +19,12 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping(value = "/api/books/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookResDTO> getAllBooks() {
+    public List<BookResListDTO> getAllBooks() {
         return bookService.findAll();
     }
 
     @GetMapping(value = "/api/books", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookResDTO> findBooksByParams(
+    public List<BookResListDTO> findBooksByParams(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "authorId", required = false) Long authorId,
@@ -33,25 +34,25 @@ public class BookController {
     }
 
     @GetMapping(value = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookWithCommentsDTO getBook (
+    public BookResWithCommentsDTO getBook (
             @PathVariable(name = "id") Long id
     ) {
         return bookService.getById(id);
     }
 
     @PostMapping(value = "/api/books", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookDTO createBook (
-            @Valid @RequestBody BookDTO bookDTO
+    public BookResDTO createBook (
+            @Valid @RequestBody BookReqDTO bookReqDTO
     ) {
-        return bookService.add(bookDTO);
+        return bookService.add(bookReqDTO);
     }
 
     @PutMapping(path = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookDTO modifyBook (
+    public BookResDTO modifyBook (
             @PathVariable(name = "id") Long id,
-            @Valid @RequestBody BookDTO bookDTO
+            @Valid @RequestBody BookReqDTO bookReqDTO
     ) {
-        return bookService.update(id, bookDTO);
+        return bookService.update(id, bookReqDTO);
     }
 
     @DeleteMapping(value = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.homework.dto.*;
 import ru.otus.homework.service.BookService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,16 +43,12 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Весь Шерлок Холмс")))
                 .andExpect(content().string(containsString("978-5-17-105207-2")))
-                .andExpect(content().string(containsString("мы выросли")))
                 .andExpect(content().string(containsString("Повесть о настоящем человеке")))
                 .andExpect(content().string(containsString("978-5-17-064314-1")))
-                .andExpect(content().string(containsString("о подвиге")))
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Русские волшебные сказки")))
                 .andExpect(content().string(containsString("978-5-00108-639-0")))
-                .andExpect(content().string(containsString("всеми сказки")))
                 .andExpect(content().string(containsString("Дойл")))
                 .andExpect(content().string(containsString("Артур")))
                 .andExpect(content().string(containsString("Конан")))
@@ -70,11 +65,8 @@ public class BookControllerTest {
                 .andExpect(content().string(containsString("Сергей")))
                 .andExpect(content().string(containsString("Тимофеевич")))
                 .andExpect(content().string(containsString("Детектив")))
-                .andExpect(content().string(containsString("Преимущественно")))
                 .andExpect(content().string(containsString("Повесть")))
-                .andExpect(content().string(containsString("Средняя")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
 
     }
@@ -88,12 +80,10 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
     }
 
@@ -106,12 +96,10 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
     }
 
@@ -124,10 +112,8 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Русские волшебные сказки")))
                 .andExpect(content().string(containsString("978-5-00108-639-0")))
-                .andExpect(content().string(containsString("всеми сказки")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
@@ -138,7 +124,6 @@ public class BookControllerTest {
                 .andExpect(content().string(containsString("Сергей")))
                 .andExpect(content().string(containsString("Тимофеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
     }
 
@@ -151,10 +136,8 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Русские волшебные сказки")))
                 .andExpect(content().string(containsString("978-5-00108-639-0")))
-                .andExpect(content().string(containsString("всеми сказки")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
@@ -165,7 +148,6 @@ public class BookControllerTest {
                 .andExpect(content().string(containsString("Сергей")))
                 .andExpect(content().string(containsString("Тимофеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
     }
 
@@ -178,12 +160,10 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
     }
 
@@ -196,12 +176,10 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Сказка о рыбаке и рыбке")))
                 .andExpect(content().string(containsString("978-5-353-08602-4")))
-                .andExpect(content().string(containsString("не для детей")))
                 .andExpect(content().string(containsString("Пушкин")))
                 .andExpect(content().string(containsString("Александр")))
                 .andExpect(content().string(containsString("Сергеевич")))
                 .andExpect(content().string(containsString("Сказка")))
-                .andExpect(content().string(containsString("в сказках")))
         ;
 
     }
@@ -210,17 +188,17 @@ public class BookControllerTest {
     @Test
     public void create() throws Exception {
 
-        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
-        GenreIdDTO genreDTO = new GenreIdDTO(2L);
+        AuthorReqIdDTO authorDTO = new AuthorReqIdDTO(1L);
+        GenreReqIdDTO genreDTO = new GenreReqIdDTO(2L);
 
-        BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
 
-        String json = new ObjectMapper().writeValueAsString(bookDTO);
+        String json = new ObjectMapper().writeValueAsString(bookReqDTO);
 
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
 
-        List<BookResDTO> books = bookService.findByParams(null, "ISBN", null, null);
+        List<BookResListDTO> books = bookService.findByParams(null, "ISBN", null, null);
         assertThat(books.size()).isEqualTo(1);
         assertThat(books.get(0).getAuthors().size()).isEqualTo(1);
         assertThat(books.get(0).getAuthors().get(0).getId()).isEqualTo(1);
@@ -237,31 +215,33 @@ public class BookControllerTest {
     @Test
     public void update() throws Exception {
 
-        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
-        GenreIdDTO genreDTO = new GenreIdDTO(2L);
+        AuthorReqIdDTO authorDTO = new AuthorReqIdDTO(1L);
+        GenreReqIdDTO genreDTO = new GenreReqIdDTO(2L);
 
-        BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
-        bookDTO = bookService.add(bookDTO);
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
+        BookResDTO bookResDTO = bookService.add(bookReqDTO);
 
-        AuthorIdDTO updateAuthorDTO = new AuthorIdDTO(1L);
-        GenreIdDTO updateGenreDTO = new GenreIdDTO(2L);
+        AuthorReqIdDTO updateAuthorDTO = new AuthorReqIdDTO(1L);
+        GenreReqIdDTO updateGenreDTO = new GenreReqIdDTO(2L);
 
-        BookDTO updateBookDTO = new BookDTO("Название 1", "ISBN 1", "Описание 1", List.of(updateAuthorDTO), List.of(updateGenreDTO));
+        BookReqDTO updateBookReqDTO = new BookReqDTO("Название 1", "ISBN 1", "Описание 1", List.of(updateAuthorDTO), List.of(updateGenreDTO));
 
-        String json = new ObjectMapper().writeValueAsString(updateBookDTO);
+        String json = new ObjectMapper().writeValueAsString(updateBookReqDTO);
 
-        this.mockMvc.perform(put("/api/books/" + bookDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(put("/api/books/" + bookResDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(bookDTO.getId()))
+                .andExpect(jsonPath("$.id").value(bookResDTO.getId()))
                 .andExpect(content().string(containsString("Название 1")))
                 .andExpect(content().string(containsString("ISBN 1")))
                 .andExpect(content().string(containsString("Описание 1")))
-                .andExpect(content().string(containsString("\"authors\":[{\"id\":1}]")))
-                .andExpect(content().string(containsString("\"genres\":[{\"id\":2}]")))
+                .andExpect(content().string(containsString("Дойл")))
+                .andExpect(content().string(containsString("Артур")))
+                .andExpect(content().string(containsString("Конан")))
+                .andExpect(content().string(containsString("Повесть")))
         ;
 
-        bookService.deleteById(bookDTO.getId());
+        bookService.deleteById(bookResDTO.getId());
 
     }
 
@@ -269,16 +249,16 @@ public class BookControllerTest {
     @Test
     public void delete() throws Exception {
 
-        AuthorIdDTO authorDTO = new AuthorIdDTO(1L);
-        GenreIdDTO genreDTO = new GenreIdDTO(2L);
+        AuthorReqIdDTO authorDTO = new AuthorReqIdDTO(1L);
+        GenreReqIdDTO genreDTO = new GenreReqIdDTO(2L);
 
-        BookDTO bookDTO = new BookDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
-        bookDTO = bookService.add(bookDTO);
+        BookReqDTO bookReqDTO = new BookReqDTO("Название", "ISBN", "Описание", List.of(authorDTO), List.of(genreDTO));
+        BookResDTO bookResDTO = bookService.add(bookReqDTO);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookDTO.getId()))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookResDTO.getId()))
                 .andDo(print());
 
-        List<BookResDTO> books = bookService.findByParams(null, "ISBN", null, null);
+        List<BookResListDTO> books = bookService.findByParams(null, "ISBN", null, null);
 
         assertThat(books.size()).isEqualTo(0);
 

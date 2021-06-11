@@ -3,7 +3,9 @@ package ru.otus.homework.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ru.otus.homework.domain.Genre;
-import ru.otus.homework.dto.GenreDTO;
+import ru.otus.homework.dto.GenreReqDTO;
+import ru.otus.homework.dto.GenreResDTO;
+import ru.otus.homework.dto.GenreResListDTO;
 
 import java.util.List;
 
@@ -12,8 +14,9 @@ public interface GenreMapper {
 
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 
-    GenreDTO toDto(Genre genre);
-    Genre fromDto(GenreDTO genreDTO);
-    List<GenreDTO> toListDto(List<Genre> genres);
+    Genre fromDto(GenreReqDTO genreReqDTO);
+
+    GenreResDTO toDto(Genre genre);
+    List<GenreResListDTO> toListDto(List<Genre> genres);
 
 }

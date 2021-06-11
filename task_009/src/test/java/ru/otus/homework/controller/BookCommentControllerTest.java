@@ -11,9 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.otus.homework.dto.BookCommentIdTextDTO;
-import ru.otus.homework.dto.BookCommentDTO;
-import ru.otus.homework.dto.BookIdDTO;
+import ru.otus.homework.dto.BookCommentResDTO;
+import ru.otus.homework.dto.BookCommentReqDTO;
+import ru.otus.homework.dto.BookCommentResListDTO;
+import ru.otus.homework.dto.BookReqIdDTO;
 import ru.otus.homework.service.BookCommentService;
 
 import java.util.List;
@@ -64,15 +65,15 @@ public class BookCommentControllerTest {
     @Test
     public void create() throws Exception {
 
-        BookIdDTO bookIdDTO = new BookIdDTO(3L);
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Грустная");
+        BookReqIdDTO bookReqIdDTO = new BookReqIdDTO(3L);
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(bookReqIdDTO, "Грустная");
 
-        String json = new ObjectMapper().writeValueAsString(bookCommentDTO);
+        String json = new ObjectMapper().writeValueAsString(bookCommentReqDTO);
 
         mockMvc.perform(post("/api/bookcomments").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
 
-        List<BookCommentIdTextDTO> bookComments = bookCommentService.findAllByBookId(3L);
+        List<BookCommentResListDTO> bookComments = bookCommentService.findAllByBookId(3L);
         assertThat(bookComments.size()).isEqualTo(1);
 
         if(bookComments != null && bookComments.size() == 1) {
@@ -86,15 +87,15 @@ public class BookCommentControllerTest {
     @Test
     public void update() throws Exception {
 
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Грустная");
+        BookReqIdDTO bookReqIdDTO = new BookReqIdDTO(1L);
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(bookReqIdDTO, "Грустная");
 
-        BookCommentIdTextDTO createdBookCommentDTO = bookCommentService.add(bookCommentDTO);
+        BookCommentResDTO createdBookCommentDTO = bookCommentService.add(bookCommentReqDTO);
 
-        BookIdDTO updateBookIdDTO = new BookIdDTO(1L);
-        BookCommentDTO updateBookCommentDTO = new BookCommentDTO(updateBookIdDTO, "Грустная!!");
+        BookReqIdDTO updateBookReqIdDTO = new BookReqIdDTO(1L);
+        BookCommentReqDTO updateBookCommentReqDTO = new BookCommentReqDTO(updateBookReqIdDTO, "Грустная!!");
 
-        String json = new ObjectMapper().writeValueAsString(updateBookCommentDTO);
+        String json = new ObjectMapper().writeValueAsString(updateBookCommentReqDTO);
 
         this.mockMvc.perform(put("/api/bookcomments/" + createdBookCommentDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
@@ -111,15 +112,15 @@ public class BookCommentControllerTest {
     @Test
     public void delete() throws Exception {
 
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Грустная");
+        BookReqIdDTO bookReqIdDTO = new BookReqIdDTO(1L);
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(bookReqIdDTO, "Грустная");
 
-        BookCommentIdTextDTO createdBookCommentDTO = bookCommentService.add(bookCommentDTO);
+        BookCommentResDTO createdBookCommentDTO = bookCommentService.add(bookCommentReqDTO);
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/bookcomments/" + createdBookCommentDTO.getId()))
                 .andDo(print());
 
-        List<BookCommentIdTextDTO> bookComments = bookCommentService.findAllByBookId(3L);
+        List<BookCommentResListDTO> bookComments = bookCommentService.findAllByBookId(3L);
 
         assertThat(bookComments.size()).isEqualTo(0);
 

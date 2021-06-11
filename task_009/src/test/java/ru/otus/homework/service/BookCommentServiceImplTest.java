@@ -12,11 +12,12 @@ import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.BookComment;
 import ru.otus.homework.domain.Genre;
-import ru.otus.homework.dto.BookCommentDTO;
-import ru.otus.homework.dto.BookDTO;
-import ru.otus.homework.dto.BookIdDTO;
+import ru.otus.homework.dto.BookCommentReqDTO;
+import ru.otus.homework.dto.BookCommentResDTO;
+import ru.otus.homework.dto.BookCommentResListDTO;
+import ru.otus.homework.dto.BookReqIdDTO;
 import ru.otus.homework.exceptions.BusinessException;
-import ru.otus.homework.mapper.BookMapper;
+import ru.otus.homework.mapper.BookCommentMapper;
 import ru.otus.homework.repository.BookCommentRepository;
 import ru.otus.homework.repository.BookRepository;
 
@@ -36,6 +37,9 @@ public class BookCommentServiceImplTest {
     @Mock
     private BookCommentRepository bookCommentRepository;
 
+    @Mock
+    private BookCommentMapper bookCommentMapper;
+
     @InjectMocks
     private BookCommentServiceImpl bookCommentService;
 
@@ -43,6 +47,9 @@ public class BookCommentServiceImplTest {
     @Test
     void addBookComment() {
 
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(new BookReqIdDTO(1L), "Комментарий");
+        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(1L, "Комментарий");
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
@@ -52,20 +59,20 @@ public class BookCommentServiceImplTest {
         genres.add(genre);
 
         Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
+        BookReqIdDTO bookReqIdDTO = new BookReqIdDTO(1L);
 
         BookComment bookComment = new BookComment(book, "Комментарий");
         BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
 
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
-
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
         given(bookCommentRepository.save(bookComment)).willReturn(createdBookComment);
+        given(bookCommentMapper.toDto(createdBookComment)).willReturn(bookCommentResDTO);
 
-        bookCommentService.add(bookCommentDTO);
+        bookCommentService.add(bookCommentReqDTO);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).save(bookComment);
+        Mockito.verify(bookCommentMapper, Mockito.times(1)).toDto(createdBookComment);
 
     }
 
@@ -73,27 +80,13 @@ public class BookCommentServiceImplTest {
     @Test
     void addBookCommentInvalidBookIdError() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
-
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
-
-        Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
-
-        BookComment bookComment = new BookComment(book, "Комментарий");
-        BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
-
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(new BookReqIdDTO(1L), "Комментарий");
 
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookCommentService.add(bookCommentDTO);
+            bookCommentService.add(bookCommentReqDTO);
 
         });
 
@@ -102,6 +95,9 @@ public class BookCommentServiceImplTest {
     @DisplayName("изменить комментарий к книге на новую книгу и новый текст")
     @Test
     void updateBookCommentWithNewBookAndNewText() {
+
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(new BookReqIdDTO(2L), "Комментарий!!!");
+        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(2L, "Комментарий!!!");
 
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
@@ -117,19 +113,19 @@ public class BookCommentServiceImplTest {
         BookComment updatedBookComment = new BookComment(1L, secondBook, "Комментарий!!!");
         book.setComments(List.of(bookComment));
 
-        BookDTO secondBookDTO = BookMapper.INSTANCE.toDto(secondBook);
-        BookIdDTO bookIdDTO = new BookIdDTO(2L);
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий!!!");
-
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
         given(bookRepository.findById(2L)).willReturn(Optional.of(secondBook));
+        given(bookCommentMapper.fromDto(bookCommentReqDTO)).willReturn(updatedBookComment);
         given(bookCommentRepository.save(updatedBookComment)).willReturn(updatedBookComment);
+        given(bookCommentMapper.toDto(updatedBookComment)).willReturn(bookCommentResDTO);
 
-        bookCommentService.update(1L, bookCommentDTO);
+        bookCommentService.update(1L, bookCommentReqDTO);
 
         Mockito.verify(bookCommentRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(2L);
+        Mockito.verify(bookCommentMapper, Mockito.times(1)).fromDto(bookCommentReqDTO);
         Mockito.verify(bookCommentRepository, Mockito.times(1)).save(updatedBookComment);
+        Mockito.verify(bookCommentMapper, Mockito.times(1)).toDto(updatedBookComment);
 
     }
 
@@ -137,26 +133,11 @@ public class BookCommentServiceImplTest {
     @Test
     void updateBookCommentZeroIdError() {
 
-        Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
-        List<Author> authors = new ArrayList<>();
-        authors.add(author);
-
-        Genre genre = new Genre(1L,"Жанр", "Описание");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(genre);
-
-        Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
-
-        BookComment bookComment = new BookComment(book, "Комментарий");
-        BookComment createdBookComment = new BookComment(1L, book, "Комментарий");
-
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
-
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(new BookReqIdDTO(1L), "Комментарий");
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookCommentService.update(0, bookCommentDTO);
+            bookCommentService.update(0, bookCommentReqDTO);
 
         });
 
@@ -166,6 +147,8 @@ public class BookCommentServiceImplTest {
     @Test
     void updateBookCommentInvalidIdError() {
 
+        BookCommentReqDTO bookCommentReqDTO = new BookCommentReqDTO(new BookReqIdDTO(1L), "Комментарий");
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
@@ -178,16 +161,12 @@ public class BookCommentServiceImplTest {
         BookComment bookComment = new BookComment(1L, book, "Комментарий");
         book.setComments(List.of(bookComment));
 
-        BookIdDTO bookIdDTO = new BookIdDTO(1L);
-
-        BookCommentDTO bookCommentDTO = new BookCommentDTO(bookIdDTO, "Комментарий");
-
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
         given(bookRepository.findById(1L)).willReturn(Optional.empty());
 
         Assertions.assertThrows(BusinessException.class, () -> {
 
-            bookCommentService.update(1L, bookCommentDTO);
+            bookCommentService.update(1L, bookCommentReqDTO);
 
         });
 
@@ -197,6 +176,8 @@ public class BookCommentServiceImplTest {
     @Test
     void getById() {
 
+        BookCommentResDTO bookCommentResDTO = new BookCommentResDTO(1L, "Комментарий");
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
@@ -210,10 +191,12 @@ public class BookCommentServiceImplTest {
         book.setComments(List.of(bookComment));
 
         given(bookCommentRepository.findById(1L)).willReturn(Optional.of(bookComment));
+        given(bookCommentMapper.toDto(bookComment)).willReturn(bookCommentResDTO);
 
         bookCommentService.getById(1L);
 
         Mockito.verify(bookCommentRepository, Mockito.times(1)).findById(1L);
+        Mockito.verify(bookCommentMapper, Mockito.times(1)).toDto(bookComment);
 
     }
 
@@ -299,6 +282,10 @@ public class BookCommentServiceImplTest {
     @Test
     void findAllByBookId() {
 
+        BookCommentResListDTO bookCommentResListDTO = new BookCommentResListDTO(1L, "Комментарий");
+        List<BookCommentResListDTO> bookCommentsResListDTO = new ArrayList<>();
+        bookCommentsResListDTO.add(bookCommentResListDTO);
+
         Author author = new Author(1L,"Фамилия", "Имя", "Отчество");
         List<Author> authors = new ArrayList<>();
         authors.add(author);
@@ -309,13 +296,16 @@ public class BookCommentServiceImplTest {
 
         Book book = new Book(1L,"Название", null, "Описание", authors, genres, null);
         BookComment bookComment = new BookComment(1L, book, "Комментарий");
-        book.setComments(List.of(bookComment));
+        List<BookComment> bookComments = List.of(bookComment);
+        book.setComments(bookComments);
 
         given(bookRepository.findById(1L)).willReturn(Optional.of(book));
+        given(bookCommentMapper.toListDto(bookComments)).willReturn(bookCommentsResListDTO);
 
         bookCommentService.findAllByBookId(1L);
 
         Mockito.verify(bookRepository, Mockito.times(1)).findById(1L);
+        Mockito.verify(bookCommentMapper, Mockito.times(1)).toListDto(bookComments);
 
     }
 

@@ -11,7 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.otus.homework.dto.AuthorDTO;
+import ru.otus.homework.dto.AuthorReqDTO;
+import ru.otus.homework.dto.AuthorResDTO;
+import ru.otus.homework.dto.AuthorResListDTO;
 import ru.otus.homework.service.AuthorService;
 
 import java.util.List;
@@ -130,14 +132,14 @@ public class AuthorControllerTest {
     @Test
     public void create() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO("Елшин", "Антон", "Николаевич");
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Елшин", "Антон", "Николаевич");
 
-        String json = new ObjectMapper().writeValueAsString(authorDTO);
+        String json = new ObjectMapper().writeValueAsString(authorReqDTO);
 
         mockMvc.perform(post("/api/authors").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk());
 
-        List<AuthorDTO> authors = authorService.findByParams("Елшин", "Антон", "Николаевич");
+        List<AuthorResListDTO> authors = authorService.findByParams("Елшин", "Антон", "Николаевич");
         assertThat(authors.size()).isEqualTo(1);
         if(authors != null && authors.size() == 1) {
             Long id = authors.get(0).getId();
@@ -150,23 +152,23 @@ public class AuthorControllerTest {
     @Test
     public void update() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO("Елшин", "Антон", "Николаевич");
-        authorDTO = authorService.add(authorDTO);
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Елшин", "Антон", "Николаевич");
+        AuthorResDTO authorResDTO = authorService.add(authorReqDTO);
 
-        AuthorDTO updateAuthorDTO = new AuthorDTO("Елшин 1", "Антон 1", "Николаевич 1");
+        AuthorReqDTO updateAuthorReqDTO = new AuthorReqDTO("Елшин 1", "Антон 1", "Николаевич 1");
 
-        String json = new ObjectMapper().writeValueAsString(updateAuthorDTO);
+        String json = new ObjectMapper().writeValueAsString(updateAuthorReqDTO);
 
-        this.mockMvc.perform(put("/api/authors/" + authorDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(put("/api/authors/" + authorResDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(authorDTO.getId()))
+                .andExpect(jsonPath("$.id").value(authorResDTO.getId()))
                 .andExpect(content().string(containsString("Елшин 1")))
                 .andExpect(content().string(containsString("Антон 1")))
                 .andExpect(content().string(containsString("Николаевич 1")))
         ;
 
-        authorService.deleteById(authorDTO.getId());
+        authorService.deleteById(authorResDTO.getId());
 
     }
 
@@ -174,13 +176,13 @@ public class AuthorControllerTest {
     @Test
     public void delete() throws Exception {
 
-        AuthorDTO authorDTO = new AuthorDTO("Елшин", "Антон", "Николаевич");
-        authorDTO = authorService.add(authorDTO);
+        AuthorReqDTO authorReqDTO = new AuthorReqDTO("Елшин", "Антон", "Николаевич");
+        AuthorResDTO authorResDTO = authorService.add(authorReqDTO);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/authors/" + authorDTO.getId()))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/authors/" + authorResDTO.getId()))
                 .andDo(print());
 
-        List<AuthorDTO> authors = authorService.findByParams("Елшин", "Антон", "Николаевич");
+        List<AuthorResListDTO> authors = authorService.findByParams("Елшин", "Антон", "Николаевич");
 
         assertThat(authors.size()).isEqualTo(0);
 
