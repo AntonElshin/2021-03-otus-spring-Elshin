@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+    <property name="autoIncrement" value="true" dbms="h2"/>
+
+    <!--Таблица книг-->
+    <changeSet author="aelshin" id="1.0.1-createBookTableV1">
+        <createSequence sequenceName="LIB_BOOKS_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="LIB_BOOKS">
+            <column autoIncrement="${autoIncrement}" name="BOOKID" type="INT"
+                    defaultValueSequenceNext="LIB_BOOKS_SEQ" remarks="Идентификатор книги">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="TITLE" type="VARCHAR(256)" remarks="Название">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISBN" type="VARCHAR(18)" remarks="International Standard Book Number">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(1024)" remarks="Описание">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_LIB_BOOKS" tableName="LIB_BOOKS" columnNames="ISBN"/>
+
+        <createIndex tableName="LIB_BOOKS" indexName="K01_LIB_BOOKS" unique="false">
+            <column name="TITLE"/>
+        </createIndex>
+
+        <comment>Creation of LIB_BOOKS table</comment>
+    </changeSet>
+
+    <!--Таблица авторов-->
+    <changeSet author="aelshin" id="1.0.1-createAuthorTableV1">
+        <createSequence sequenceName="LIB_AUTHORS_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="LIB_AUTHORS">
+            <column autoIncrement="${autoIncrement}" name="AUTHORID" type="INT"
+                    defaultValueSequenceNext="LIB_AUTHORS_SEQ" remarks="Идентификатор автор">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="LASTNAME" type="VARCHAR(256)" remarks="Фамилия автора">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRSTNAME" type="VARCHAR(256)" remarks="Имя автора">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIDDLENAME" type="VARCHAR(256)" remarks="Отчество автора">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="LIB_AUTHORS" indexName="K01_LIB_AUTHORS" unique="false">
+            <column name="LASTNAME"/>
+        </createIndex>
+        <createIndex tableName="LIB_AUTHORS" indexName="K02_LIB_AUTHORS" unique="false">
+            <column name="LASTNAME"/>
+            <column name="FIRSTNAME"/>
+        </createIndex>
+
+        <comment>Creation of LIB_AUTHORS table</comment>
+    </changeSet>
+
+    <!--Таблица жанров книг-->
+    <changeSet author="aelshin" id="1.0.1-createGenreTableV1">
+        <createSequence sequenceName="LIB_GENRES_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="LIB_GENRES">
+            <column autoIncrement="${autoIncrement}" name="GENREID" type="INT"
+                    defaultValueSequenceNext="LIB_GENRES_SEQ" remarks="Идентификатор жанра книги">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(256)" remarks="Название жанра">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(1024)" remarks="Описание жанра">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_LIB_GENRES" tableName="LIB_GENRES" columnNames="NAME"/>
+
+        <comment>Creation of LIB_GENRES table</comment>
+    </changeSet>
+
+    <!--Таблица связи книг и авторов-->
+    <changeSet author="aelshin" id="1.0.1-createBookAuthorLinkTableV1">
+        <createTable tableName="LIB_BOOKAUTHORLINKS">
+            <column name="BOOKID" type="INT" remarks="Идентификатор книги">
+                <constraints nullable="false" foreignKeyName="FK01_LIB_BOOKAUTHORLINKS" references="LIB_BOOKS(BOOKID)"/>
+            </column>
+            <column name="AUTHORID" type="INT" remarks="Идентификатор автора">
+                <constraints nullable="false" foreignKeyName="FK02_LIB_BOOKAUTHORLINKS" references="LIB_AUTHORS(AUTHORID)"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="LIB_BOOKAUTHORLINKS" columnNames="BOOKID, AUTHORID"/>
+
+        <createIndex tableName="LIB_BOOKAUTHORLINKS" indexName="K01_LIB_BOOKAUTHORLINKS" unique="true">
+            <column name="BOOKID"/>
+            <column name="AUTHORID"/>
+        </createIndex>
+        <createIndex tableName="LIB_BOOKAUTHORLINKS" indexName="K02_LIB_BOOKAUTHORLINKS" unique="false">
+            <column name="BOOKID"/>
+        </createIndex>
+        <createIndex tableName="LIB_BOOKAUTHORLINKS" indexName="K03_LIB_BOOKAUTHORLINKS" unique="false">
+            <column name="AUTHORID"/>
+        </createIndex>
+
+        <comment>Creation of LIB_BOOKAUTHORLINKS table</comment>
+    </changeSet>
+
+    <!--Таблица связи книг и жанров-->
+    <changeSet author="aelshin" id="1.0.1-createBookGenreLinkTableV1">
+        <createTable tableName="LIB_BOOKGENRELINKS">
+            <column name="BOOKID" type="INT" remarks="Идентификатор книги">
+                <constraints nullable="false" foreignKeyName="FK01_LIB_BOOKGENRELINKS" references="LIB_BOOKS(BOOKID)"/>
+            </column>
+            <column name="GENREID" type="INT" remarks="Идентификатор жанра">
+                <constraints nullable="false" foreignKeyName="FK02_LIB_BOOKGENRELINKS" references="LIB_GENRES(GENREID)"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="LIB_BOOKGENRELINKS" columnNames="BOOKID, GENREID"/>
+
+        <createIndex tableName="LIB_BOOKGENRELINKS" indexName="K01_LIB_BOOKGENRELINKS" unique="true">
+            <column name="BOOKID"/>
+            <column name="GENREID"/>
+        </createIndex>
+        <createIndex tableName="LIB_BOOKGENRELINKS" indexName="K02_LIB_BOOKGENRELINKS" unique="false">
+            <column name="BOOKID"/>
+        </createIndex>
+        <createIndex tableName="LIB_BOOKGENRELINKS" indexName="K03_LIB_BOOKGENRELINKS" unique="false">
+            <column name="GENREID"/>
+        </createIndex>
+
+        <comment>Creation of LIB_BOOKGENRELINKS table</comment>
+    </changeSet>
+
+    <!--Таблица комментариев к книгам-->
+    <changeSet author="aelshin" id="1.0.1-createBookCommentsTableV1">
+        <createSequence sequenceName="LIB_BOOKCOMMENTS_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="LIB_BOOKCOMMENTS">
+            <column autoIncrement="${autoIncrement}" name="COMMENTID" type="INT"
+                    defaultValueSequenceNext="LIB_BOOKCOMMENTS_SEQ" remarks="Идентификатор комментария к книге">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="BOOKID" type="INT" remarks="Идентификатор книги">
+                <constraints nullable="false" foreignKeyName="FK01_LIB_BOOKCOMMENTS" references="LIB_BOOKS(BOOKID)"/>
+            </column>
+            <column name="TEXT" type="VARCHAR(256)" remarks="Комментарий">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <comment>Creation of LIB_BOOKCOMMENTS table</comment>
+    </changeSet>
+
+    <include file="genres.xml" relativeToChangelogFile="true"/>
+    <include file="authors.xml" relativeToChangelogFile="true"/>
+    <include file="books/book_978-5-17-105207-2.xml" relativeToChangelogFile="true"/>
+    <include file="books/book_978-5-17-064314-1.xml" relativeToChangelogFile="true"/>
+    <include file="books/book_978-5-353-08602-4.xml" relativeToChangelogFile="true"/>
+    <include file="books/book_978-5-00108-639-0.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
