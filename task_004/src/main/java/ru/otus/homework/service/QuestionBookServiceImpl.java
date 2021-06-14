@@ -2,7 +2,6 @@ package ru.otus.homework.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.domain.*;
 import ru.otus.homework.exceptions.BusinessException;
@@ -13,7 +12,9 @@ import ru.otus.homework.parsers.Parser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +22,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
 
     private final Loader loader;
     private final Parser parser;
-    private final MessageSource messageSource;
+    private final MessageService messageService;
     private InputStream in;
     private PrintStream out;
     private Scanner scanner;
@@ -31,9 +32,6 @@ public class QuestionBookServiceImpl implements QuestionBookService {
 
     @Value("${question-book.valid-answer-min-count}")
     private Integer validAnswerMinCount;
-
-    @Value("${question-book.language-tag}")
-    private String LanguageTag = "";
 
     @Override
     public String prepareQuestion(Integer questionNumber, Question question) {
@@ -46,7 +44,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             Integer answerNumber = 1;
 
             for(Answer answer : question.getAnswers()) {
-                answerOptions.append(answerNumber + "." + getLocalizedMessage(answer.getText()));
+                answerOptions.append(answerNumber + "." + answer.getText());
                 answerNumber++;
                 if(answerNumber < question.getAnswers().size() + 1) {
                     answerOptions.append("   ");
@@ -56,18 +54,18 @@ public class QuestionBookServiceImpl implements QuestionBookService {
         }
 
         questionStr.append("----------------------------------------------------" + "\n");
-        questionStr.append(getLocalizedMessage("messages.hint") + ": " + getLocalizedMessage(question.getType().getQuestionHint())  + "\n");
-        questionStr.append(getLocalizedMessage("messages.question_example") + ": " + getLocalizedMessage(question.getType().getQuestionExample())  + "\n");
-        questionStr.append(getLocalizedMessage("messages.answer_example") + ": " + getLocalizedMessage(question.getType().getAnswerExample()) + "\n");
+        questionStr.append(messageService.getLocalizedMessage("messages.hint") + ": " + messageService.getLocalizedMessage(question.getType().getQuestionHint())  + "\n");
+        questionStr.append(messageService.getLocalizedMessage("messages.question_example") + ": " + messageService.getLocalizedMessage(question.getType().getQuestionExample())  + "\n");
+        questionStr.append(messageService.getLocalizedMessage("messages.answer_example") + ": " + messageService.getLocalizedMessage(question.getType().getAnswerExample()) + "\n");
         questionStr.append("----------------------------------------------------" + "\n\n");
-        questionStr.append(questionNumber + "." + getLocalizedMessage(question.getText()) + "   " + answerOptions.toString()  + "\n");
-        questionStr.append(getLocalizedMessage("messages.our_answer") + ": ");
+        questionStr.append(questionNumber + "." + question.getText() + "   " + answerOptions.toString()  + "\n");
+        questionStr.append(messageService.getLocalizedMessage("messages.our_answer") + ": ");
 
         return questionStr.toString();
     }
 
     @Override
-    public void printQuestionBook(Boolean addAnswersFlag) throws BusinessException {
+    public void printQuestionBook(Boolean addAnswersFlag) {
 
         askLanguage(addAnswersFlag);
 
@@ -164,16 +162,16 @@ public class QuestionBookServiceImpl implements QuestionBookService {
     }
 
     @Override
-    public void performTesting(Boolean addAnswersFlag) throws BusinessException {
+    public void performTesting(Boolean addAnswersFlag) {
 
         configurateEnvironment();
         List<String> questionAnswers;
 
+        askLanguage(addAnswersFlag);
+
         QuestionBook questionBook = initQuestionBook();
 
         try {
-
-            askLanguage(addAnswersFlag);
 
             Student student = askStudentInfo(addAnswersFlag);
 
@@ -200,18 +198,20 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             configurateEnvironment();
         }
 
+        List<String> locales = loader.loadAvailableLocales();
+
         try {
 
             Integer languageNumber = 1;
 
-            StringBuilder languageOptions = new StringBuilder("\n" + getLocalizedMessage("messages.available_languages") + ":");
+            StringBuilder languageOptions = new StringBuilder("\n" + messageService.getLocalizedMessage("messages.available_languages") + ":");
 
-            for(Locales locale : Locales.values()) {
-                languageOptions.append("\n" + languageNumber + "."+ getLocalizedMessage(locale.getName()));
+            for(String locale : locales) {
+                languageOptions.append("\n" + languageNumber + "."+ locale);
                 languageNumber++;
             }
 
-            byte[] languageStrBytes = (languageOptions + "\n" + getLocalizedMessage("messages.please_select_language_number") + ": ").getBytes();
+            byte[] languageStrBytes = (languageOptions + "\n" + messageService.getLocalizedMessage("messages.please_select_language_number") + ": ").getBytes();
             out.write(languageStrBytes);
             String studentLanguageSelect = scanner.nextLine();
             if(studentLanguageSelect != null && studentLanguageSelect.trim() != "") {
@@ -226,11 +226,11 @@ public class QuestionBookServiceImpl implements QuestionBookService {
                         //e.printStackTrace();
                     }
 
-                    if(studentIndex > 0 && studentIndex < Locales.values().length) {
+                    if(studentIndex > 0 && studentIndex < locales.size()) {
                         Integer index = 0;
-                        for(Locales locale : Locales.values()) {
+                        for(String locale : locales) {
                             if(studentIndex == index) {
-                                LanguageTag = locale.getCode();
+                                messageService.setLanguageTag(locale);
                                 break;
                             }
                             index++;
@@ -259,14 +259,14 @@ public class QuestionBookServiceImpl implements QuestionBookService {
 
         try {
 
-            byte[] nameStrBytes = ("\n" + getLocalizedMessage("messages.please_enter_your_name") + ": ").getBytes();
+            byte[] nameStrBytes = ("\n" + messageService.getLocalizedMessage("messages.please_enter_your_name") + ": ").getBytes();
             out.write(nameStrBytes);
             studentName = scanner.nextLine();
             if(addAnswersFlag) {
                 out.write(studentName.getBytes());
             }
 
-            byte[] surnameStrBytes = ("\n" + getLocalizedMessage("messages.please_enter_your_surname") + ": ").getBytes();
+            byte[] surnameStrBytes = ("\n" + messageService.getLocalizedMessage("messages.please_enter_your_surname") + ": ").getBytes();
             out.write(surnameStrBytes);
             studentSurname = scanner.nextLine();
             if(addAnswersFlag) {
@@ -325,16 +325,14 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             Student student,
             QuestionBook questionBook,
             List<String> questionAnswers
-    ) throws BusinessException {
+    ) {
 
         if(questionAnswers != null && questionBook.getQuestions().size() != questionAnswers.size()) {
             throw new BusinessException(
-                    Errors.QUESTION_AND_ANSWER_QUANTITY_NOT_EQUALS,
-                    questionAnswers.size(),
-                    questionBook.getQuestions().size());
+                    Errors.QUESTION_AND_ANSWER_QUANTITY_NOT_EQUALS, messageService.getLocalizedMessage("exception.question_and_answer_quantity_not_equals"));
         }
         if(questionAnswers == null || (questionAnswers != null && questionAnswers.size() == 0)) {
-            throw new BusinessException(Errors.ANSWER_LIST_IS_EMPTY);
+            throw new BusinessException(Errors.ANSWER_LIST_IS_EMPTY, messageService.getLocalizedMessage("exception.answer_list_is_empty"));
         }
 
         Integer questionQuantity = questionBook.getQuestions().size();
@@ -385,7 +383,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             }
             else {
                 for(Answer answer : curQuestion.getAnswers()) {
-                    if(getLocalizedMessage(answer.getText()).trim().equalsIgnoreCase(curAnswer.trim()) && answer.getIsValid()) {
+                    if(answer.getText().trim().equalsIgnoreCase(curAnswer.trim()) && answer.getIsValid()) {
                         answerIsValid = true;
                         break;
                     }
@@ -403,7 +401,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
 
         if((student.getName() != null && !student.getName().trim().isEmpty())
             || (student.getSurname() != null && !student.getSurname().trim().isEmpty())) {
-            resultStr.append(getLocalizedMessage("messages.dear") + ", ");
+            resultStr.append(messageService.getLocalizedMessage("messages.dear") + ", ");
             if(!student.getName().trim().isEmpty() && student.getSurname().trim().isEmpty()) {
                 resultStr.append(student.getName());
             }
@@ -415,14 +413,14 @@ public class QuestionBookServiceImpl implements QuestionBookService {
             }
             resultStr.append("\n");
         }
-        resultStr.append(getLocalizedMessage("messages.test_result") + ": "
-                + totalValidAnswer + " " + getLocalizedMessage("messages.valid_answers_of") + " "
-                + questionQuantity + " " + getLocalizedMessage("messages.questions") + "\n");
+        resultStr.append(messageService.getLocalizedMessage("messages.test_result") + ": "
+                + totalValidAnswer + " " + messageService.getLocalizedMessage("messages.valid_answers_of") + " "
+                + questionQuantity + " " + messageService.getLocalizedMessage("messages.questions") + "\n");
         if(totalValidAnswer >= validAnswerMinCount) {
-            resultStr.append(getLocalizedMessage("messages.test_passed_successfully") + "!");
+            resultStr.append(messageService.getLocalizedMessage("messages.test_passed_successfully") + "!");
         }
         else {
-            resultStr.append(getLocalizedMessage("messages.test_failed_please_try_again") + " ... ");
+            resultStr.append(messageService.getLocalizedMessage("messages.test_failed_please_try_again") + " ... ");
         }
         resultStr.append("\n");
         resultStr.append("----------------------------------------------------\n");
@@ -469,15 +467,7 @@ public class QuestionBookServiceImpl implements QuestionBookService {
         return validAnswerMinCount;
     }
 
-    public void setLanguageTag(String languageTag) {
-        LanguageTag = languageTag;
-    }
-
-    public String getLanguageTag() {
-        return LanguageTag;
-    }
-
-    public QuestionBook initQuestionBook() throws BusinessException {
+    public QuestionBook initQuestionBook() {
 
         List<String> questions = loader.loadQuestions(resourceName);
         QuestionBook questionBook = parser.getQuestionBook(questions);
@@ -485,10 +475,6 @@ public class QuestionBookServiceImpl implements QuestionBookService {
 
         return questionBook;
 
-    }
-
-    public String getLocalizedMessage(String key) {
-        return messageSource.getMessage(key, null, Locale.forLanguageTag(LanguageTag));
     }
 
     private Scanner configurateEnvironment() {

@@ -1,5 +1,6 @@
 package ru.otus.homework.parsers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.domain.Answer;
 import ru.otus.homework.domain.Question;
@@ -7,20 +8,24 @@ import ru.otus.homework.domain.QuestionBook;
 import ru.otus.homework.domain.QuestionTypes;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.exceptions.Errors;
+import ru.otus.homework.service.MessageService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ParserCSV implements Parser {
 
+    private final MessageService messageService;
+
     @Override
-    public QuestionBook getQuestionBook(List<String> questions) throws BusinessException {
+    public QuestionBook getQuestionBook(List<String> questions) {
 
         if(questions == null || questions.size() == 0) {
-            throw new BusinessException(Errors.QUESTION_LIST_IS_NULL);
+            throw new BusinessException(Errors.QUESTION_LIST_IS_NULL, messageService.getLocalizedMessage("exception.question_list_is_null"));
         }
 
         QuestionBook questionBook = new QuestionBook();
@@ -32,7 +37,7 @@ public class ParserCSV implements Parser {
         }
 
         if(bookQuestions.size() == 0) {
-            throw new BusinessException(Errors.QUESTION_LIST_IS_EMPTY);
+            throw new BusinessException(Errors.QUESTION_LIST_IS_EMPTY, messageService.getLocalizedMessage("exception.question_list_is_empty"));
         }
 
         questionBook.setQuestions(bookQuestions);
@@ -41,13 +46,21 @@ public class ParserCSV implements Parser {
 
     }
 
-    public Question getQuestion(String setting, String separator) throws BusinessException {
-
+    public Question getQuestion(String setting, String separator) {
         if(setting == null) {
-            throw new BusinessException(Errors.QUESTION_SETTING_IS_NULL, setting);
+            String message = String.format("%s \"%s?,typing|single|multy,%s:true\", %s \"%s?,typing,%s:true)\", %s: null",
+                    messageService.getLocalizedMessage("exception.question_setting_is_null"),
+                    messageService.getLocalizedMessage("exception.question"),
+                    messageService.getLocalizedMessage("exception.answer"),
+                    messageService.getLocalizedMessage("exception.example"),
+                    messageService.getLocalizedMessage("exception.question"),
+                    messageService.getLocalizedMessage("exception.answer"),
+                    messageService.getLocalizedMessage("exception.current_value")
+            );
+            throw new BusinessException(Errors.QUESTION_SETTING_IS_NULL, message);
         }
         if(separator == null) {
-            throw new BusinessException(Errors.QUESTION_SEPARATOR_IS_NULL, separator);
+            throw new BusinessException(Errors.QUESTION_SEPARATOR_IS_NULL, messageService.getLocalizedMessage("exception.question_separator_is_null"));
         }
 
         String[] questionStrings = setting.split(separator);
@@ -63,13 +76,13 @@ public class ParserCSV implements Parser {
             question.setText(text);
 
             if(text.isEmpty()) {
-                throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY);
+                throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY, messageService.getLocalizedMessage("exception.question_text_is_empty"));
             }
 
             QuestionTypes questionType = QuestionTypes.getByName(type);
 
             if(questionType == null) {
-                throw new BusinessException(Errors.QUESTION_TYPE_NOT_FOUND, questionType);
+                throw new BusinessException(Errors.QUESTION_TYPE_NOT_FOUND, messageService.getLocalizedMessage("exception.question_type_not_found"));
             }
 
             question.setType(questionType);
@@ -82,7 +95,7 @@ public class ParserCSV implements Parser {
             }
 
             if(questionAnswers.size() == 0) {
-                throw new BusinessException(Errors.QUESTION_DOES_NOT_HAVE_ANSWER_OPTIONS);
+                throw new BusinessException(Errors.QUESTION_DOES_NOT_HAVE_ANSWER_OPTIONS, messageService.getLocalizedMessage("exception.question_type_not_found"));
             }
 
             question.setAnswers(questionAnswers);
@@ -91,23 +104,31 @@ public class ParserCSV implements Parser {
 
         }
         else if (questionStrings.length == 2) {
-            throw new BusinessException(Errors.QUESTION_DOES_NOT_HAVE_ANSWER_OPTIONS);
+            throw new BusinessException(Errors.QUESTION_DOES_NOT_HAVE_ANSWER_OPTIONS, messageService.getLocalizedMessage("exception.question_does_not_have_answer_options"));
         }
         else if(questionStrings.length == 1) {
-            throw new BusinessException(Errors.QUESTION_TYPE_IS_EMPTY);
+            throw new BusinessException(Errors.QUESTION_TYPE_IS_EMPTY, messageService.getLocalizedMessage("exception.question_type_is_empty"));
         }
         else {
-            throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY);
+            throw new BusinessException(Errors.QUESTION_TEXT_IS_EMPTY, messageService.getLocalizedMessage("exception.question_text_is_empty"));
         }
     }
 
-    public Answer getAnswer(String setting, String separator) throws BusinessException {
+    public Answer getAnswer(String setting, String separator) {
 
         if(setting == null) {
-            throw new BusinessException(Errors.ANSWER_SETTING_IS_NULL, setting);
+            String message = String.format("%s \"%s:true\", %s \"%s1:true, %s2:false\"), %s: null",
+                    messageService.getLocalizedMessage("exception.answer_setting_is_null"),
+                    messageService.getLocalizedMessage("exception.text"),
+                    messageService.getLocalizedMessage("exception.example"),
+                    messageService.getLocalizedMessage("exception.answer"),
+                    messageService.getLocalizedMessage("exception.answer"),
+                    messageService.getLocalizedMessage("exception.current_value")
+            );
+            throw new BusinessException(Errors.ANSWER_SETTING_IS_NULL, message);
         }
         if(separator == null) {
-            throw new BusinessException(Errors.ANSWER_SEPARATOR_IS_NULL, separator);
+            throw new BusinessException(Errors.ANSWER_SEPARATOR_IS_NULL, messageService.getLocalizedMessage("exception.answer_separator_is_null"));
         }
 
         String[] answerStrings = setting.split(separator);
@@ -121,7 +142,7 @@ public class ParserCSV implements Parser {
         }
 
         if(text.isEmpty()) {
-            throw new BusinessException(Errors.ANSWER_TEXT_IS_EMPTY, text);
+            throw new BusinessException(Errors.ANSWER_TEXT_IS_EMPTY, messageService.getLocalizedMessage("exception.answer_text_is_empty"));
         }
 
         return new Answer(text, isValid);

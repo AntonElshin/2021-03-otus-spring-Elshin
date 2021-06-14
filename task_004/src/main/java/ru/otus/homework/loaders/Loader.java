@@ -6,4 +6,6 @@ public interface Loader {
 
     List<String> loadQuestions(String resourceName);
 
+    List<String> loadAvailableLocales();
+
 }

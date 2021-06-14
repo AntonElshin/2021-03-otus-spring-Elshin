@@ -1,6 +1,6 @@
 package ru.otus.homework.exceptions;
 
-public class BusinessException extends Exception {
+public class BusinessException extends RuntimeException {
 
     private int code;
 

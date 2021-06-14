@@ -33,10 +33,12 @@ public class QuestionBookServiceImplTest {
 
     @Mock
     private Loader loader;
+
     @Mock
     private Parser parser;
+
     @Mock
-    private MessageSource messageSource;
+    private MessageService messageService;
 
     private InputStream in;
     private ByteArrayOutputStream outByte;
@@ -72,7 +74,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareQuestion подготовит все вопросы для вывода")
     @Test
-    void prepareQuestionTest() throws Exception {
+    void prepareQuestionTest() {
 
         QuestionBook questionBook = getQuestionBook();
 
@@ -98,7 +100,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareQuestion не выведет ответ для вопроса с вводом ответа")
     @Test
-    void prepareQuestionTest_TypingQuestionWithoutAnswer() throws Exception {
+    void prepareQuestionTest_TypingQuestionWithoutAnswer() {
 
         QuestionBook questionBook = getQuestionBook();
         Question question = questionBook.getQuestions().get(0);
@@ -112,7 +114,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareQuestion выведет ответы для вопроса с единичным выбором")
     @Test
-    void prepareQuestionTest_SingleOptionQuestionHasAnswers() throws Exception {
+    void prepareQuestionTest_SingleOptionQuestionHasAnswers() {
 
         QuestionBook questionBook = getQuestionBook();
         Question question = questionBook.getQuestions().get(1);
@@ -122,7 +124,7 @@ public class QuestionBookServiceImplTest {
 
         Integer answerNumber = 1;
         for(Answer answer : question.getAnswers()) {
-            assertThat(str).containsIgnoringCase(answerNumber + "." + questionBookService.getLocalizedMessage(answer.getText()));
+            assertThat(str).containsIgnoringCase(answerNumber + "." + answer.getText());
             answerNumber++;
         }
 
@@ -130,7 +132,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareQuestion выведет ответы для вопроса с множественным выбором")
     @Test
-    void prepareQuestionTest_MultyOptionQuestionHasAnswers() throws Exception {
+    void prepareQuestionTest_MultyOptionQuestionHasAnswers() {
 
         QuestionBook questionBook = getQuestionBook();
         Question question = questionBook.getQuestions().get(2);
@@ -140,7 +142,7 @@ public class QuestionBookServiceImplTest {
 
         Integer answerNumber = 1;
         for(Answer answer : question.getAnswers()) {
-            assertThat(str).containsIgnoringCase(answerNumber + "." + questionBookService.getLocalizedMessage(answer.getText()));
+            assertThat(str).containsIgnoringCase(answerNumber + "." + answer.getText());
             answerNumber++;
         }
 
@@ -148,7 +150,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод printQuestionBook выведет список вопросов")
     @Test
-    public void printQuestionBookTest() throws Exception {
+    public void printQuestionBookTest() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -171,7 +173,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод printQuestionBook присвоит номер каждому вопросу")
     @Test
-    public void printQuestionBookTest_addQuestionNumbers() throws Exception {
+    public void printQuestionBookTest_addQuestionNumbers() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -194,7 +196,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook свалидирует QuestionBook без ошибок")
     @Test
-    void validateQuestionBook_QuestionBookValid() throws Exception {
+    void validateQuestionBook_QuestionBookValid() {
 
         Boolean validationFlag = questionBookService.validateQuestionBook(getQuestionBook());
         Assert.assertTrue(validationFlag);
@@ -202,7 +204,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым списком вопросов")
     @Test
-    void validateQuestionBook_NullQuestionsUnvalid() throws Exception {
+    void validateQuestionBook_NullQuestionsUnvalid() {
 
         QuestionBook questionBook = new QuestionBook();
         Boolean validationFlag = questionBookService.validateQuestionBook(questionBook);
@@ -211,7 +213,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым списком вопросов")
     @Test
-    void validateQuestionBook_EmptyQuestionsUnvalid() throws Exception {
+    void validateQuestionBook_EmptyQuestionsUnvalid() {
 
         QuestionBook questionBook = new QuestionBook();
         questionBook.setQuestions(new ArrayList<>());
@@ -221,7 +223,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым вопросом")
     @Test
-    void validateQuestionBook_NullQuestionTextUnvalid() throws Exception {
+    void validateQuestionBook_NullQuestionTextUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -244,7 +246,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым вопросом")
     @Test
-    void validateQuestionBook_EmptyQuestionTextUnvalid() throws Exception {
+    void validateQuestionBook_EmptyQuestionTextUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -267,7 +269,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым вопросом без учёта пробелов")
     @Test
-    void validateQuestionBook_EmptyQuestionTextIgnoreSpacesUnvalid() throws Exception {
+    void validateQuestionBook_EmptyQuestionTextIgnoreSpacesUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -290,7 +292,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым типом вопроса")
     @Test
-    void validateQuestionBook_NullQuestionTypeUnvalid() throws Exception {
+    void validateQuestionBook_NullQuestionTypeUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -313,7 +315,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым ответом")
     @Test
-    void validateQuestionBook_NullAnswerQuestionUnvalid() throws Exception {
+    void validateQuestionBook_NullAnswerQuestionUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer(null, true));
@@ -335,7 +337,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым ответом")
     @Test
-    void validateQuestionBook_EmptyAnswerQuestionUnvalid() throws Exception {
+    void validateQuestionBook_EmptyAnswerQuestionUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("", true));
@@ -357,7 +359,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с пустым ответом без учёта пробелов")
     @Test
-    void validateQuestionBook_EmptyAnswerQuestionIgnoreSpacesUnvalid() throws Exception {
+    void validateQuestionBook_EmptyAnswerQuestionIgnoreSpacesUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("   ", true));
@@ -379,7 +381,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с нулевым признаком правильности ответа")
     @Test
-    void validateQuestionBook_NullAnswerIsValidQuestionUnvalid() throws Exception {
+    void validateQuestionBook_NullAnswerIsValidQuestionUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", null));
@@ -401,7 +403,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c двумя правильными ответами в вопросе с вводом ответа")
     @Test
-    void validateQuestionBook_TotalValidTypingAnswerCountUnvalid() throws Exception {
+    void validateQuestionBook_TotalValidTypingAnswerCountUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Moscow", true));
@@ -424,7 +426,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c двумя правильными ответами в вопросе с выбором единственной опции")
     @Test
-    void validateQuestionBook_TotalValidSingleAnswerCountUnvalid() throws Exception {
+    void validateQuestionBook_TotalValidSingleAnswerCountUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Only for frontend", true));
@@ -448,7 +450,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook c без неправильного ответа в вопросе с выбором единственной опции")
     @Test
-    void validateQuestionBook_TotalUnvalidSingleAnswerCountUnvalid() throws Exception {
+    void validateQuestionBook_TotalUnvalidSingleAnswerCountUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Only for frontend", true));
@@ -472,7 +474,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook с одним правильным ответом в вопросе с выбором множества опции")
     @Test
-    void validateQuestionBook_TotalValidMultyAnswerCountUnvalid() throws Exception {
+    void validateQuestionBook_TotalValidMultyAnswerCountUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Java", true));
@@ -497,7 +499,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод validateQuestionBook не свалидирует QuestionBook без неправильного ответа в вопросе с выбором множества опции")
     @Test
-    void validateQuestionBook_TotalUnvalidMultyAnswerCountUnvalid() throws Exception {
+    void validateQuestionBook_TotalUnvalidMultyAnswerCountUnvalid() {
 
         ArrayList<Answer> answers = new ArrayList<>();
         answers.add(new Answer("Java", true));
@@ -522,7 +524,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting проведёт тест с правильными ответами на все вопросы")
     @Test
-    public void performTestingTest_AllAnswersValid() throws Exception {
+    public void performTestingTest_AllAnswersValid() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -547,7 +549,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting при ответе на вопросы теста игнорирует пробелы справа и слева от значимого текста")
     @Test
-    public void performTestingTest_AnswerWithSpaceProcessedCorrect() throws Exception {
+    public void performTestingTest_AnswerWithSpaceProcessedCorrect() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -572,7 +574,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting корректно обрабатывает дубли ответов на вопрос, предполагающий несколько ответов")
     @Test
-    public void performTestingTest_MultyAnswerWithSpaceAndDuplication() throws Exception {
+    public void performTestingTest_MultyAnswerWithSpaceAndDuplication() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -599,7 +601,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting корректно обрабатывает произвольный порядок ответов на вопрос с несколькими ответами")
     @Test
-    public void performTestingTest_MultyInverseAnswer() throws Exception {
+    public void performTestingTest_MultyInverseAnswer() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -624,7 +626,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для множественного ответа")
     @Test
-    public void performTestingTest_MultyAnswerIncorrectWithOneUnvalidOption() throws Exception {
+    public void performTestingTest_MultyAnswerIncorrectWithOneUnvalidOption() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -649,7 +651,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting не засчитывает правильный ответ при указании ошибочного ответа вместе с правильными для единичного ответа")
     @Test
-    public void performTestingTest_SingleTwoAnswerWithOneValidIncorrect() throws Exception {
+    public void performTestingTest_SingleTwoAnswerWithOneValidIncorrect() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -674,7 +676,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting корректно обрабатывает ответы на вопросы с печатью правильного ответа без учёта регистра")
     @Test
-    public void performTestingTest_ignoreCaseValid() throws Exception {
+    public void performTestingTest_ignoreCaseValid() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -699,7 +701,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting не выведет имя и фамилию студента, если данные не указаны")
     @Test
-    public void performTestingTest_Anonymous() throws Exception {
+    public void performTestingTest_Anonymous() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -720,7 +722,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод performTesting не засчитает тест при указании недостаточного количества правильных ответов")
     @Test
-    public void performTestingTest_TestFailed() throws Exception {
+    public void performTestingTest_TestFailed() {
 
         List<String> questions = getQuestions();
         given(loader.loadQuestions(any())).willReturn(questions);
@@ -747,6 +749,10 @@ public class QuestionBookServiceImplTest {
     @Test
     public void askLanguageTest_Default() {
 
+        List<String> locales = new ArrayList<>();
+        locales.add("en-US");
+        locales.add("ru-RU");
+        given(loader.loadAvailableLocales()).willReturn(locales);
         getLocalizedMessageAskLanguage();
 
         outByte = configurateEnvironment("\n");
@@ -758,8 +764,8 @@ public class QuestionBookServiceImplTest {
         assertThat(str).containsIgnoringCase("Available languages:");
 
         Integer languageNumber = 1;
-        for(Locales locale : Locales.values()) {
-            assertThat(str).containsIgnoringCase(languageNumber + "." + questionBookService.getLocalizedMessage(locale.getName()));
+        for(String locale : locales) {
+            assertThat(str).containsIgnoringCase(languageNumber + "." + locale);
             languageNumber++;
         }
 
@@ -771,6 +777,10 @@ public class QuestionBookServiceImplTest {
     @Test
     public void askLanguageTest_English() {
 
+        List<String> locales = new ArrayList<>();
+        locales.add("en-US");
+        locales.add("ru-RU");
+        given(loader.loadAvailableLocales()).willReturn(locales);
         getLocalizedMessageAskLanguage();
 
         outByte = configurateEnvironment("1");
@@ -782,8 +792,8 @@ public class QuestionBookServiceImplTest {
         assertThat(str).containsIgnoringCase("Available languages:");
 
         Integer languageNumber = 1;
-        for(Locales locale : Locales.values()) {
-            assertThat(str).containsIgnoringCase(languageNumber + "." + questionBookService.getLocalizedMessage(locale.getName()));
+        for(String locale : locales) {
+            assertThat(str).containsIgnoringCase(languageNumber + "." + locale);
             languageNumber++;
         }
 
@@ -795,10 +805,13 @@ public class QuestionBookServiceImplTest {
     @Test
     public void askLanguageTest_Russian() {
 
+        List<String> locales = new ArrayList<>();
+        locales.add("en-US");
+        locales.add("ru-RU");
+        given(loader.loadAvailableLocales()).willReturn(locales);
         getLocalizedMessageAskLanguageRussian();
 
         outByte = configurateEnvironment("2");
-        questionBookService.setLanguageTag("ru-RU");
 
         questionBookService.askLanguage(true);
 
@@ -807,8 +820,8 @@ public class QuestionBookServiceImplTest {
         assertThat(str).containsIgnoringCase("Доступные языки:");
 
         Integer languageNumber = 1;
-        for(Locales locale : Locales.values()) {
-            assertThat(str).containsIgnoringCase(languageNumber + "." + questionBookService.getLocalizedMessage(locale.getName()));
+        for(String locale : locales) {
+            assertThat(str).containsIgnoringCase(languageNumber + "." + locale);
             languageNumber++;
         }
 
@@ -818,7 +831,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод askStudentInfo запросит и получит имя и фамилию студента")
     @Test
-    public void askStudentInfoTest() throws Exception {
+    public void askStudentInfoTest() {
 
         outByte = configurateEnvironment("Anton\nElshin");
 
@@ -837,6 +850,10 @@ public class QuestionBookServiceImplTest {
     @Test
     public void askLanguageTest_NotExistIndex() {
 
+        List<String> locales = new ArrayList<>();
+        locales.add("en-US");
+        locales.add("ru-RU");
+        given(loader.loadAvailableLocales()).willReturn(locales);
         getLocalizedMessageAskLanguage();
 
         outByte = configurateEnvironment("1000");
@@ -848,8 +865,8 @@ public class QuestionBookServiceImplTest {
         assertThat(str).containsIgnoringCase("Available languages:");
 
         Integer languageNumber = 1;
-        for(Locales locale : Locales.values()) {
-            assertThat(str).containsIgnoringCase(languageNumber + "." + questionBookService.getLocalizedMessage(locale.getName()));
+        for(String locale : locales) {
+            assertThat(str).containsIgnoringCase(languageNumber + "." + locale);
             languageNumber++;
         }
 
@@ -860,6 +877,10 @@ public class QuestionBookServiceImplTest {
     @Test
     public void askLanguageTest_NotDigitInput() {
 
+        List<String> locales = new ArrayList<>();
+        locales.add("en-US");
+        locales.add("ru-RU");
+        given(loader.loadAvailableLocales()).willReturn(locales);
         getLocalizedMessageAskLanguage();
 
         outByte = configurateEnvironment("ru");
@@ -871,8 +892,8 @@ public class QuestionBookServiceImplTest {
         assertThat(str).containsIgnoringCase("Available languages:");
 
         Integer languageNumber = 1;
-        for(Locales locale : Locales.values()) {
-            assertThat(str).containsIgnoringCase(languageNumber + "." + questionBookService.getLocalizedMessage(locale.getName()));
+        for(String locale : locales) {
+            assertThat(str).containsIgnoringCase(languageNumber + "." + locale);
             languageNumber++;
         }
 
@@ -882,7 +903,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод askStudentInfo позволит не вводить имя и фамилию студента")
     @Test
-    public void askStudentInfoTest_WithoutName() throws Exception {
+    public void askStudentInfoTest_WithoutName() {
 
         outByte = configurateEnvironment("\n\n");
 
@@ -899,7 +920,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод askQuestions задаст вопросы и получит на них ответы")
     @Test
-    public void askQuestionsTest() throws Exception {
+    public void askQuestionsTest() {
 
         QuestionBook questionBook = getQuestionBook();
 
@@ -921,7 +942,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод askQuestions позволит не вводить ответы на вопросы")
     @Test
-    public void askQuestionsTest_skipAnswers() throws Exception {
+    public void askQuestionsTest_skipAnswers() {
 
         QuestionBook questionBook = getQuestionBook();
 
@@ -943,13 +964,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит успешный результат теста")
     @Test
-    void prepareResultTest() throws BusinessException {
+    void prepareResultTest() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePreparePositiveResult();
 
@@ -973,13 +990,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит успешный результат теста без учёта регистра")
     @Test
-    void prepareResultTest_IgnoreSpaces() throws BusinessException {
+    void prepareResultTest_IgnoreSpaces() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePreparePositiveResult();
 
@@ -1003,13 +1016,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит успешный результат теста без учёта регистра")
     @Test
-    void prepareResultTest_IgnoreCase() throws BusinessException {
+    void prepareResultTest_IgnoreCase() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePreparePositiveResult();
 
@@ -1033,13 +1042,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит успешный результат теста без учёта дублей для единичного и множественного ответа")
     @Test
-    void prepareResultTest_SingleAndMultyIgnoreDuplication() throws BusinessException {
+    void prepareResultTest_SingleAndMultyIgnoreDuplication() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePreparePositiveResult();
 
@@ -1063,13 +1068,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит успешный результат теста без учёта порядка в вопросе множественного выбора")
     @Test
-    void prepareResultTest_MultyIgnoreInverse() throws BusinessException {
+    void prepareResultTest_MultyIgnoreInverse() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePreparePositiveResult();
 
@@ -1093,13 +1094,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult подготовит провальный результат теста")
     @Test
-    void prepareResultTest_TestFailed() throws BusinessException {
+    void prepareResultTest_TestFailed() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePrepareNegativeResult();
 
@@ -1123,13 +1120,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult выведет неуспешный результат при пустых ответах")
     @Test
-    void prepareResultTest_TestFailedAllEmptyAnswers() throws BusinessException {
+    void prepareResultTest_TestFailedAllEmptyAnswers() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePrepareNegativeResult();
 
@@ -1153,13 +1146,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult выведет неуспешный результат при пустых ответах без учёта пробелов")
     @Test
-    void prepareResultTest_TestFailedAllEmptyAnswersIgnoreCases() throws BusinessException {
+    void prepareResultTest_TestFailedAllEmptyAnswersIgnoreCases() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePrepareStudentInfo();
         getLocalizedMessagePrepareNegativeResult();
 
@@ -1183,13 +1172,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult не выведет данные студента с null в имени и фамилии")
     @Test
-    void prepareResultTest_NameAndSurnameNull() throws BusinessException {
+    void prepareResultTest_NameAndSurnameNull() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePreparePositiveResult();
 
         Student student = new Student();
@@ -1210,13 +1195,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult не выведет данные студента с пустыми данными в имени и фамилии")
     @Test
-    void prepareResultTest_NameAndSurnameEmpty() throws BusinessException {
+    void prepareResultTest_NameAndSurnameEmpty() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePreparePositiveResult();
 
         Student student = new Student("", "");
@@ -1237,13 +1218,9 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult не выведет данные студента с пустыми данными в имени и фамилии без учёта пробелов")
     @Test
-    void prepareResultTest_NameAndSurnameEmptyIgnoreSpaces() throws BusinessException {
+    void prepareResultTest_NameAndSurnameEmptyIgnoreSpaces() {
 
         questionBookService.setValidAnswerMinCount(4);
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
         getLocalizedMessagePreparePositiveResult();
 
         Student student = new Student("  ", "  ");
@@ -1264,7 +1241,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
     @Test
-    void prepareResultTest_QuestionAndAnswerQuantityNotEquals() throws BusinessException {
+    void prepareResultTest_QuestionAndAnswerQuantityNotEquals() {
 
         questionBookService.setValidAnswerMinCount(4);
 
@@ -1283,7 +1260,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
     @Test
-    void prepareResultTest_AnswersListNullEquals() throws BusinessException {
+    void prepareResultTest_AnswersListNullEquals() {
 
         questionBookService.setValidAnswerMinCount(4);
 
@@ -1297,7 +1274,7 @@ public class QuestionBookServiceImplTest {
 
     @DisplayName("метод prepareResult выдаст ошибку при разном количестве вопросов и ответов")
     @Test
-    void prepareResultTest_AnswersListEmptyEquals() throws BusinessException {
+    void prepareResultTest_AnswersListEmptyEquals() {
 
         questionBookService.setValidAnswerMinCount(4);
 
@@ -1360,29 +1337,9 @@ public class QuestionBookServiceImplTest {
         assertThat(questionBookService.getValidAnswerMinCount()).isEqualTo(4);
     }
 
-    @DisplayName("метод setLanguageTag установит русский язык")
-    @Test
-    void setLanguageTagTest() {
-
-        questionBookService.setLanguageTag("ru-RU");
-
-        assertThat(questionBookService.getLanguageTag()).isEqualTo("ru-RU");
-
-    }
-
-    @DisplayName("метод getLanguageTag получит установленный русский язык")
-    @Test
-    void getLanguageTagTest() {
-
-        questionBookService.setLanguageTag("ru-RU");
-
-        assertThat(questionBookService.getLanguageTag()).isEqualTo("ru-RU");
-
-    }
-
     @DisplayName("метод initQuestionBook выполнит загрузку и парсинг файла csv")
     @Test
-    void initQuestionBookTest() throws Exception {
+    void initQuestionBookTest() {
 
         List<String> questions = getQuestions();
         QuestionBook questionBook = getQuestionBook();
@@ -1397,32 +1354,6 @@ public class QuestionBookServiceImplTest {
         Mockito.verify(parser, Mockito.times(1))
                 .getQuestionBook(any());
 
-    }
-
-    @DisplayName("метод getLocalizedMessage запросит строку в английской локали")
-    @Test
-    void getLocalizedMessageTest_Default() {
-
-        given(messageSource.getMessage("some key", null, Locale.forLanguageTag(""))).willReturn("some localized string");
-        questionBookService.setLanguageTag("");
-
-        questionBookService.getLocalizedMessage("some key");
-
-        Mockito.verify(messageSource, Mockito.times(1))
-                .getMessage("some key", null, Locale.forLanguageTag(""));
-    }
-
-    @DisplayName("метод getLocalizedMessage запросит строку в русской локали")
-    @Test
-    void getLocalizedMessageTest_Russian() {
-
-        given(messageSource.getMessage("some key", null, Locale.forLanguageTag("ru-RU"))).willReturn("some localized string");
-        questionBookService.setLanguageTag("ru-RU");
-
-        questionBookService.getLocalizedMessage("some key");
-
-        Mockito.verify(messageSource, Mockito.times(1))
-                .getMessage("some key", null, Locale.forLanguageTag("ru-RU"));
     }
 
     private ByteArrayOutputStream configurateEnvironment(String answers) {
@@ -1442,11 +1373,11 @@ public class QuestionBookServiceImplTest {
 
         List<String> questions = new ArrayList<>();
 
-        questions.add("questions.current_capital_of_russia,typing,answers.moscow:true");
-        questions.add("questions.javascript_is_language_for,single,answers.only_for_frontend:false,answers.only_for_backend:false,answers.frontend_and_backend:true");
-        questions.add("questions.mark_languages_and_frameworks_for_current_course,multy,answers.java:true,answers.angular:false,answers.spring:true,answers.typescript:false");
-        questions.add("questions.print_name_of_company_for_which_course_customized_for,typing,answers.diasoft:true");
-        questions.add("questions.select_name_of_education_company,single,answers.university:false,answers.udemy:false,answers.otus:true");
+        questions.add("Current capital of Russia?,typing,Moscow:true");
+        questions.add("JavaScript is language for?,single,Only for frontend:false,Only for backend:false,Frontend and backend:true");
+        questions.add("Mark languages and frameworks for current course ...,multy,Java:true,Angular:false,Spring:true,TypeScript:false");
+        questions.add("Print name of company for which course customized for?,typing,Diasoft:true");
+        questions.add("Select name of education company?,single,University:false,Udemy:false,Otus:true");
 
         return questions;
 
@@ -1457,49 +1388,49 @@ public class QuestionBookServiceImplTest {
         QuestionBook questionBook = new QuestionBook();
 
         ArrayList<Answer> q1_answers = new ArrayList<>();
-        q1_answers.add(new Answer("answers.moscow", true));
+        q1_answers.add(new Answer("Moscow", true));
 
         ArrayList<Answer> q2_answers = new ArrayList<>();
-        q2_answers.add(new Answer("answers.only_for_frontend", false));
-        q2_answers.add(new Answer("answers.only_for_backend", false));
-        q2_answers.add(new Answer("answers.frontend_and_backend", true));
+        q2_answers.add(new Answer("Only for frontend", false));
+        q2_answers.add(new Answer("Only for backend", false));
+        q2_answers.add(new Answer("Frontend and backend", true));
 
         ArrayList<Answer> q3_answers = new ArrayList<>();
-        q3_answers.add(new Answer("answers.java", true));
-        q3_answers.add(new Answer("answers.angular", false));
-        q3_answers.add(new Answer("answers.spring", true));
-        q3_answers.add(new Answer("answers.typescript", false));
+        q3_answers.add(new Answer("Java", true));
+        q3_answers.add(new Answer("Angular", false));
+        q3_answers.add(new Answer("Spring", true));
+        q3_answers.add(new Answer("TypeScript", false));
 
         ArrayList<Answer> q4_answers = new ArrayList<>();
-        q4_answers.add(new Answer("answers.diasoft", true));
+        q4_answers.add(new Answer("Diasoft", true));
 
         ArrayList<Answer> q5_answers = new ArrayList<>();
-        q5_answers.add(new Answer("answers.university", false));
-        q5_answers.add(new Answer("answers.udemy", false));
-        q5_answers.add(new Answer("answers.otus", true));
+        q5_answers.add(new Answer("University", false));
+        q5_answers.add(new Answer("Udemy", false));
+        q5_answers.add(new Answer("Otus", true));
 
         Question question_1 = new Question();
-        question_1.setText("questions.current_capital_of_russia");
+        question_1.setText("Current capital of Russia?");
         question_1.setType(QuestionTypes.TYPING);
         question_1.setAnswers(q1_answers);
 
         Question question_2 = new Question();
-        question_2.setText("questions.javascript_is_language_for");
+        question_2.setText("JavaScript is language for?");
         question_2.setType(QuestionTypes.SINGLE);
         question_2.setAnswers(q2_answers);
 
         Question question_3 = new Question();
-        question_3.setText("questions.mark_languages_and_frameworks_for_current_course");
+        question_3.setText("Mark languages and frameworks for current course ...");
         question_3.setType(QuestionTypes.MULTY);
         question_3.setAnswers(q3_answers);
 
         Question question_4 = new Question();
-        question_4.setText("questions.print_name_of_company_for_which_course_customized_for");
+        question_4.setText("Print name of company for which course customized for?");
         question_4.setType(QuestionTypes.TYPING);
         question_4.setAnswers(q4_answers);
 
         Question question_5 = new Question();
-        question_5.setText("questions.select_name_of_education_company");
+        question_5.setText("Select name of education company?");
         question_5.setType(QuestionTypes.SINGLE);
         question_5.setAnswers(q5_answers);
 
@@ -1518,222 +1449,138 @@ public class QuestionBookServiceImplTest {
 
     private void getLocalizedMessageAskLanguage() {
 
-        doReturn("Available languages").when(messageSource)
-                .getMessage("messages.available_languages", null, Locale.forLanguageTag(""));
+        doReturn("Available languages").when(messageService)
+                .getLocalizedMessage("messages.available_languages");
 
-        doReturn("English").when(messageSource)
-                .getMessage("locales.en", null, Locale.forLanguageTag(""));
-        doReturn("Russian").when(messageSource)
-                .getMessage("locales.ru", null, Locale.forLanguageTag(""));
-
-        doReturn("Please select language number").when(messageSource)
-                .getMessage("messages.please_select_language_number", null, Locale.forLanguageTag(""));
+        doReturn("Please select language number").when(messageService)
+                .getLocalizedMessage("messages.please_select_language_number");
     }
 
     private void getLocalizedMessageAskLanguageRussian() {
 
-        doReturn("Доступные языки").when(messageSource)
-                .getMessage("messages.available_languages", null, Locale.forLanguageTag("ru-RU"));
+        doReturn("Доступные языки").when(messageService)
+                .getLocalizedMessage("messages.available_languages");
 
-        doReturn("Английский").when(messageSource)
-                .getMessage("locales.en", null, Locale.forLanguageTag("ru-RU"));
-        doReturn("Русский").when(messageSource)
-                .getMessage("locales.ru", null, Locale.forLanguageTag("ru-RU"));
-
-        doReturn("Пожалуйста, выберите язык").when(messageSource)
-                .getMessage("messages.please_select_language_number", null, Locale.forLanguageTag("ru-RU"));
+        doReturn("Пожалуйста, выберите язык").when(messageService)
+                .getLocalizedMessage("messages.please_select_language_number");
 
     }
 
     private void getLocalizedMessageAskStudentInfo() {
 
-        doReturn("Please enter your name").when(messageSource)
-                .getMessage("messages.please_enter_your_name", null, Locale.forLanguageTag(""));
-        doReturn("Please enter your surname").when(messageSource)
-                .getMessage("messages.please_enter_your_surname", null, Locale.forLanguageTag(""));
+        doReturn("Please enter your name").when(messageService)
+                .getLocalizedMessage("messages.please_enter_your_name");
+        doReturn("Please enter your surname").when(messageService)
+                .getLocalizedMessage("messages.please_enter_your_surname");
 
     }
 
     private void getLocalizedMessageQuestion1() {
 
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
+        doReturn("Hint").when(messageService)
+                .getLocalizedMessage("messages.hint");
+        doReturn("Please type on keyboard correct answer (case insensitive)").when(messageService)
+                .getLocalizedMessage("enums.typing.hint");
+        doReturn("Question example").when(messageService)
+                .getLocalizedMessage("messages.question_example");
+        doReturn("Question").when(messageService)
+                .getLocalizedMessage("enums.typing.question_example");
+        doReturn("Answer example").when(messageService)
+                .getLocalizedMessage("messages.answer_example");
+        doReturn("Our answer: Answer").when(messageService)
+                .getLocalizedMessage("enums.typing.answer_example");
 
-        doReturn("Hint").when(messageSource)
-                .getMessage("messages.hint", null, Locale.forLanguageTag(""));
-        doReturn("Please type on keyboard correct answer (case insensitive)").when(messageSource)
-                .getMessage("enums.typing.hint", null, Locale.forLanguageTag(""));
-        doReturn("Question example").when(messageSource)
-                .getMessage("messages.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Question").when(messageSource)
-                .getMessage("enums.typing.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Answer example").when(messageSource)
-                .getMessage("messages.answer_example", null, Locale.forLanguageTag(""));
-        doReturn("Our answer: Answer").when(messageSource)
-                .getMessage("enums.typing.answer_example", null, Locale.forLanguageTag(""));
-
-        doReturn("Current capital of Russia?").when(messageSource)
-                .getMessage("questions.current_capital_of_russia", null, Locale.forLanguageTag(""));
-
-        doReturn("Our answer").when(messageSource)
-                .getMessage("messages.our_answer", null, Locale.forLanguageTag(""));
+        doReturn("Our answer").when(messageService)
+                .getLocalizedMessage("messages.our_answer");
 
     }
 
     private void getLocalizedMessageQuestion2() {
 
-        doReturn("Only for frontend").when(messageSource)
-                .getMessage("answers.only_for_frontend", null, Locale.forLanguageTag(""));
-        doReturn("Only for backend").when(messageSource)
-                .getMessage("answers.only_for_backend", null, Locale.forLanguageTag(""));
-        doReturn("Frontend and backend").when(messageSource)
-                .getMessage("answers.frontend_and_backend", null, Locale.forLanguageTag(""));
-
-        doReturn("Please type on keyboard single correct option number").when(messageSource)
-                .getMessage("enums.single.hint", null, Locale.forLanguageTag(""));
-        doReturn("Question?   1.Option   2.Option   3.Option").when(messageSource)
-                .getMessage("enums.single.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Our answer: 2").when(messageSource)
-                .getMessage("enums.single.answer_example", null, Locale.forLanguageTag(""));
-
-        doReturn("JavaScript is language for?").when(messageSource)
-                .getMessage("questions.javascript_is_language_for", null, Locale.forLanguageTag(""));
+        doReturn("Please type on keyboard single correct option number").when(messageService)
+                .getLocalizedMessage("enums.single.hint");
+        doReturn("Question?   1.Option   2.Option   3.Option").when(messageService)
+                .getLocalizedMessage("enums.single.question_example");
+        doReturn("Our answer: 2").when(messageService)
+                .getLocalizedMessage("enums.single.answer_example");
 
     }
 
     private void getLocalizedMessageQuestionFull2() {
 
-        doReturn("Only for frontend").when(messageSource)
-                .getMessage("answers.only_for_frontend", null, Locale.forLanguageTag(""));
-        doReturn("Only for backend").when(messageSource)
-                .getMessage("answers.only_for_backend", null, Locale.forLanguageTag(""));
-        doReturn("Frontend and backend").when(messageSource)
-                .getMessage("answers.frontend_and_backend", null, Locale.forLanguageTag(""));
-
-        doReturn("Hint").when(messageSource)
-                .getMessage("messages.hint", null, Locale.forLanguageTag(""));
-        doReturn("Please type on keyboard single correct option number").when(messageSource)
-                .getMessage("enums.single.hint", null, Locale.forLanguageTag(""));
-        doReturn("Question example").when(messageSource)
-                .getMessage("messages.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Question?   1.Option   2.Option   3.Option").when(messageSource)
-                .getMessage("enums.single.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Answer example").when(messageSource)
-                .getMessage("messages.answer_example", null, Locale.forLanguageTag(""));
-        doReturn("Our answer: 2").when(messageSource)
-                .getMessage("enums.single.answer_example", null, Locale.forLanguageTag(""));
-
-        doReturn("JavaScript is language for?").when(messageSource)
-                .getMessage("questions.javascript_is_language_for", null, Locale.forLanguageTag(""));
+        doReturn("Hint").when(messageService)
+                .getLocalizedMessage("messages.hint");
+        doReturn("Please type on keyboard single correct option number").when(messageService)
+                .getLocalizedMessage("enums.single.hint");
+        doReturn("Question example").when(messageService)
+                .getLocalizedMessage("messages.question_example");
+        doReturn("Question?   1.Option   2.Option   3.Option").when(messageService)
+                .getLocalizedMessage("enums.single.question_example");
+        doReturn("Answer example").when(messageService)
+                .getLocalizedMessage("messages.answer_example");
+        doReturn("Our answer: 2").when(messageService)
+                .getLocalizedMessage("enums.single.answer_example");
 
     }
 
     private void getLocalizedMessageQuestion3() {
 
-        doReturn("Java").when(messageSource)
-                .getMessage("answers.java", null, Locale.forLanguageTag(""));
-        doReturn("Angular").when(messageSource)
-                .getMessage("answers.angular", null, Locale.forLanguageTag(""));
-        doReturn("Spring").when(messageSource)
-                .getMessage("answers.spring", null, Locale.forLanguageTag(""));
-        doReturn("TypeScript").when(messageSource)
-                .getMessage("answers.typescript", null, Locale.forLanguageTag(""));
-
-        doReturn("Please type on keyboard correct option numbers through space").when(messageSource)
-                .getMessage("enums.multy.hint", null, Locale.forLanguageTag(""));
-        doReturn("Question?   1.Option   2.Option   3.Option").when(messageSource)
-                .getMessage("enums.multy.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Our answer: 1 2").when(messageSource)
-                .getMessage("enums.multy.answer_example", null, Locale.forLanguageTag(""));
-
-        doReturn("Mark languages and frameworks for current course ...").when(messageSource)
-                .getMessage("questions.mark_languages_and_frameworks_for_current_course", null, Locale.forLanguageTag(""));
+        doReturn("Please type on keyboard correct option numbers through space").when(messageService)
+                .getLocalizedMessage("enums.multy.hint");
+        doReturn("Question?   1.Option   2.Option   3.Option").when(messageService)
+                .getLocalizedMessage("enums.multy.question_example");
+        doReturn("Our answer: 1 2").when(messageService)
+                .getLocalizedMessage("enums.multy.answer_example");
 
     }
 
     private void getLocalizedMessageQuestionFull3() {
 
-        doReturn("Java").when(messageSource)
-                .getMessage("answers.java", null, Locale.forLanguageTag(""));
-        doReturn("Angular").when(messageSource)
-                .getMessage("answers.angular", null, Locale.forLanguageTag(""));
-        doReturn("Spring").when(messageSource)
-                .getMessage("answers.spring", null, Locale.forLanguageTag(""));
-        doReturn("TypeScript").when(messageSource)
-                .getMessage("answers.typescript", null, Locale.forLanguageTag(""));
-
-        doReturn("Hint").when(messageSource)
-                .getMessage("messages.hint", null, Locale.forLanguageTag(""));
-        doReturn("Please type on keyboard correct option numbers through space").when(messageSource)
-                .getMessage("enums.multy.hint", null, Locale.forLanguageTag(""));
-        doReturn("Question example").when(messageSource)
-                .getMessage("messages.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Question?   1.Option   2.Option   3.Option").when(messageSource)
-                .getMessage("enums.multy.question_example", null, Locale.forLanguageTag(""));
-        doReturn("Answer example").when(messageSource)
-                .getMessage("messages.answer_example", null, Locale.forLanguageTag(""));
-        doReturn("Our answer: 1 2").when(messageSource)
-                .getMessage("enums.multy.answer_example", null, Locale.forLanguageTag(""));
-
-        doReturn("Mark languages and frameworks for current course ...").when(messageSource)
-                .getMessage("questions.mark_languages_and_frameworks_for_current_course", null, Locale.forLanguageTag(""));
-
-    }
-
-    private void getLocalizedMessageQuestion4() {
-
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
-
-        doReturn("Print name of company for which course customized for?").when(messageSource)
-                .getMessage("questions.print_name_of_company_for_which_course_customized_for", null, Locale.forLanguageTag(""));
-
-    }
-
-    private void getLocalizedMessageQuestion5() {
-
-        doReturn("University").when(messageSource)
-                .getMessage("answers.university", null, Locale.forLanguageTag(""));
-        doReturn("Udemy").when(messageSource)
-                .getMessage("answers.udemy", null, Locale.forLanguageTag(""));
-        doReturn("Otus").when(messageSource)
-                .getMessage("answers.otus", null, Locale.forLanguageTag(""));
-
-        doReturn("Select name of education company?").when(messageSource)
-                .getMessage("questions.select_name_of_education_company", null, Locale.forLanguageTag(""));
+        doReturn("Hint").when(messageService)
+                .getLocalizedMessage("messages.hint");
+        doReturn("Please type on keyboard correct option numbers through space").when(messageService)
+                .getLocalizedMessage("enums.multy.hint");
+        doReturn("Question example").when(messageService)
+                .getLocalizedMessage("messages.question_example");
+        doReturn("Question?   1.Option   2.Option   3.Option").when(messageService)
+                .getLocalizedMessage("enums.multy.question_example");
+        doReturn("Answer example").when(messageService)
+                .getLocalizedMessage("messages.answer_example");
+        doReturn("Our answer: 1 2").when(messageService)
+                .getLocalizedMessage("enums.multy.answer_example");
 
     }
 
     private void getLocalizedMessagePrepareStudentInfo() {
 
-        doReturn("Dear").when(messageSource)
-                .getMessage("messages.dear", null, Locale.forLanguageTag(""));
+        doReturn("Dear").when(messageService)
+                .getLocalizedMessage("messages.dear");
 
     }
 
     private void getLocalizedMessagePreparePositiveResult() {
 
-        doReturn("Test result").when(messageSource)
-                .getMessage("messages.test_result", null, Locale.forLanguageTag(""));
-        doReturn("valid answers of").when(messageSource)
-                .getMessage("messages.valid_answers_of", null, Locale.forLanguageTag(""));
-        doReturn("questions").when(messageSource)
-                .getMessage("messages.questions", null, Locale.forLanguageTag(""));
-        doReturn("Test passed successfully").when(messageSource)
-                .getMessage("messages.test_passed_successfully", null, Locale.forLanguageTag(""));
+        doReturn("Test result").when(messageService)
+                .getLocalizedMessage("messages.test_result");
+        doReturn("valid answers of").when(messageService)
+                .getLocalizedMessage("messages.valid_answers_of");
+        doReturn("questions").when(messageService)
+                .getLocalizedMessage("messages.questions");
+        doReturn("Test passed successfully").when(messageService)
+                .getLocalizedMessage("messages.test_passed_successfully");
 
     }
 
     private void getLocalizedMessagePrepareNegativeResult() {
 
-        doReturn("Test result").when(messageSource)
-                .getMessage("messages.test_result", null, Locale.forLanguageTag(""));
-        doReturn("valid answers of").when(messageSource)
-                .getMessage("messages.valid_answers_of", null, Locale.forLanguageTag(""));
-        doReturn("questions").when(messageSource)
-                .getMessage("messages.questions", null, Locale.forLanguageTag(""));
-        doReturn("Test failed! Please try again").when(messageSource)
-                .getMessage("messages.test_failed_please_try_again", null, Locale.forLanguageTag(""));
+        doReturn("Test result").when(messageService)
+                .getLocalizedMessage("messages.test_result");
+        doReturn("valid answers of").when(messageService)
+                .getLocalizedMessage("messages.valid_answers_of");
+        doReturn("questions").when(messageService)
+                .getLocalizedMessage("messages.questions");
+        doReturn("Test failed! Please try again").when(messageService)
+                .getLocalizedMessage("messages.test_failed_please_try_again");
 
     }
 
@@ -1744,41 +1591,6 @@ public class QuestionBookServiceImplTest {
         getLocalizedMessageQuestion1();
         getLocalizedMessageQuestion2();
         getLocalizedMessageQuestion3();
-        getLocalizedMessageQuestion4();
-        getLocalizedMessageQuestion5();
-
-    }
-
-    private void getLocalizedMessageAnswers() {
-
-        doReturn("Moscow").when(messageSource)
-                .getMessage("answers.moscow", null, Locale.forLanguageTag(""));
-
-        doReturn("Only for frontend").when(messageSource)
-                .getMessage("answers.only_for_frontend", null, Locale.forLanguageTag(""));
-        doReturn("Only for backend").when(messageSource)
-                .getMessage("answers.only_for_backend", null, Locale.forLanguageTag(""));
-        doReturn("Frontend and backend").when(messageSource)
-                .getMessage("answers.frontend_and_backend", null, Locale.forLanguageTag(""));
-
-        doReturn("Java").when(messageSource)
-                .getMessage("answers.java", null, Locale.forLanguageTag(""));
-        doReturn("Angular").when(messageSource)
-                .getMessage("answers.angular", null, Locale.forLanguageTag(""));
-        doReturn("Spring").when(messageSource)
-                .getMessage("answers.spring", null, Locale.forLanguageTag(""));
-        doReturn("TypeScript").when(messageSource)
-                .getMessage("answers.typescript", null, Locale.forLanguageTag(""));
-
-        doReturn("Diasoft").when(messageSource)
-                .getMessage("answers.diasoft", null, Locale.forLanguageTag(""));
-
-        doReturn("University").when(messageSource)
-                .getMessage("answers.university", null, Locale.forLanguageTag(""));
-        doReturn("Udemy").when(messageSource)
-                .getMessage("answers.udemy", null, Locale.forLanguageTag(""));
-        doReturn("Otus").when(messageSource)
-                .getMessage("answers.otus", null, Locale.forLanguageTag(""));
 
     }
 

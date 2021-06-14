@@ -3,6 +3,7 @@ spring:
     basename: i18n/messages
 
 question-book:
+  language-resource-folder-name: i18n
   resource-name: questions.csv
   valid-answer-min-count: 4
   language-tag: ""
