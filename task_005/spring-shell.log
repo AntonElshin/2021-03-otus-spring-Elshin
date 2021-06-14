@@ -1,0 +1,93 @@
+1623684537457:perform_testing
+1623684724844:print_questions
+1623684731555:select_language
+1623684740147:print_questions
+1623684748667:perform_testing
+1623684772249:select_language
+1623685725707:print_questions
+1623685732679:select_language
+1623685742972:print_questions
+1623685753881:set_language 'en-US'
+1623685759469:print_questions
+1623685765120:set_language 'ru-RU'
+1623685770227:print_questions
+1623685780851:set_language
+1623685787085:print_questions
+1623685794779:set_language 'en-US123'
+1623685802972:print_questions
+1623685814611:set_language 'en-US'
+1623685840668:set_valid_min_answer_count 3
+1623685847115:perform_testing
+1623685883604:set_valid_min_answer_count 4
+1623685919736:perform_testing
+1623685974853:select_language
+1623685999550:set_language 'ru-RU'
+1623686017925:set_valid_min_answer_count 5
+1623686045333:perform_testing
+1623686073212:set_valid_min_answer_count 4
+1623686080077:perform_testing
+1623686109323:select_language
+1623686117811:print_questions
+1623686144589:select_language
+1623686151580:print_questions
+1623686167446:set_language 'en-US'
+1623686174871:print_questions
+1623686200719:select_language
+1623686210163:print_questions
+1623686216476:select_language
+1623686239068:print_questions
+1623686411327:select_language
+1623686440999:set_language 'ru-RU'
+1623686452060:select_language
+1623686515550:set_language 'ru-RU'
+1623686554353:select_language
+1623686568573:print_questions
+1623686577542:select_language 1
+1623686587220:print_questions
+1623686592524:set_language 'en-US'
+1623686606959:set_language 'ru-RU'
+1623686618036:print_questions
+1623686626127:set_language 'en-US'
+1623686630620:print_questions
+1623686635780:set_language 'ru-RU'
+1623686640258:print_questions
+1623686648741:set_language
+1623686653611:print_questions
+1623686661779:set_language 'en-US123'
+1623686666243:print_questions
+1623686678421:set_valid_min_answer_count 3
+1623686684575:perform_testing
+1623686714654:set_valid_min_answer_count 5
+1623686721459:set_language 'ru-RU'
+1623686726283:perform_testing
+1623686750663:set_valid_min_answer_count 4
+1623686757965:perform_testing
+1623687143031:select_language
+1623687151102:print_questions
+1623687164965:select_language
+1623687172292:print_questions
+1623687183051:set_language 'ru-RU'
+1623687187671:print_questions
+1623687193431:set_language 'en-US'
+1623687198334:print_questions
+1623687205286:set_valid_min_answer_count 3
+1623687210913:perform_testing
+1623687243751:set_language 'en-US'
+1623687333375:print_questions
+1623687402419:set_language 'en-US'
+1623687407447:print_questions
+1623687420759:select_language
+1623687428230:print_questions
+1623687433431:select_language
+1623687440235:print_questions
+1623687458776:set_language 'ru-RU'
+1623687463818:print_questions
+1623687472102:set_language 'en-US'
+1623687476853:print_questions
+1623687490726:set_valid_min_answer_count 3
+1623687500894:perform_testing
+1623687533847:set_valid_min_answer_count 5
+1623687540188:set_language 'ru-RU'
+1623687544430:perform_testing
+1623687576471:set_valid_min_answer_count 4
+1623687582032:perform_testing
