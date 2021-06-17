@@ -1,0 +1,20 @@
+select_language
+print_questions
+
+select_language
+print_questions
+
+set_language 'ru-RU'
+print_questions
+
+set_language 'en-US'
+print_questions
+
+set_valid_min_answer_count 3
+perform_testing
+
+set_valid_min_answer_count 5
+perform_testing
+
+set_valid_min_answer_count 4
+perform_testing

@@ -1,0 +1,5 @@
+Текущая столица России?,typing,Москва:true
+JavaScript язык для?,single,Только для frontend:false,Только для backend:false,Frontend и backend:true
+Отметьте языки и фреймворки для текущего курса ...,multy,Java:true,Angular:false,Spring:true,TypeScript:false
+Напечатайте название компании для которой данный курс был изменён?,typing,Диасофт:true
+Выберите имя обучающей компании?,single,Университет:false,Юдеми:false,Отус:true
