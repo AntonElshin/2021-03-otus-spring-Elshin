@@ -1,0 +1,30 @@
+http://localhost:8080/logout - разлогиниться
+Логин/пароль: admin/admin
+
+http://localhost:8080/swagger-ui.html - swagger
+
+http://localhost:8080/genre/genres/all - все жанры
+http://localhost:8080/genre/genres?genreName=Детектив - поиск жанров по параметрам
+http://localhost:8080/genre/genres/1 - жанр по идентификатору
+
+http://localhost:8080/author/authors/all - все авторы
+http://localhost:8080/author/authors?authorLastName=Пушкин&authorFirstName=Александр&authorMiddleName=Сергеевич - поиск авторов по параметрам
+http://localhost:8080/author/authors/1 - автор по идентификатору
+
+http://localhost:8080/book/books/all - все книги
+http://localhost:8080/book/books?bookTitle=Сказка о рыбаке и рыбке&bookISBN=353&bookAuthorId=3&bookGenreId=3 - поиск книг по параметрам
+http://localhost:8080/book/books/1 - книга по идентификатору
+
+http://localhost:8080/book-comment/bookcomments?commentBookId=1 - комментарии к книге
+http://localhost:8080/book-comment/bookcomments/1 - комментарий по идентификатору
+
+select * from lib_genres; --3
+select * from lib_authors; --5
+select * from lib_books; --4
+
+select * from lib_bookauthorlinks where bookid = 5; --6
+select * from lib_bookgenrelinks where bookid = 5; --4
+
+select * from lib_bookcomments; --4
+
+-Dspring.profiles.active=dev

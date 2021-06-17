@@ -17,6 +17,7 @@ import ru.otus.homework.domain.QuestionBook;
 import ru.otus.homework.domain.QuestionTypes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -30,14 +31,6 @@ public class QuestionBookServiceImplTest {
     private QuestionBookService questionBookService;
 
     QuestionBook questionBook = new QuestionBook();
-
-    String[] questionsFromFile  = new String[] {
-            "Current capital of Russia?,typing,Moscow:true",
-            "JavaScript is language for?,single,Only for frontend:false,Only for backend:false,Frontend and backend:true",
-            "Mark languages and frameworks for current course ...,multy,Java:true,Angular:false,Spring:true,TypeScript:false",
-            "Print name of company for which course customized for?,typing,Diasoft:true",
-            "Select name of education company?,single,University:false,Udemy:false,Otus:true"
-    };
 
     @BeforeEach
     public void setUp() {
@@ -103,6 +96,8 @@ public class QuestionBookServiceImplTest {
     @Test
     public void getQuestionBook() throws Exception {
 
+        List<String> questionsFromFile = getQuestions();
+
         Mockito.when(questionBookDao.getQuestionBook(questionsFromFile)).thenReturn(questionBook);
 
         questionBookService.getQuestionBook(questionsFromFile);
@@ -139,6 +134,19 @@ public class QuestionBookServiceImplTest {
         testQuestionBook.setQuestions(questions);
 
         Assert.assertFalse(questionBookService.validateQuestionBook(testQuestionBook));
+
+    }
+
+    private List<String> getQuestions() {
+
+        List<String> questionsFromFile = new ArrayList<>();
+        questionsFromFile.add("Current capital of Russia?,typing,Moscow:true");
+        questionsFromFile.add("JavaScript is language for?,single,Only for frontend:false,Only for backend:false,Frontend and backend:true");
+        questionsFromFile.add("Mark languages and frameworks for current course ...,multy,Java:true,Angular:false,Spring:true,TypeScript:false");
+        questionsFromFile.add("Print name of company for which course customized for?,typing,Diasoft:true");
+        questionsFromFile.add("Select name of education company?,single,University:false,Udemy:false,Otus:true");
+
+        return questionsFromFile;
 
     }
 

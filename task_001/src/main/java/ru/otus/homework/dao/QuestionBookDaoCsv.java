@@ -17,9 +17,9 @@ public class QuestionBookDaoCsv implements QuestionBookDao {
     }
 
     @Override
-    public QuestionBook getQuestionBook(String[] questions) throws BusinessException {
+    public QuestionBook getQuestionBook(List<String> questions) throws BusinessException {
 
-        if(questions == null || questions.length == 0) {
+        if(questions == null || (questions != null && questions.size() == 0)) {
             throw new BusinessException(Errors.QUESTION_LIST_IS_NULL);
         }
 
