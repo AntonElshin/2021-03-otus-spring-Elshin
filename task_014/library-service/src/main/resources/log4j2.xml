@@ -37,7 +37,7 @@
 			<AppenderRef ref="File"/>
 		</Logger>
 
-		<Root level="trace">
+		<Root level="error">
 			<AppenderRef ref="STDOUT"/>
 		</Root>
 	</Loggers>
