@@ -1,0 +1,38 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <!-- Добавление пользователя администратор -->
+    <changeSet author="aelshin" id="1.0.1-insertAdminAccountV1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(USERACCOUNTID) FROM CORE_USERACCOUNT WHERE LOGIN = 'admin'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="CORE_USERACCOUNT">
+            <column name="USERACCOUNTID" valueComputed="nextval('CORE_USERACCOUNT_SEQ')"/>
+            <column name="LOGIN">admin</column>
+            <column name="PASSWORD">$2a$10$aa7LtAqXeRnbs85FJCf0zutJeWyHudhpx1txB8BxcYMjluX/Rx.5q</column> <!--admin-->
+            <column name="STATUS">ACTIVE</column>
+        </insert>
+
+    </changeSet>
+
+    <!-- Связь роли пользователя и учётной записи -->
+    <changeSet author="aelshin" id="1.0.1-insertAdminRoleAccountV1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(ROLEID) FROM CORE_ROLEACCOUNT WHERE USERACCOUNTID = 1 AND ROLEID = 1
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="CORE_ROLEACCOUNT">
+            <column name="LINKID" valueComputed="nextval('CORE_ROLEACCOUNT_SEQ')"/>
+            <column name="USERACCOUNTID" valueComputed="(select USERACCOUNTID from CORE_USERACCOUNT where LOGIN = 'admin')"/>
+            <column name="ROLEID" valueComputed="(select ROLEID from CORE_USERROLE where ROLESYSNAME = 'admin')"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
