@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:task_013
+    username: sa
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+    generate-ddl: false
+  liquibase:
+    change-log: classpath:/liquibase/rootChangeLog.xml
+
+logging:
+  file.name: logs/controller.log
+  pattern:
+    console: "%d [%t] %-5level %logger{36} - %msg%n"
+    file: "%d [%t] %-5level %logger{36} - %msg%n"
+  level:
+    ru.otus.homework.library: DEBUG
+
+security:
+  enabled: true
+
+jwt:
+  secret: otus
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
