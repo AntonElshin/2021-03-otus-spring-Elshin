@@ -17,6 +17,14 @@ spring:
   liquibase:
     change-log: classpath:/liquibase/rootChangeLog.xml
 
+logging:
+  file.name: logs/controller.log
+  pattern:
+    console: "%d [%t] %-5level %logger{36} - %msg%n"
+    file: "%d [%t] %-5level %logger{36} - %msg%n"
+  level:
+    ru.otus.homework.library: DEBUG
+
 security:
   enabled: true
 
