@@ -1,0 +1,19 @@
+Проект task_016 запускать с профилем dev
+
+http://localhost:8765/ - Eureka
+
+http://localhost:7081/demo/swagger-ui.html - swagger
+
+http://localhost:7080/ - gateway
+
+fetch(
+  'http://localhost:7080/sms-verification', 
+  { 
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ PhoneNumber: '89159746106' })
+  }
+).then(result => console.log(result))
+
+
+fetch('http://localhost:7080/v1/sms-verification?Code=13241&ProcessGUID=923cdf15-11b6-41cf-8393-11509b917137').then(response => response.json().then(console.log))

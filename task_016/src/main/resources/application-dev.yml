@@ -1,0 +1,71 @@
+server:
+  port: 7081
+  servlet:
+    context-path: /${SERVICE_NAME:demo}
+
+security: 
+  enabled: false
+  oauth2: 
+    client: 
+      clientId:
+      clientSecret: 
+      scope:
+      accessTokenUri:
+      userAuthorizationUri:
+    resource: 
+      jwt: 
+        key-uri:
+        
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/task_016
+    username: postgres
+    password: 123
+    hikari:
+      connection-test-query:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        jdbc:
+          time_zone: UTC
+          lob:
+            non_contextual_creation: true
+  kafka:
+    bootstrap-servers: localhost:9092   
+  cloud:      
+    stream:
+      binders:
+        binderName:
+          type: kafka
+      bindings:
+        smsVerificationMessagePublish:
+          destination: sms-verification
+        smsVerificationDeliveredSubscribe:
+          destination: sms-verification-delivered
+          group: sms-verification
+  messages:
+    basename: i18n.messages
+
+rest-template:
+  config:
+    connectTimeout: 300000
+    readTimeout: 300000
+
+eureka:
+  client:
+    enabled: true
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8765/eureka/
+  instance:
+    prefer-ip-address: true
