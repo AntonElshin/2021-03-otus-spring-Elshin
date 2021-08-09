@@ -1,0 +1,19 @@
+server:
+  port: 7082
+  servlet:
+    context-path: /${SERVICE_NAME:adapter}
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+  cloud:
+    stream:
+      binders:
+        binderName:
+          type: kafka
+      bindings:
+        smsVerificationDeliveredPublish:
+          destination: sms-verification-delivered
+        smsVerificationMessageSubscribe:
+          destination: sms-verification
+          group: sms-verification

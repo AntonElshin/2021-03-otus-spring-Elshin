@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ${SERVICE_NAME:task}
+  cloud:
+    config:
+      enabled: false
