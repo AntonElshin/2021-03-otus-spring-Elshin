@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: task_017_clientcall
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+server:
+  port: 8081
+ru:
+  otus:
+    homework:
+      library:
+        base-url: http://localhost:8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#Eureka Discovery settings
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8765/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 30
+    instance-id: task_017_clientcall:8081

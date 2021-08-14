@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: task_017
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_017
+    username: postgres
+    password: 123
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#Eureka Discovery settings
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8765/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 30
+    instance-id: task_017:8080
