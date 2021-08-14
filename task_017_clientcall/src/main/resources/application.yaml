@@ -30,3 +30,11 @@ eureka:
     leaseRenewalIntervalInSeconds: 30
     leaseExpirationDurationInSeconds: 30
     instance-id: task_017_clientcall:8081
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 3000
+        loggerLevel: basic

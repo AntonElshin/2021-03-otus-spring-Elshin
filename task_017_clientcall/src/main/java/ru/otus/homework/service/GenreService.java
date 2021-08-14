@@ -1,20 +1,14 @@
 package ru.otus.homework.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import ru.otus.homework.library.client.LibraryClient;
 import ru.otus.homework.library.dto.GenreResListDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 @Service
 public class GenreService {
