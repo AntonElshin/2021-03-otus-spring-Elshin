@@ -1,0 +1,1295 @@
+openapi: 3.0.0
+info:
+  title: Otus library API
+  version: 1.0.0
+  description: 'Сервис библиотеки домашнего задания Otus'
+  contact:
+    name: Anton Elshin
+    email: aelshin@diasoft.ru
+    url: https://otus.ru
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/author/authors/{authorId}':
+    parameters:
+      - $ref: '#/components/parameters/authorId'
+    get:
+      summary: Получение автора
+      operationId: getAuthor
+      description: Получение автора
+      tags:
+        - authors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    lastName: string
+                    firstName: string
+                    middleName: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+    put:
+      summary: Изменение автора
+      operationId: modifyAuthor
+      description: Изменение автора
+      tags:
+        - authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorReqDTO'
+            examples:
+              example-1:
+                value:
+                  lastName: string
+                  firstName: string
+                  middleName: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    lastName: string
+                    firstName: string
+                    middleName: string
+        '400':
+          description: Bad Request
+    delete:
+      summary: Удаление автора
+      operationId: deleteAuthor
+      description: Удаление автора
+      tags:
+        - authors
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /author/authors:
+    parameters: [ ]
+    get:
+      summary: Получение списка авторов по параметрам
+      operationId: findAuthorsByParams
+      description: Получение списка авторов по параметрам
+      tags:
+        - authors
+      parameters:
+        - $ref: '#/components/parameters/authorLastName'
+        - $ref: '#/components/parameters/authorFirstName'
+        - $ref: '#/components/parameters/authorMiddleName'
+      responses:
+        '200':
+          description: OK
+          headers: { }
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AuthorResListDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      lastName: string
+                      firstName: string
+                      middleName: string
+    post:
+      summary: Создание автора
+      operationId: createAuthor
+      description: Создание автора
+      tags:
+        - authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorReqDTO'
+            examples:
+              example-1:
+                value:
+                  lastName: string
+                  firstName: string
+                  middleName: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    lastName: string
+                    firstName: string
+                    middleName: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /author/authors/all:
+    get:
+      summary: Получение всех авторов
+      operationId: getAllAuthors
+      description: Получение всех авторов
+      tags:
+        - authors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorResListDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    lastName: string
+                    firstName: string
+                    middleName: string
+        '400':
+          description: Bad Request
+  '/genre/genres/{genreId}':
+    parameters:
+      - $ref: '#/components/parameters/genreId'
+    get:
+      summary: Получение жанра
+      operationId: getGenre
+      description: Получение жанра
+      tags:
+        - genres
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+    put:
+      summary: Изменение жанра
+      operationId: modifyGenre
+      description: Изменение жанра
+      tags:
+        - genres
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenreReqDTO'
+            examples:
+              example-1:
+                value:
+                  name: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+    delete:
+      summary: Удаление жанра
+      operationId: deleteGenre
+      description: Удаление жанра
+      tags:
+        - genres
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /genre/genres:
+    parameters: [ ]
+    get:
+      summary: Получение списка жанров по параметрам
+      operationId: findGenresByParams
+      description: Получение списка жанров по параметрам
+      tags:
+        - genres
+      parameters:
+        - $ref: '#/components/parameters/genreName'
+      responses:
+        '200':
+          description: OK
+          headers: { }
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GenreResListDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      name: string
+    post:
+      summary: Создание жанра
+      operationId: createGenre
+      description: Создание жанра
+      tags:
+        - genres
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenreReqDTO'
+            examples:
+              example-1:
+                value:
+                  lastName: string
+                  firstName: string
+                  middleName: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /genre/genres/all:
+    get:
+      summary: Получение всех жанров
+      operationId: getAllGenres
+      description: Получение всех жанров
+      tags:
+        - genres
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GenreResListDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+        '400':
+          description: Bad Request
+  '/book/books/{bookId}':
+    parameters:
+      - $ref: '#/components/parameters/bookId'
+    get:
+      summary: Получение книги
+      operationId: getBook
+      description: Получение книги
+      tags:
+        - books
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResWithCommentsDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    title: string
+                    isbn: string
+                    authors:
+                      - id: 1
+                        lastName: string
+                        firstName: string
+                        middleName: string
+                    genres:
+                      - id: 1
+                        name: string
+                    comments:
+                      - id: 1
+                        text: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+    put:
+      summary: Изменение книги
+      operationId: modifyBook
+      description: Изменение книги
+      tags:
+        - books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReqDTO'
+            examples:
+              example-1:
+                value:
+                  title: string
+                  isbn: string
+                  description: string
+                  authors:
+                    - id: 1
+                  genres:
+                    - id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResDTO'
+              examples:
+                example-1:
+                  value:
+                    title: string
+                    isbn: string
+                    description: string
+                    authors:
+                      - id: 1
+                        lastName: string
+                        firstName: string
+                        middleName: string
+                    genres:
+                      - id: 1
+                        name: string
+        '400':
+          description: Bad Request
+    delete:
+      summary: Удаление книги
+      operationId: deleteBook
+      description: Удаление книги
+      tags:
+        - books
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /book/books:
+    parameters: [ ]
+    get:
+      summary: Получение списка книг по параметрам
+      operationId: findBooksByParams
+      description: Получение списка книг по параметрам
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/bookTitle'
+        - $ref: '#/components/parameters/bookISBN'
+        - $ref: '#/components/parameters/bookAuthorId'
+        - $ref: '#/components/parameters/bookGenreId'
+      responses:
+        '200':
+          description: OK
+          headers: { }
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BookResListDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      title: string
+                      isbn: string
+                      authors:
+                        - id: 1
+                          lastName: string
+                          firstName: string
+                          middleName: string
+                      genres:
+                        - id: 1
+                          name: string
+    post:
+      summary: Создание книги
+      operationId: createBook
+      description: Создание книги
+      tags:
+        - books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookReqDTO'
+            examples:
+              example-1:
+                value:
+                  title: string
+                  isbn: string
+                  description: string
+                  authors:
+                    - id: 1
+                  genres:
+                    - id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResDTO'
+              examples:
+                example-1:
+                  value:
+                    title: string
+                    isbn: string
+                    description: string
+                    authors:
+                      - id: 1
+                        lastName: string
+                        firstName: string
+                        middleName: string
+                    genres:
+                      - id: 1
+                        name: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /book/books/all:
+    get:
+      summary: Получение всех книг
+      operationId: getAllBooks
+      description: Получение всех книг
+      tags:
+        - books
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResListDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    title: string
+                    isbn: string
+                    authors:
+                      - id: 1
+                        lastName: string
+                        firstName: string
+                        middleName: string
+                    genres:
+                      - id: 1
+                        name: string
+        '400':
+          description: Bad Request
+  '/book-comment/bookcomments/{bookCommentId}':
+    parameters:
+      - $ref: '#/components/parameters/bookCommentId'
+    get:
+      summary: Получение комментария к книге
+      operationId: getBookComment
+      description: Получение комментария к книге
+      tags:
+        - bookcomments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCommentResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    text: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+    put:
+      summary: Изменение комментария к книге
+      operationId: modifyBookComment
+      description: Изменение комментария к книге
+      tags:
+        - bookcomments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCommentReqDTO'
+            examples:
+              example-1:
+                value:
+                  book:
+                    id: 1
+                  text: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCommentResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    text: string
+        '400':
+          description: Bad Request
+    delete:
+      summary: Удаление комментария к книге
+      operationId: deleteBookComment
+      description: Удаление комментария к книге
+      tags:
+        - bookcomments
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+  /book-comment/bookcomments:
+    parameters: [ ]
+    get:
+      summary: Получение списка комментариев к книге по параметрам
+      operationId: findBookCommentsByParams
+      description: Получение списка комментариев к книге по параметрам
+      tags:
+        - bookcomments
+      parameters:
+        - $ref: '#/components/parameters/commentBookId'
+      responses:
+        '200':
+          description: OK
+          headers: { }
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BookCommentResListDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      text: string
+    post:
+      summary: Создание комментария к книге
+      operationId: createBookComment
+      description: Создание комментария к книге
+      tags:
+        - bookcomments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCommentReqDTO'
+            examples:
+              example-1:
+                value:
+                  book:
+                    id: 1
+                  text: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCommentResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    text: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResDTO'
+components:
+  schemas:
+    AuthorReqDTO:
+      title: AuthorReqDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с информацией об авторе'
+      x-examples:
+        example-1:
+          lastName: string
+          firstName: string
+          middleName: string
+      properties:
+        lastName:
+          type: string
+          description: Фамилия автора
+          maxLength: 256
+        firstName:
+          type: string
+          description: Имя автора
+          maxLength: 256
+        middleName:
+          type: string
+          description: Отчество автора
+          maxLength: 256
+      required:
+        - lastName
+        - firstName
+    AuthorReqIdDTO:
+      title: AuthorReqIdDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с идентификатором автора'
+      x-examples:
+        example-1:
+          id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор автора
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    AuthorResDTO:
+      title: AuthorResDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией об авторе'
+      x-examples:
+        example-1:
+          id: 1
+          lastName: string
+          firstName: string
+          middleName: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор автора
+          minimum: 1
+          maximum: 2147483647
+        lastName:
+          type: string
+          description: Фамилия автора
+          maxLength: 256
+        firstName:
+          type: string
+          description: Имя автора
+          maxLength: 256
+        middleName:
+          type: string
+          description: Отчество автора
+          maxLength: 256
+    AuthorResListDTO:
+      title: AuthorResListDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией об авторе для списка'
+      x-examples:
+        example-1:
+          id: 1
+          lastName: string
+          firstName: string
+          middleName: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор автора
+          minimum: 1
+          maximum: 2147483647
+        lastName:
+          type: string
+          description: Фамилия автора
+          maxLength: 256
+        firstName:
+          type: string
+          description: Имя автора
+          maxLength: 256
+        middleName:
+          type: string
+          description: Отчество автора
+          maxLength: 256
+    BookCommentReqDTO:
+      title: BookCommentReqDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с информацией о комментарии к книге'
+      x-examples:
+        example-1:
+          book:
+            id: 1
+          text: string
+      properties:
+        book:
+          $ref: '#/components/schemas/BookReqIdDTO'
+        text:
+          type: string
+          description: Текст комментария к книге
+          maxLength: 256
+      required:
+        - book
+        - text
+    BookCommentResDTO:
+      title: BookCommentResDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о комментарии к книге'
+      x-examples:
+        example-1:
+          id: 1            
+          text: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор комментария к книге
+          minimum: 1
+          maximum: 2147483647
+        text:
+          type: string
+          description: Текст комментария к книге
+          maxLength: 256
+    BookCommentResListDTO:
+      title: BookCommentResListDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о комментарии к книге для списка'
+      x-examples:
+        example-1:
+          id: 1
+          text: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор комментария к книге
+          minimum: 1
+          maximum: 2147483647
+        text:
+          type: string
+          description: Текст комментария к книге
+          maxLength: 256    
+    BookReqDTO:
+      title: BookReqDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с информацией о книге'
+      x-examples:
+        example-1:
+          title: string
+          isbn: string
+          description: string
+          authors:
+            - id: 1
+          genres:
+            - id: 1
+      properties:
+        title:
+          type: string
+          description: Название книги
+          maxLength: 256
+        isbn:
+          type: string
+          description: ISBN
+          maxLength: 18
+        description:
+          type: string
+          description: Описание книги
+          maxLength: 1024
+        authors:
+          type: array
+          minItems: 1
+          description: Список идентификаторов авторов
+          items:
+            $ref: '#/components/schemas/AuthorReqIdDTO'
+        genres:
+          type: array
+          minItems: 1
+          description: Список идентификаторов жанров
+          items:
+            $ref: '#/components/schemas/GenreReqIdDTO'
+      required:
+        - title
+        - authors
+        - genres
+    BookReqIdDTO:
+      title: BookReqIdDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с идентификатором книги'
+      x-examples:
+        example-1:
+          id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор книги
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    BookResDTO:
+      title: BookResDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о книге'
+      x-examples:
+        example-1:
+          id: 1
+          title: string
+          isbn: string
+          description: string
+          authors:
+            - id: 1
+              lastName: string
+              firstName: string
+              middleName: string
+          genres:
+            - id: 1
+              name: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор книги
+          minimum: 1
+          maximum: 2147483647
+        title:
+          type: string
+          description: Название книги
+          maxLength: 256
+        isbn:
+          type: string
+          description: ISBN
+          maxLength: 18
+        description:
+          type: string
+          description: Описание книги
+          maxLength: 1024
+        authors:
+          type: array
+          minItems: 0
+          description: Список авторов
+          items:
+            $ref: '#/components/schemas/AuthorResListDTO'
+        genres:
+          type: array
+          minItems: 0
+          description: Список жанров
+          items:
+            $ref: '#/components/schemas/GenreResListDTO'
+    BookResListDTO:
+      title: BookResListDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о книге'
+      x-examples:
+        example-1:
+          id: 1
+          title: string
+          isbn: string
+          authors:
+            - id: 1
+              lastName: string
+              firstName: string
+              middleName: string
+          genres:
+            - id: 1
+              name: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор книги
+          minimum: 1
+          maximum: 2147483647
+        title:
+          type: string
+          description: Название книги
+          maxLength: 256
+        isbn:
+          type: string
+          description: ISBN
+          maxLength: 18
+        authors:
+          type: array
+          minItems: 0
+          description: Список авторов
+          items:
+            $ref: '#/components/schemas/AuthorResListDTO'
+        genres:
+          type: array
+          minItems: 0
+          description: Список жанров
+          items:
+            $ref: '#/components/schemas/GenreResListDTO'
+    BookResWithCommentsDTO:
+      title: BookResWithCommentsDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о книге c комментариями'
+      x-examples:
+        example-1:
+          id: 1
+          title: string
+          isbn: string
+          description: string
+          authors:
+            - id: 1
+              lastName: string
+              firstName: string
+              middleName: string
+          genres:
+            - id: 1
+              name: string
+          comments:
+            - id: 1
+              text: string            
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор книги
+          minimum: 1
+          maximum: 2147483647
+        title:
+          type: string
+          description: Название книги
+          maxLength: 256
+        isbn:
+          type: string
+          description: ISBN
+          maxLength: 18
+        description:
+          type: string
+          description: Описание книги
+          maxLength: 1024
+        authors:
+          type: array
+          minItems: 0
+          description: Список авторов
+          items:
+            $ref: '#/components/schemas/AuthorResListDTO'
+        genres:
+          type: array
+          minItems: 0
+          description: Список жанров
+          items:
+            $ref: '#/components/schemas/GenreResListDTO'
+        comments:
+          type: array
+          minItems: 0
+          description: Список комментариев
+          items:
+            $ref: '#/components/schemas/BookCommentResListDTO'
+    ErrorResDTO:
+      title: ErrorResDTO
+      type: object
+      additionalProperties: false
+      description: 'Объект ошибки'
+      x-examples:
+        example-1:
+          code: 1
+          message: string
+      properties:
+        code:
+          type: integer
+          format: int64
+          description: Код ошибки
+          minimum: 0
+          maximum: 2147483647
+        message:
+          type: string
+          description: Текст ошибки
+          maxLength: 256
+    GenreReqDTO:
+      title: GenreReqDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с информацией о жанре'
+      x-examples:
+        example-1:
+          name: string
+          description: string
+      properties:
+        name:
+          type: string
+          description: Название жанра
+          maxLength: 256
+        description:
+          type: string
+          description: Описание жанра
+          maxLength: 1024
+      required:
+        - name
+    GenreReqIdDTO:
+      title: AuthorReqIdDTO
+      type: object
+      additionalProperties: false
+      description: 'Входящий объект с идентификатором жанра'
+      x-examples:
+        example-1:
+          id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор жанра
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    GenreResDTO:
+      title: GenreResDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о жанре'
+      x-examples:
+        example-1:
+          id: 1
+          name: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор жанра
+          minimum: 1
+          maximum: 2147483647
+        name:
+          type: string
+          description: Название жанра
+          maxLength: 256
+        description:
+          type: string
+          description: Описание жанра
+          maxLength: 1024
+    GenreResListDTO:
+      title: GenreResListDTO
+      type: object
+      additionalProperties: false
+      description: 'Исходящий объект с информацией о жанре для списка'
+      x-examples:
+        example-1:
+          id: 1
+          name: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор жанра
+          minimum: 1
+          maximum: 2147483647
+        name:
+          type: string
+          description: Название жанра
+          maxLength: 256
+  parameters:
+    authorLastName:
+      name: authorLastName
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по фамилии автора
+    authorFirstName:
+      name: authorFirstName
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по имени автора
+    authorMiddleName:
+      name: authorMiddleName
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по отчеству автора
+    genreName:
+      name: genreName
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по названию жанра
+    bookTitle:
+      name: bookTitle
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по названию книги
+    bookISBN:
+      name: bookISBN
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 18
+      description: Критерия фильтрации по ISBN книги
+    bookAuthorId:
+      name: bookAuthorId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 0
+        maximum: 20
+      description: Критерия фильтрации по идентификатору автора книги
+    bookGenreId:
+      name: bookGenreId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 0
+        maximum: 20
+      description: Критерия фильтрации по идентификатору жанра книги
+    commentBookId:
+      name: commentBookId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по идентификатору книги для комментария
+    authorId:
+      name: authorId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор автора
+    genreId:
+      name: genreId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор жанра
+    bookId:
+      name: bookId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор книги
+    bookCommentId:
+      name: bookCommentId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор комментария к книге
+tags:
+  - name: authors
+  - name: genres
+  - name: books
+  - name: bookcomments

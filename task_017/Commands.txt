@@ -1,0 +1,63 @@
+Проект task_017 запускать с профилем dev
+
+http://localhost:8765/ - Eureka
+
+HYSTRIX DASHBOARD
+
+http://localhost:8788/hystrix
+указать адрес http://localhost:8081/actuator/hystrix.stream
+указать адрес http://localhost:8788/turbine.stream
+или
+http://localhost:8788/hystrix/monitor?stream=http%3A%2F%2Flocalhost%3A8081%2Factuator%2Fhystrix.stream
+http://localhost:8788/hystrix/monitor?stream=http%3A%2F%2Flocalhost%3A8788%2Fturbine.stream
+
+Сборка приложения в docker
+
+mvn clean install
+docker-compose up --build
+
+Сборка образа графаны
+
+cd D:\Git\2021-03-otus-spring-Elshin\task_017\scripts
+docker-compose up --build
+
+http://localhost:3000/login - графана
+admin/admin
+
+http://localhost:8080/actuator/health - метрики здоровья
+
+http://localhost:8080/swagger-ui.html - swagger
+
+http://localhost:8080/genre/genres/all - все жанры
+http://localhost:8080/genre/genres?genreName=Детектив - поиск жанров по параметрам
+http://localhost:8080/genre/genres/1 - жанр по идентификатору
+
+http://localhost:8080/author/authors/all - все авторы
+http://localhost:8080/author/authors?authorLastName=Пушкин&authorFirstName=Александр&authorMiddleName=Сергеевич - поиск авторов по параметрам
+http://localhost:8080/author/authors/1 - автор по идентификатору
+
+http://localhost:8080/book/books/all - все книги
+http://localhost:8080/book/books?bookTitle=Сказка о рыбаке и рыбке&bookISBN=353&bookAuthorId=3&bookGenreId=3 - поиск книг по параметрам
+http://localhost:8080/book/books/1 - книга по идентификатору
+
+http://localhost:8080/book-comment/bookcomments?commentBookId=1 - комментарии к книге
+http://localhost:8080/book-comment/bookcomments/1 - комментарий по идентификатору
+
+select * from lib_genres; --3
+select * from lib_authors; --5
+select * from lib_books; --4
+
+select * from lib_bookauthorlinks where bookid = 5; --6
+select * from lib_bookgenrelinks where bookid = 5; --4
+
+select * from lib_bookcomments; --4
+
+select * from core_userrole;
+select * From core_useraccount;
+select * from core_roleaccount;
+
+-Dspring.profiles.active=dev
+
+*************************************************DEV*TOKENS***********************************************************
+login = admin, token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9._BBLSLFVxDRW7Oeg0s01_Vj-NOOp1YoTMDyGDAIHnHl3aBVZkZ32dxSyY2DClHpSgwIdHHSta-gIaMbYkqMBBA
+**********************************************************************************************************************
