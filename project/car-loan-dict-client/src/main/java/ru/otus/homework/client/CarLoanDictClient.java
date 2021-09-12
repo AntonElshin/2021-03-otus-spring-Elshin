@@ -24,6 +24,14 @@ public class CarLoanDictClient {
     private RestTemplate restTemplate;
     private CarLoanDictClientProperties props;
 
+    private final String URL_PATH_REF_GROUP = "/reference-group/refgroup";
+    private final String URL_PATH_REFERENCE = "/reference/reference";
+    private final String URL_PATH_REF_ITEM = "/reference-item/refitem";
+    private final String URL_PATH_BRAND = "/vehicle-brand/vehiclebrand";
+    private final String URL_PATH_MODEL = "/vehicle-model/vehiclemodel";
+    private final String URL_PATH_SET = "/vehicle-set/vehicleset";
+    private final String URL_PATH_SET_YEAR = "/vehicle-set-year/vehiclesetyear";
+
     public CarLoanDictClient(RestTemplate restTemplate, CarLoanDictClientProperties props) {
         this.restTemplate = restTemplate;
         this.props = props;
@@ -57,7 +65,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroups")
+                        .path(URL_PATH_REF_GROUP + "s")
                         .queryParam("parentId", parentId)
                         .queryParam("name", name)
                         .queryParam("sysname", sysname)
@@ -77,7 +85,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefGroupResDTO> getReferenceGroupById(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroup/{id}")
+                        .path(URL_PATH_REF_GROUP + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -89,7 +97,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefGroupResDTO> createReferenceGroup(RefGroupReqDTO refGroupReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroup")
+                        .path(URL_PATH_REF_GROUP)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(refGroupReqDTO),
@@ -100,7 +108,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefGroupResDTO> updateReferenceGroup(Long id, RefGroupReqDTO refGroupReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroup/{id}")
+                        .path(URL_PATH_REF_GROUP + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -112,7 +120,7 @@ public class CarLoanDictClient {
     public ResponseEntity<Void> deleteReferenceGroup(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroup/{id}")
+                        .path(URL_PATH_REF_GROUP + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -124,7 +132,7 @@ public class CarLoanDictClient {
     public ResponseEntity<List<RefGroupResDTO>> getAllReferenceGroups() {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-group/refgroups/all")
+                        .path(URL_PATH_REF_GROUP + "s/all")
                         .encode()
                         .build()
                         .toUri(),
@@ -147,7 +155,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/references")
+                        .path(URL_PATH_REFERENCE + "s")
                         .queryParam("group.id", groupId)
                         .queryParam("name", name)
                         .queryParam("sysname", sysname)
@@ -167,7 +175,7 @@ public class CarLoanDictClient {
     public ResponseEntity<ReferenceResDTO> getReferenceById(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/reference/{id}")
+                        .path(URL_PATH_REFERENCE + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -179,7 +187,7 @@ public class CarLoanDictClient {
     public ResponseEntity<ReferenceResDTO> createReference(ReferenceReqDTO referenceReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/reference")
+                        .path(URL_PATH_REFERENCE)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(referenceReqDTO),
@@ -190,7 +198,7 @@ public class CarLoanDictClient {
     public ResponseEntity<ReferenceResDTO> updateReference(Long id, ReferenceReqDTO referenceReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/reference/{id}")
+                        .path(URL_PATH_REFERENCE + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -202,7 +210,7 @@ public class CarLoanDictClient {
     public ResponseEntity<Void> deleteReference(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/reference/{id}")
+                        .path(URL_PATH_REFERENCE + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -216,7 +224,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference/references/all")
+                        .path(URL_PATH_REFERENCE + "s/all")
                         .queryParam("groupId", groupId)
                         .encode()
                         .build()
@@ -241,7 +249,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitems")
+                        .path(URL_PATH_REF_ITEM + "s")
                         .queryParam("reference.id", referenceId)
                         .queryParam("code", code)
                         .queryParam("name", name)
@@ -265,7 +273,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitems/all")
+                        .path(URL_PATH_REF_ITEM + "s/all")
                         .queryParam("referenceId", referenceId)
                         .queryParam("referenceSysName", referenceSysName)
                         .encode()
@@ -281,7 +289,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefItemResDTO> getReferenceItemById(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitem/{id}")
+                        .path(URL_PATH_REF_ITEM + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -293,7 +301,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefItemResDTO> createReferenceItem(RefItemReqDTO refItemReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitem")
+                        .path(URL_PATH_REF_ITEM)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(refItemReqDTO),
@@ -304,7 +312,7 @@ public class CarLoanDictClient {
     public ResponseEntity<RefItemResDTO> updateReferenceItem(Long id, RefItemReqDTO refItemReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitem/{id}")
+                        .path(URL_PATH_REF_ITEM + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -316,7 +324,7 @@ public class CarLoanDictClient {
     public ResponseEntity<Void> deleteReferenceItem(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/reference-item/refitem/{id}")
+                        .path(URL_PATH_REF_ITEM + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -336,7 +344,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrands")
+                        .path(URL_PATH_BRAND + "s")
                         .queryParam("name", name)
                         .queryParam("productionKind.id", productionKindId)
                         .queryParam("sort", sort)
@@ -359,7 +367,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrands/all")
+                        .path(URL_PATH_BRAND + "s/all")
                         .queryParam("name", name)
                         .queryParam("productionKindId", productionKindId)
                         .encode()
@@ -375,7 +383,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleBrandResDTO> getVehicleBrand(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrand/{id}")
+                        .path(URL_PATH_BRAND + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -387,7 +395,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleBrandResDTO> createVehicleBrand(VehicleBrandReqDTO vehicleBrandReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrand")
+                        .path(URL_PATH_BRAND)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(vehicleBrandReqDTO),
@@ -398,7 +406,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleBrandResDTO> modifyVehicleBrand(Long id, VehicleBrandReqDTO vehicleBrandReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrand/{id}")
+                        .path(URL_PATH_BRAND + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -410,7 +418,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleBrandReqDTO> deleteVehicleBrand(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-brand/vehiclebrand/{id}")
+                        .path(URL_PATH_BRAND + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -433,7 +441,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodels")
+                        .path(URL_PATH_MODEL + "s")
                         .queryParam("brand.id", brandId)
                         .queryParam("name", name)
                         .queryParam("kind.id", kindId)
@@ -461,7 +469,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodels/all")
+                        .path(URL_PATH_MODEL + "s/all")
                         .queryParam("brandId", brandId)
                         .queryParam("name", name)
                         .queryParam("kindId", kindId)
@@ -480,7 +488,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleModelResDTO> getVehicleModel(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodel/{id}")
+                        .path(URL_PATH_MODEL + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -492,7 +500,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleModelResDTO> createVehicleModel(VehicleModelReqDTO vehicleModelReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodel")
+                        .path(URL_PATH_MODEL)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(vehicleModelReqDTO),
@@ -503,7 +511,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleModelResDTO> modifyVehicleModel(Long id, VehicleModelReqDTO vehicleModelReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodel/{id}")
+                        .path(URL_PATH_MODEL + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -515,7 +523,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleModelReqDTO> deleteVehicleModel(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-model/vehiclemodel/{id}")
+                        .path(URL_PATH_MODEL + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -540,7 +548,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehiclesets")
+                        .path(URL_PATH_SET + "s")
                         .queryParam("model.id", modelId)
                         .queryParam("body.id", bodyId)
                         .queryParam("engineSize.id", engineSizeId)
@@ -572,7 +580,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehiclesets/all")
+                        .path(URL_PATH_SET + "s/all")
                         .queryParam("modelId", modelId)
                         .queryParam("bodyId", bodyId)
                         .queryParam("engineSizeId", engineSizeId)
@@ -602,7 +610,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehiclesets/checkprice")
+                        .path(URL_PATH_SET + "s/checkprice")
                         .queryParam("modelId", modelId)
                         .queryParam("characteristicSysName", characteristicSysName)
                         .queryParam("bodyId", bodyId)
@@ -624,7 +632,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetResDTO> getVehicleSet(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehicleset/{id}")
+                        .path(URL_PATH_SET + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -636,7 +644,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetResDTO> createVehicleSet(VehicleSetReqDTO vehicleSetReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehicleset")
+                        .path(URL_PATH_SET)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(vehicleSetReqDTO),
@@ -647,7 +655,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetResDTO> modifyVehicleSet(Long id, VehicleSetReqDTO vehicleSetReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehicleset/{id}")
+                        .path(URL_PATH_SET + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -659,7 +667,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetReqDTO> deleteVehicleSet(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set/vehicleset/{id}")
+                        .path(URL_PATH_SET + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -679,7 +687,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyears")
+                        .path(URL_PATH_SET_YEAR + "s")
                         .queryParam("set.id", setId)
                         .queryParam("year.id", yearId)
                         .queryParam("sort", sort)
@@ -701,7 +709,7 @@ public class CarLoanDictClient {
     ) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyears/all")
+                        .path(URL_PATH_SET_YEAR + "s/all")
                         .queryParam("setId", setId)
                         .queryParam("yearId", yearId)
                         .encode()
@@ -717,7 +725,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetYearResDTO> getVehicleSetYear(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyear/{id}")
+                        .path(URL_PATH_SET_YEAR + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.GET,
@@ -729,7 +737,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetYearResDTO> createVehicleSetYear(VehicleSetYearReqDTO vehicleSetYearReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyear")
+                        .path(URL_PATH_SET_YEAR)
                         .toUriString(),
                 HttpMethod.POST,
                 new HttpEntity(vehicleSetYearReqDTO),
@@ -740,7 +748,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetYearResDTO> modifyVehicleSetYear(Long id, VehicleSetYearReqDTO vehicleSetYearReqDTO) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyear/{id}")
+                        .path(URL_PATH_SET_YEAR + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.PUT,
@@ -752,7 +760,7 @@ public class CarLoanDictClient {
     public ResponseEntity<VehicleSetYearReqDTO> deleteVehicleSetYear(Long id) {
 
         return restTemplate.exchange(fromHttpUrl(props.baseUrl)
-                        .path("/vehicle-set-year/vehiclesetyear/{id}")
+                        .path(URL_PATH_SET_YEAR + "/{id}")
                         .buildAndExpand(id)
                         .toUriString(),
                 HttpMethod.DELETE,
@@ -763,7 +771,30 @@ public class CarLoanDictClient {
 
     // Загрузка файлов
 
-    public ResponseEntity<Void> uploadPassengerVehicleModels(MultipartFile file) {
+    public ResponseEntity<FileUploadHistoryPageResponseDTO> browseFileUploadHistoriesByParams(
+            Long fileTypeId,
+            String sort,
+            Long size,
+            Long page
+    ) {
+
+        return restTemplate.exchange(fromHttpUrl(props.baseUrl)
+                        .path("/file-upload/history")
+                        .queryParam("fileType.id", fileTypeId)
+                        .queryParam("sort", sort)
+                        .queryParam("size", size)
+                        .queryParam("page", page)
+                        .encode()
+                        .build()
+                        .toUri(),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<FileUploadHistoryPageResponseDTO>() {}
+        );
+
+    }
+
+    public ResponseEntity<Void> uploadPassengerUsedVehicleModels(MultipartFile file) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);

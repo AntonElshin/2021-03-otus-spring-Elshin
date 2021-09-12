@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.dto.VehicleSetYearReqDTO;
 import ru.otus.homework.dto.VehicleSetYearResDTO;
 import ru.otus.homework.entity.QVehicleSetYearEntity;
@@ -39,6 +40,13 @@ public class VehicleSetYearServiceImpl implements VehicleSetYearService {
     }
 
     @Override
+    @Transactional
+    public List<VehicleSetYearResDTO> findByParams(Predicate predicate) {
+        List<VehicleSetYearEntity> vehicleSetYearEntities = vehicleSetYearRepository.findAll(predicate);
+        return vehicleSetYearMapper.toListDto(vehicleSetYearEntities);
+    }
+
+    @Override
     public VehicleSetYearResDTO findById(Long id) {
 
         VehicleSetYearEntity vehicleSetYearEntity = vehicleSetYearRepository.findById(id)
@@ -51,6 +59,7 @@ public class VehicleSetYearServiceImpl implements VehicleSetYearService {
     }
 
     @Override
+    @Transactional
     public VehicleSetYearResDTO create(VehicleSetYearReqDTO vehicleSetYearReqDTO) {
 
         VehicleSetYearEntity vehicleSetYearEntity = checkAndPrepareVehicleSetYear(null, vehicleSetYearReqDTO);
@@ -60,6 +69,7 @@ public class VehicleSetYearServiceImpl implements VehicleSetYearService {
     }
 
     @Override
+    @Transactional
     public VehicleSetYearResDTO modify(Long id, VehicleSetYearReqDTO vehicleSetYearReqDTO) {
 
         VehicleSetYearEntity vehicleSetYearEntity = checkAndPrepareVehicleSetYear(id, vehicleSetYearReqDTO);
@@ -69,6 +79,7 @@ public class VehicleSetYearServiceImpl implements VehicleSetYearService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
 
         VehicleSetYearEntity vehicleSetYearEntity = vehicleSetYearRepository.findById(id)
@@ -164,7 +175,7 @@ public class VehicleSetYearServiceImpl implements VehicleSetYearService {
             }
         }
 
-        // проверка наличия типа кузова
+        // проверка наличия года выпуска
         if(yearId != null) {
             year = referenceItemService.checkReferenceItem(
                     yearId,

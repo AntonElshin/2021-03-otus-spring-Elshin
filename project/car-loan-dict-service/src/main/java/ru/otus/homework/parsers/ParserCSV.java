@@ -3,8 +3,6 @@ package ru.otus.homework.parsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.entity.*;
 import ru.otus.homework.exceptions.BusinessException;
 import ru.otus.homework.exceptions.Errors;

@@ -59,21 +59,21 @@ insert into ref_reference (refgroupid, referencename, refsysname, description) v
 (2, 'ref name 15', 'refsysname15', 'description 15');
 
 insert into ref_refitem (referenceid, code, name, brief, description) values
-(11, 'code1', 'name 1', 'brief 1', 'description 1'),
-(11, 'code2', 'name 2', 'brief 2', 'description 2'),
-(11, 'code3', 'name 3', 'brief 3', 'description 3'),
-(11, 'code4', 'name 4', 'brief 4', 'description 4'),
-(11, 'code5', 'name 5', 'brief 5', 'description 5'),
-(11, 'code6', 'name 6', 'brief 6', 'description 6'),
-(11, 'code7', 'name 7', 'brief 7', 'description 7'),
-(11, 'code8', 'name 8', 'brief 8', 'description 8'),
-(11, 'code9', 'name 9', 'brief 9', 'description 9'),
-(11, 'code10', 'name 10', 'brief 10', 'description 10'),
-(11, 'code11', 'name 11', 'brief 11', 'description 11'),
-(11, 'code12', 'name 12', 'brief 12', 'description 12'),
-(11, 'code13', 'name 13', 'brief 13', 'description 13'),
-(11, 'code14', 'name 14', 'brief 14', 'description 14'),
-(11, 'code15', 'name 15', 'brief 15', 'description 15');
+(12, 'code1', 'name 1', 'brief 1', 'description 1'),
+(12, 'code2', 'name 2', 'brief 2', 'description 2'),
+(12, 'code3', 'name 3', 'brief 3', 'description 3'),
+(12, 'code4', 'name 4', 'brief 4', 'description 4'),
+(12, 'code5', 'name 5', 'brief 5', 'description 5'),
+(12, 'code6', 'name 6', 'brief 6', 'description 6'),
+(12, 'code7', 'name 7', 'brief 7', 'description 7'),
+(12, 'code8', 'name 8', 'brief 8', 'description 8'),
+(12, 'code9', 'name 9', 'brief 9', 'description 9'),
+(12, 'code10', 'name 10', 'brief 10', 'description 10'),
+(12, 'code11', 'name 11', 'brief 11', 'description 11'),
+(12, 'code12', 'name 12', 'brief 12', 'description 12'),
+(12, 'code13', 'name 13', 'brief 13', 'description 13'),
+(12, 'code14', 'name 14', 'brief 14', 'description 14'),
+(12, 'code15', 'name 15', 'brief 15', 'description 15');
 
 insert into ref_vehiclebrand (brandname, productionkindid)  values
 ('brand name 1', 77),
@@ -129,9 +129,10 @@ select * from ref_reference where refsysname like '%refsysname%';
 select * from ref_refitem where code like '%code%';
 select * from ref_vehiclebrand where brandname like '%brand name%';
 select * from ref_vehiclemodel where modelname like '%model name%';
-select * from ref_vehicleset where vehiclesetid = 80;
-select * from ref_vehicleset where vehiclesetid = 121;
-select * from ref_vehiclesetyear where vehiclesetid = 121;
+select * from ref_modelownformlink where vehiclemodelid in (select vehiclemodelid from ref_vehiclemodel where modelname like '%model name%');
+select * from ref_vehicleset where vehiclesetid = 1;
+select * from ref_vehicleset where vehiclesetid = 10;
+select * from ref_vehiclesetyear where vehiclesetid = 10;
 
 select * from ref_refitem where referenceid = 1; -- vehicleKind
 select * from ref_refitem where referenceid = 8; -- bodyType
@@ -142,6 +143,7 @@ select * from ref_refitem where referenceid = 4; -- transmission
 select * from ref_refitem where referenceid = 5; -- yearOfManufacture
 select * from ref_refitem where referenceid = 10; -- propertyForm
 select * from ref_refitem where referenceid = 9; -- productionKind
+select * from ref_refitem where referenceid = 11; -- uploadFileType
 
 insert into ref_vehicleset values
-(121, 67, 49, 44, 8, 30, 11);
+(10, 67, 49, 44, 8, 30, 11);

@@ -11,6 +11,8 @@ public interface VehicleSetYearService {
 
     Iterable<VehicleSetYearResDTO> findByParams(Predicate predicate, Pageable pageable);
 
+    List<VehicleSetYearResDTO> findByParams(Predicate predicate);
+
     VehicleSetYearResDTO findById(Long id);
 
     VehicleSetYearResDTO create(VehicleSetYearReqDTO vehicleSetYearReqDTO);

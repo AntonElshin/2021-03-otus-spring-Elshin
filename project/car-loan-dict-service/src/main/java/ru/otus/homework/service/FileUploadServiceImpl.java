@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.homework.dto.FileUploadHistoryResDTO;
 import ru.otus.homework.entity.FileUploadHistoryEntity;
@@ -20,7 +19,6 @@ import ru.otus.homework.repository.ReferenceItemRepository;
 import ru.otus.homework.repository.VehicleModelRepository;
 import ru.otus.homework.dto.FileUploadHistoryResIdDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

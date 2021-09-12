@@ -1454,6 +1454,116 @@ public class VehicleSetControllerTest {
 
     }
 
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @DisplayName("вернуть цену комплектации после последовательного выбора полей")
+    @Test
+    public void checkPrice() throws Exception {
+
+        List<VehicleBrandResDTO> vehicleBrandsResDTO = createVehicleBrands();
+        List<VehicleModelResDTO> vehicleModelsResDTO = createVehicleModels(vehicleBrandsResDTO);
+        List<VehicleSetResDTO> vehicleSetsResDTO = createVehicleSets(vehicleModelsResDTO);
+        List<VehicleSetYearResDTO> vehicleSetYearsResDTO = createVehicleSetYears(vehicleSetsResDTO);
+
+        Long modelId_1 = vehicleModelsResDTO.get(0).getId();
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&characteristicSysName=yearOfManufacture"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(yearOfManufacture_2018.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2017.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2016.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2015.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2014.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2013.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2012.getId().toString())))
+                .andExpect(content().string(containsString(yearOfManufacture_2011.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&characteristicSysName=bodyType"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(bodyType_12.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&characteristicSysName=engineCapacity"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(engineCapacity_1.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&engineSizeId=" + engineCapacity_1.getId() +
+                "&characteristicSysName=engineType"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(engineType_B.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&engineSizeId=" + engineCapacity_1.getId() +
+                "&engineTypeId=" + engineType_B.getId() +
+                "&characteristicSysName=enginePower"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(enginePower_6.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&engineSizeId=" + engineCapacity_1.getId() +
+                "&engineTypeId=" + engineType_B.getId() +
+                "&powerId=" + enginePower_6.getId() +
+                "&characteristicSysName=transmission"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(transmission_A.getId().toString())))
+                .andExpect(content().string(containsString(transmission_M.getId().toString())))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&engineSizeId=" + engineCapacity_1.getId() +
+                "&engineTypeId=" + engineType_B.getId() +
+                "&powerId=" + enginePower_6.getId() +
+                "&transmissionId=" + transmission_A.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("100006")))
+        ;
+
+        this.mockMvc.perform(get(URL_PATH + "s/checkprice?modelId="+ modelId_1 +
+                "&yearId=" + yearOfManufacture_2012.getId() +
+                "&bodyId=" + bodyType_12.getId() +
+                "&engineSizeId=" + engineCapacity_1.getId() +
+                "&engineTypeId=" + engineType_B.getId() +
+                "&powerId=" + enginePower_6.getId() +
+                "&transmissionId=" + transmission_M.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("100010")))
+        ;
+
+        deleteVehicleSetYears(vehicleSetYearsResDTO);
+        deleteVehicleSets(vehicleSetsResDTO);
+        deleteVehicleModels(vehicleModelsResDTO);
+        deleteVehicleBrands(vehicleBrandsResDTO);
+    }
+
     private VehicleSetYearReqDTO createVehicleSetYearReqDTO(VehicleSetReqIdDTO set, RefItemReqIdDTO year, Double price) {
         VehicleSetYearReqDTO vehicleSetYearReqDTO = new VehicleSetYearReqDTO();
         vehicleSetYearReqDTO.setSet(set);
@@ -1541,8 +1651,6 @@ public class VehicleSetControllerTest {
         VehicleModelReqDTO vehicleModelReqDTO_1 = createVehicleModelReqDTO(createVehicleBrandReqIdDTO(brandId_1), "model name 1",
                 createRefItemReqIdDTO(vehicleKind_Passenger.getId()), List.of(createRefItemReqIdDTO(propertyForm_FinancedCar.getId())));
         vehicleModelsResDTO.add(vehicleModelService.create(vehicleModelReqDTO_1));
-        VehicleModelReqDTO vehicleModelReqDTO_2 = createVehicleModelReqDTO(createVehicleBrandReqIdDTO(brandId_1), "model name 2",
-                createRefItemReqIdDTO(vehicleKind_Passenger.getId()), List.of(createRefItemReqIdDTO(propertyForm_FinancedCar.getId())));
 
         return vehicleModelsResDTO;
     }

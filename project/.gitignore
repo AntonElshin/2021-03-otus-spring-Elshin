@@ -36,3 +36,5 @@ build/
 logs/
 *.log
 *.gz
+
+.flattened-pom.xml
