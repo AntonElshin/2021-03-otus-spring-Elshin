@@ -1,0 +1,532 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-AutoLoanReferenceEnginePower" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFERENCEID)
+                FROM
+                  REF_REFERENCE
+                WHERE
+                  REFSYSNAME = 'enginePower'
+                  AND REFGROUPID IN (
+                    SELECT
+                      REFGROUPID
+                    FROM
+                      REF_REFGROUP
+                    WHERE
+                      PARENTGROUPID = 0
+                      AND GROUPSYSNAME = 'AutoLoan'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFERENCE">
+            <column name="REFERENCEID" valueComputed="nextval('REF_REFERENCE_SEQ')"/>
+            <column name="REFGROUPID" valueComputed="(SELECT REFGROUPID FROM REF_REFGROUP WHERE PARENTGROUPID = 0 AND GROUPSYSNAME = 'AutoLoan')"/>
+            <column name="REFERENCENAME">Мощность (л.с.)</column>
+            <column name="REFSYSNAME">enginePower</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower100" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '1'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">1</column>
+            <column name="NAME">100</column>
+            <column name="BRIEF">100</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower200" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '2'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">2</column>
+            <column name="NAME">200</column>
+            <column name="BRIEF">200</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower250" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '3'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">3</column>
+            <column name="NAME">250</column>
+            <column name="BRIEF">250</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower300" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '4'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">4</column>
+            <column name="NAME">300</column>
+            <column name="BRIEF">300</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower50" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '5'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">5</column>
+            <column name="NAME">50</column>
+            <column name="BRIEF">50</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower150" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '6'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">6</column>
+            <column name="NAME">150</column>
+            <column name="BRIEF">150</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower350" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '7'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">7</column>
+            <column name="NAME">350</column>
+            <column name="BRIEF">350</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower400" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '8'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">8</column>
+            <column name="NAME">400</column>
+            <column name="BRIEF">400</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower450" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '9'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">9</column>
+            <column name="NAME">450</column>
+            <column name="BRIEF">450</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower500" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '10'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">10</column>
+            <column name="NAME">500</column>
+            <column name="BRIEF">500</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower550" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '11'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">11</column>
+            <column name="NAME">550</column>
+            <column name="BRIEF">550</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower600" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '12'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">12</column>
+            <column name="NAME">600</column>
+            <column name="BRIEF">600</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower650" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '13'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">13</column>
+            <column name="NAME">650</column>
+            <column name="BRIEF">650</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower700" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '14'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">14</column>
+            <column name="NAME">700</column>
+            <column name="BRIEF">700</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower750" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '15'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">15</column>
+            <column name="NAME">750</column>
+            <column name="BRIEF">750</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemEnginePower800" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = '16'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'enginePower'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'enginePower')"/>
+            <column name="CODE">16</column>
+            <column name="NAME">800</column>
+            <column name="BRIEF">800</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,28 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-AutoLoanRefGroup" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFGROUPID)
+                FROM
+                  REF_REFGROUP
+                WHERE
+                  PARENTGROUPID = 0
+                  AND GROUPSYSNAME = 'AutoLoan'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFGROUP">
+            <column name="REFGROUPID" valueComputed="nextval('REF_REFGROUP_SEQ')"/>
+            <column name="PARENTGROUPID">0</column>
+            <column name="GROUPNAME">Автокредитование</column>
+            <column name="GROUPSYSNAME">AutoLoan</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

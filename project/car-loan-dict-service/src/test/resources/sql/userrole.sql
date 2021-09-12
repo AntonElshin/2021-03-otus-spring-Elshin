@@ -1,0 +1,16 @@
+insert into ref_userrole(roleid, rolename, rolesysname, description) values
+(1, 'role name 1', 'rolesysname1', 'description 1'),
+(2, 'role name 2', 'rolesysname2', 'description 2'),
+(3, 'role name 3', 'rolesysname3', 'description 3'),
+(4, 'role name 4', 'rolesysname4', 'description 4'),
+(5, 'role name 5', 'rolesysname5', 'description 5'),
+(6, 'role name 6', 'rolesysname6', 'description 6'),
+(7, 'role name 7', 'rolesysname7', 'description 7'),
+(8, 'role name 8', 'rolesysname8', 'description 8'),
+(9, 'role name 9', 'rolesysname9', 'description 9'),
+(10, 'role name 10', 'rolesysname10', 'description 10'),
+(11, 'role name 11', 'rolesysname11', 'description 11'),
+(12, 'role name 12', 'rolesysname12', 'description 12'),
+(13, 'role name 13', 'rolesysname13', 'description 13'),
+(14, 'role name 14', 'rolesysname14', 'description 14'),
+(15, 'role name 15', 'rolesysname15', 'description 15');

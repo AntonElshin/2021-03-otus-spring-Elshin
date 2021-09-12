@@ -1,0 +1,1 @@
+delete from ref_refgroup;

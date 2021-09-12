@@ -1,0 +1,20 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <include file="references/refgroup.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_vehicleKind.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_vehicleType.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_engineType.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_transmission.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_yearOfManufacture.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_enginePower.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_engineCapacity.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_bodyType.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_productionKind.xml" relativeToChangelogFile="true"/>
+    <include file="references/reference_propertyForm.xml" relativeToChangelogFile="true"/>
+	<include file="references/reference_uploadFileType.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

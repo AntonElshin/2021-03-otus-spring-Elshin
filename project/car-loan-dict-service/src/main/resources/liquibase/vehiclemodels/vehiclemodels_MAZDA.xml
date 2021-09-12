@@ -1,0 +1,1525 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-2-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '2'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">2</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Bongo-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Bongo'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Bongo</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-CX-5-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'CX-5'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">CX-5</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-CX-7-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'CX-7'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">CX-7</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-CX-9-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'CX-9'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">CX-9</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Capella-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Capella'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Capella</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Demio-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Demio'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Demio</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Eunos Presso-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Eunos Presso'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Eunos Presso</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Familia-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Familia'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Familia</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MPV-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MPV'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MPV</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MX-5-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MX-5'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MX-5</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-3-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '3'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">3</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Premacy-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Premacy'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Premacy</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Protege 5-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Protege 5'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Protege 5</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-RX8-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'RX8'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">RX8</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Tribute-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Tribute'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Tribute</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Verisa-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Verisa'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Verisa</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-121-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '121'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">121</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Astina-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Astina'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Astina</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-AZ-1-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'AZ-1'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">AZ-1</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-AZ-3-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'AZ-3'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">AZ-3</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-AZ-Offroad-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'AZ-Offroad'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">AZ-Offroad</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-5-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '5'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">5</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-B-Series-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'B-Series'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">B-Series</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Carol-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Carol'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Carol</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Clef-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Clef'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Clef</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Cronos-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Cronos'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Cronos</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Etude-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Etude'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Etude</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Festiva-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Festiva'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Festiva</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Lantis-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Lantis'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Lantis</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Laputa-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Laputa'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Laputa</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Luce-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Luce'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Luce</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Miata-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Miata'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Miata</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-6-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '6'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">6</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Millenia-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Millenia'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Millenia</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MS-6-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MS-6'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MS-6</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MS-8-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MS-8'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MS-8</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MS-9-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MS-9'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MS-9</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MX-2-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MX-2'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MX-2</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MX-3-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MX-3'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MX-3</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-MX-6-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'MX-6'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">MX-6</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Navajo-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Navajo'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Navajo</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Persona-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Persona'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Persona</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Porter-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Porter'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Porter</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-AZ-Wagon-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'AZ-Wagon'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">AZ-Wagon</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Proceed-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Proceed'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Proceed</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Revue-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Revue'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Revue</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Roadster-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Roadster'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Roadster</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-RX-7-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'RX-7'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">RX-7</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Sentia-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Sentia'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Sentia</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Xedos-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Xedos'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Xedos</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Biante-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Biante'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Biante</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Atenza-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Atenza'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Atenza</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Axela-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Axela'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Axela</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-B-2500-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'B-2500'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">B-2500</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-BT-50-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'BT-50'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">BT-50</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-CX-3-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'CX-3'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">CX-3</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-3 MPS-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '3 MPS'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">3 MPS</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-6 MPS-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = '6 MPS'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">6 MPS</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Flair-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Flair'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Flair</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Flair Crossover-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'Flair Crossover'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Flair Crossover</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-RX-8-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'RX-8'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">RX-8</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-Flair Hybrid-Passenger" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                COUNT(VEHICLEMODELID)
+                FROM
+                REF_VEHICLEMODEL
+                WHERE
+                MODELNAME = 'Flair Hybrid'
+                AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+                AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">Flair Hybrid</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Passenger' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-B 2500 D-Commercial" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'B 2500 D'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">B 2500 D</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+	
+    <changeSet id="1.0.1-VehicleModels-MAZDA-B 2500 TD-Commercial" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'B 2500 TD'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">B 2500 TD</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>	
+
+    <changeSet id="1.0.1-VehicleModels-MAZDA-BT-50-Commercial" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEMODELID)
+                FROM
+                  REF_VEHICLEMODEL
+                WHERE
+                  MODELNAME = 'BT-50'
+                  AND VEHICLEBRANDID IN (SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')
+				  AND KINDID IN (SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEMODEL">
+            <column name="VEHICLEMODELID" valueComputed="nextval('REF_VEHICLEMODEL_SEQ')"/>
+            <column name="VEHICLEBRANDID" valueComputed="(SELECT VEHICLEBRANDID FROM REF_VEHICLEBRAND WHERE BRANDNAME = 'MAZDA')"/>
+            <column name="MODELNAME">BT-50</column>
+            <column name="KINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'Commercial' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'vehicleKind'))"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

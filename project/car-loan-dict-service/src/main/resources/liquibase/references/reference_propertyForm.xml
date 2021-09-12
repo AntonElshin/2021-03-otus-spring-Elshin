@@ -1,0 +1,98 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-AutoLoanReferencePropertyForm" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFERENCEID)
+                FROM
+                  REF_REFERENCE
+                WHERE
+                  REFSYSNAME = 'propertyForm'
+                  AND REFGROUPID IN (
+                    SELECT
+                      REFGROUPID
+                    FROM
+                      REF_REFGROUP
+                    WHERE
+                      PARENTGROUPID = 0
+                      AND GROUPSYSNAME = 'AutoLoan'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFERENCE">
+            <column name="REFERENCEID" valueComputed="nextval('REF_REFERENCE_SEQ')"/>
+            <column name="REFGROUPID" valueComputed="(SELECT REFGROUPID FROM REF_REFGROUP WHERE PARENTGROUPID = 0 AND GROUPSYSNAME = 'AutoLoan')"/>
+            <column name="REFERENCENAME">Форма собственности</column>
+            <column name="REFSYSNAME">propertyForm</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemPropertyFormFinancedCar" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = 'FinancedCar'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'propertyForm'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'propertyForm')"/>
+            <column name="CODE">FinancedCar</column>
+            <column name="NAME">Финансируемый</column>
+            <column name="BRIEF">Финансируемый</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="1.0.1-AutoLoanRefItemPropertyFormAssetCar" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(REFITEMID)
+                FROM
+                  REF_REFITEM
+                WHERE
+                  CODE = 'AssetCar'
+                  AND REFERENCEID IN (
+                    SELECT
+                      REFERENCEID
+                    FROM
+                      REF_REFERENCE
+                    WHERE
+                      REFSYSNAME = 'propertyForm'
+                  )
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_REFITEM">
+            <column name="REFITEMID" valueComputed="nextval('REF_REFITEM_SEQ')"/>
+            <column name="REFERENCEID" valueComputed="(SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'propertyForm')"/>
+            <column name="CODE">AssetCar</column>
+            <column name="NAME">Актив</column>
+            <column name="BRIEF">Актив</column>
+            <column name="DESCRIPTION"></column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

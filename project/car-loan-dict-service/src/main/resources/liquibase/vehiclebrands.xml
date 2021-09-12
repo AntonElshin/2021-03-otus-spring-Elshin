@@ -1,0 +1,27 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1.0.1-VehicleBrands-MAZDA" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT
+                  COUNT(VEHICLEBRANDID)
+                FROM
+                  REF_VEHICLEBRAND
+                WHERE
+                  BRANDNAME = 'MAZDA'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="REF_VEHICLEBRAND">
+            <column name="VEHICLEBRANDID" valueComputed="nextval('REF_VEHICLEBRAND_SEQ')"/>
+            <column name="BRANDNAME">MAZDA</column>
+            <column name="PRODUCTIONKINDID" valueComputed="(SELECT REFITEMID FROM REF_REFITEM WHERE CODE = 'ForeignCar' AND REFERENCEID IN (SELECT REFERENCEID FROM REF_REFERENCE WHERE REFSYSNAME = 'productionKind'))"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <property name="autoIncrement" value="false" dbms="postgresql,mssql,oracle"/>
+    <property name="autoIncrement" value="true" dbms="h2"/>
+
+    <!-- Удаление таблицы элементов справочников -->
+    <changeSet id="1.0.1-dropRefItemTableV1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="REF_REFITEM" columnName="REFITEMID"/>
+                <columnExists tableName="REF_REFITEM" columnName="REFERENCEID"/>
+                <columnExists tableName="REF_REFITEM" columnName="CODE"/>
+                <columnExists tableName="REF_REFITEM" columnName="NAME"/>
+                <columnExists tableName="REF_REFITEM" columnName="BRIEF"/>
+                <columnExists tableName="REF_REFITEM" columnName="DESCRIPTION"/>
+            </and>
+        </preConditions>
+
+        <dropTable tableName="REF_REFITEM"/>
+        <dropSequence sequenceName="REF_REFITEM_SEQ"/>
+    </changeSet>
+
+    <!-- Удаление таблицы справочников -->
+    <changeSet id="1.0.1-dropReferenceTableV1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="REF_REFERENCE" columnName="REFERENCEID"/>
+                <columnExists tableName="REF_REFERENCE" columnName="REFGROUPID"/>
+                <columnExists tableName="REF_REFERENCE" columnName="REFERENCENAME"/>
+                <columnExists tableName="REF_REFERENCE" columnName="REFSYSNAME"/>
+                <columnExists tableName="REF_REFERENCE" columnName="DESCRIPTION"/>
+            </and>
+        </preConditions>
+
+        <dropTable tableName="REF_REFERENCE"/>
+        <dropSequence sequenceName="REF_REFERENCE_SEQ"/>
+    </changeSet>
+
+    <!-- Удаление таблицы групп справочников -->
+    <changeSet id="1.0.1-dropReferenceGroupV1" author="aelshin">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="REF_REFGROUP" columnName="REFGROUPID"/>
+                <columnExists tableName="REF_REFGROUP" columnName="PARENTGROUPID"/>
+                <columnExists tableName="REF_REFGROUP" columnName="GROUPNAME"/>
+                <columnExists tableName="REF_REFGROUP" columnName="GROUPSYSNAME"/>
+                <columnExists tableName="REF_REFGROUP" columnName="DESCRIPTION"/>
+            </and>
+        </preConditions>
+
+        <dropTable tableName="REF_REFGROUP"/>
+        <dropSequence sequenceName="REF_REFGROUP_SEQ"/>
+    </changeSet>
+
+    <!--Таблица групп справочников-->
+    <changeSet author="aelshin" id="1.0.1-createReferenceGroupTableV1">
+        <createSequence sequenceName="REF_REFGROUP_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_REFGROUP">
+            <column autoIncrement="${autoIncrement}" name="REFGROUPID" type="INT"
+                    defaultValueSequenceNext="REF_REFGROUP_SEQ" remarks="Идентификатор группы справочника">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="PARENTGROUPID" type="INT" remarks="Родительская группа справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUPNAME" type="VARCHAR(256)" remarks="Название группы справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUPSYSNAME" type="VARCHAR(256)" remarks="Системное наименование группы справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(512)" remarks="Описание группы справочника">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_REF_REFGROUP" tableName="REF_REFGROUP" columnNames="PARENTGROUPID, GROUPSYSNAME"/>
+
+        <createIndex tableName="REF_REFGROUP" indexName="K01_REF_REFGROUP" unique="true">
+            <column name="PARENTGROUPID"/>
+            <column name="GROUPNAME"/>
+            <column name="GROUPSYSNAME"/>
+        </createIndex>
+        <createIndex tableName="REF_REFGROUP" indexName="K02_REF_REFGROUP" unique="false">
+            <column name="GROUPNAME"/>
+            <column name="GROUPSYSNAME"/>
+        </createIndex>
+        <createIndex tableName="REF_REFGROUP" indexName="K03_REF_REFGROUP" unique="false">
+            <column name="PARENTGROUPID"/>
+        </createIndex>
+
+        <comment>Creation of REF_REFGROUP table</comment>
+    </changeSet>
+
+    <!--Таблица справочников-->
+    <changeSet author="aelshin" id="1.0.1-createReferenceTableV1">
+        <createSequence sequenceName="REF_REFERENCE_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_REFERENCE">
+            <column autoIncrement="${autoIncrement}" name="REFERENCEID" type="INT"
+                    defaultValueSequenceNext="REF_REFERENCE_SEQ" remarks="Идентификатор справочника">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="REFGROUPID" type="INT" remarks="Идентификатор группы справочника">
+                <constraints nullable="false" foreignKeyName="FK01_REF_REFERENCE" references="REF_REFGROUP(REFGROUPID)"/>
+            </column>
+            <column name="REFERENCENAME" type="VARCHAR(256)" remarks="Название справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REFSYSNAME" type="VARCHAR(256)" remarks="Системное наименование справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(512)" remarks="Описание справочника">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_REF_REFERENCE" tableName="REF_REFERENCE" columnNames="REFSYSNAME"/>
+
+        <createIndex tableName="REF_REFERENCE" indexName="K01_REF_REFERENCE" unique="true">
+            <column name="REFGROUPID"/>
+            <column name="REFERENCENAME"/>
+            <column name="REFSYSNAME"/>
+        </createIndex>
+        <createIndex tableName="REF_REFERENCE" indexName="K02_REF_REFERENCE" unique="true">
+            <column name="REFERENCENAME"/>
+            <column name="REFSYSNAME"/>
+        </createIndex>
+        <createIndex tableName="REF_REFERENCE" indexName="K03_REF_REFERENCE" unique="true">
+            <column name="REFSYSNAME"/>
+        </createIndex>
+        <createIndex tableName="REF_REFERENCE" indexName="K04_REF_REFERENCE" unique="false">
+            <column name="REFGROUPID"/>
+        </createIndex>
+
+        <comment>Creation of REF_REFERENCE table</comment>
+    </changeSet>
+
+    <!--Таблица элементов справочников-->
+    <changeSet author="aelshin" id="1.0.1-createRefItemTableV1">
+        <createSequence sequenceName="REF_REFITEM_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_REFITEM">
+            <column autoIncrement="${autoIncrement}" name="REFITEMID" type="INT"
+                    defaultValueSequenceNext="REF_REFITEM_SEQ" remarks="Идентификатор элемента справочника">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="REFERENCEID" type="INT" remarks="Идентификатор справочника">
+                <constraints nullable="false" foreignKeyName="FK01_REF_REFITEM" references="REF_REFERENCE(REFERENCEID)"/>
+            </column>
+            <column name="CODE" type="VARCHAR(256)" remarks="Код элемента справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(256)" remarks="Название элемента справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BRIEF" type="VARCHAR(256)" remarks="Сокращённое название элемента справочника">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(512)" remarks="Описание справочника">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_REF_REFITEM" tableName="REF_REFITEM" columnNames="REFERENCEID, CODE"/>
+
+        <createIndex tableName="REF_REFITEM" indexName="K01_REF_REFITEM" unique="true">
+            <column name="REFERENCEID"/>
+            <column name="CODE"/>
+            <column name="NAME"/>
+            <column name="BRIEF"/>
+        </createIndex>
+        <createIndex tableName="REF_REFITEM" indexName="K02_REF_REFITEM" unique="false">
+            <column name="REFERENCEID"/>
+        </createIndex>
+
+        <comment>Creation of REF_REFITEM table</comment>
+    </changeSet>
+
+    <!--Таблица марок автомобилей-->
+    <changeSet author="aelshin" id="1.0.1-createVehicleBrandTableV1">
+        <createSequence sequenceName="REF_VEHICLEBRAND_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_VEHICLEBRAND">
+            <column autoIncrement="${autoIncrement}" name="VEHICLEBRANDID" type="INT"
+                    defaultValueSequenceNext="REF_VEHICLEBRAND_SEQ" remarks="Идентификатор марки автомобиля">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="BRANDNAME" type="VARCHAR(256)" remarks="Название марки автомобиля">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCTIONKINDID" type="INT" remarks="Идентификатор типа производства">
+                <constraints nullable="true" foreignKeyName="FK01_REF_VEHICLEBRAND" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_REF_VEHICLEBRAND" tableName="REF_VEHICLEBRAND" columnNames="BRANDNAME"/>
+
+        <createIndex tableName="REF_VEHICLEBRAND" indexName="K01_REF_VEHICLEBRAND" unique="true">
+            <column name="BRANDNAME"/>
+        </createIndex>
+
+        <comment>Creation of REF_VEHICLEBRAND table</comment>
+
+    </changeSet>
+
+    <!--Таблица моделей автомобилей-->
+    <changeSet author="aelshin" id="1.0.1-createVehicleModelTableV1">
+        <createSequence sequenceName="REF_VEHICLEMODEL_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_VEHICLEMODEL">
+            <column autoIncrement="${autoIncrement}" name="VEHICLEMODELID" type="INT"
+                    defaultValueSequenceNext="REF_VEHICLEMODEL_SEQ" remarks="Идентификатор модели автомобиля">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VEHICLEBRANDID" type="INT" remarks="Идентификатор марки автомобиля">
+                <constraints nullable="false" foreignKeyName="FK01_REF_VEHICLEMODEL" references="REF_VEHICLEBRAND(VEHICLEBRANDID)"/>
+            </column>
+            <column name="MODELNAME" type="VARCHAR(256)" remarks="Название модели автомобиля">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KINDID" type="INT" remarks="Идентификатор вида транспортного средства">
+                <constraints nullable="false" foreignKeyName="FK02_REF_VEHICLEMODEL" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="C01_REF_VEHICLEMODEL" tableName="REF_VEHICLEMODEL" columnNames="VEHICLEBRANDID, MODELNAME, KINDID"/>
+
+        <createIndex tableName="REF_VEHICLEMODEL" indexName="K01_REF_VEHICLEMODEL" unique="true">
+            <column name="VEHICLEBRANDID"/>
+            <column name="MODELNAME"/>
+            <column name="KINDID"/>
+        </createIndex>
+        <createIndex tableName="REF_VEHICLEMODEL" indexName="K02_REF_VEHICLEMODEL" unique="false">
+            <column name="VEHICLEBRANDID"/>
+        </createIndex>
+        <createIndex tableName="REF_VEHICLEMODEL" indexName="K03_REF_VEHICLEMODEL" unique="false">
+            <column name="VEHICLEBRANDID"/>
+            <column name="MODELNAME"/>
+        </createIndex>
+
+        <comment>Creation of REF_VEHICLEMODEL table</comment>
+
+    </changeSet>
+
+    <!--Таблица связи моделей и форм собственности-->
+    <changeSet author="aelshin" id="1.0.1-createVehicleModelOwnFormLinkTableV1">
+        <createTable tableName="REF_MODELOWNFORMLINK">
+            <column name="VEHICLEMODELID" type="INT" remarks="Идентификатор модели автомобиля">
+                <constraints nullable="false" foreignKeyName="FK01_REF_MODELOWNFORMLINK" references="REF_VEHICLEMODEL(VEHICLEMODELID)"/>
+            </column>
+            <column name="OWNFORMID" type="INT" remarks="Идентификатор формы собственности">
+                <constraints nullable="false" foreignKeyName="FK02_REF_MODELOWNFORMLINK" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="REF_MODELOWNFORMLINK" columnNames="VEHICLEMODELID, OWNFORMID"/>
+
+        <createIndex tableName="REF_MODELOWNFORMLINK" indexName="K01_REF_MODELOWNFORMLINK" unique="true">
+            <column name="VEHICLEMODELID"/>
+            <column name="OWNFORMID"/>
+        </createIndex>
+        <createIndex tableName="REF_MODELOWNFORMLINK" indexName="K02_REF_MODELOWNFORMLINK" unique="false">
+            <column name="VEHICLEMODELID"/>
+        </createIndex>
+        <createIndex tableName="REF_MODELOWNFORMLINK" indexName="K03_REF_MODELOWNFORMLINK" unique="false">
+            <column name="OWNFORMID"/>
+        </createIndex>
+
+        <comment>Creation of REF_MODELOWNFORMLINK table</comment>
+    </changeSet>
+
+    <!--Таблица комплектаций автомобилей-->
+    <changeSet author="aelshin" id="1.0.1-createVehicleSetTableV1">
+        <createSequence sequenceName="REF_VEHICLESET_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_VEHICLESET">
+            <column autoIncrement="${autoIncrement}" name="VEHICLESETID" type="INT"
+                    defaultValueSequenceNext="REF_VEHICLESET_SEQ" remarks="Идентификатор комлектации автомобиля">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VEHICLEMODELID" type="INT" remarks="Идентификатор модели автомобиля">
+                <constraints nullable="false" foreignKeyName="FK01_REF_VEHICLESET" references="REF_VEHICLEMODEL(VEHICLEMODELID)"/>
+            </column>
+            <column name="BODYTYPEID" type="INT" remarks="Идентификатор типа кузова">
+                <constraints nullable="true" foreignKeyName="FK02_REF_VEHICLESET" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="ENGINESIZEID" type="INT" remarks="Идентификатор объёма двигателя">
+                <constraints nullable="true" foreignKeyName="FK03_REF_VEHICLESET" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="ENGINETYPEID" type="INT" remarks="Идентификатор типа двигателя">
+                <constraints nullable="true" foreignKeyName="FK04_REF_VEHICLESET" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="POWERID" type="INT" remarks="Идентификатор мощности двигателя">
+                <constraints nullable="true" foreignKeyName="FK05_REF_VEHICLESET" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="TRANSMISSIONID" type="INT" remarks="Идентификатор типа трансмиссии">
+                <constraints nullable="true" foreignKeyName="FK06_REF_VEHICLESET" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="REF_VEHICLESET" indexName="K01_REF_VEHICLESET" unique="false">
+            <column name="VEHICLEMODELID"/>
+        </createIndex>
+        <createIndex tableName="REF_VEHICLESET" indexName="K02_REF_VEHICLESET" unique="true">
+            <column name="VEHICLEMODELID"/>
+            <column name="BODYTYPEID"/>
+            <column name="ENGINESIZEID"/>
+            <column name="ENGINETYPEID"/>
+            <column name="POWERID"/>
+            <column name="TRANSMISSIONID"/>
+        </createIndex>
+
+        <comment>Creation of REF_VEHICLESET table</comment>
+
+    </changeSet>
+
+    <!--Таблица годов выпуска комплектаций-->
+    <changeSet author="aelshin" id="1.0.1-createVehicleSetYearTableV1">
+        <createSequence sequenceName="REF_VEHICLESETYEAR_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_VEHICLESETYEAR">
+            <column autoIncrement="${autoIncrement}" name="VEHICLESETYEARID" type="INT"
+                    defaultValueSequenceNext="REF_VEHICLESETYEAR_SEQ" remarks="Идентификатор года выпуска комплектации">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VEHICLESETID" type="INT" remarks="Идентификатор модели автомобиля">
+                <constraints nullable="false" foreignKeyName="FK01_REF_VEHICLESETYEAR" references="REF_VEHICLESET(VEHICLESETID)"/>
+            </column>
+            <column name="YEARID" type="INT" remarks="Идентификатор года">
+                <constraints nullable="false" foreignKeyName="FK02_YEAR" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="PRICE" type="DECIMAL" remarks="Стоимость">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="REF_VEHICLESETYEAR" indexName="K01_REF_SETYEAR" unique="true">
+            <column name="VEHICLESETID"/>
+            <column name="YEARID"/>
+        </createIndex>
+        <createIndex tableName="REF_VEHICLESETYEAR" indexName="K02_REF_SETYEAR" unique="false">
+            <column name="VEHICLESETID"/>
+        </createIndex>
+
+        <comment>Creation of REF_VEHICLESETYEAR table</comment>
+    </changeSet>
+
+    <include file="reference.xml" relativeToChangelogFile="true"/>
+    <include file="vehiclebrands.xml" relativeToChangelogFile="true"/>
+    <include file="vehiclemodels.xml" relativeToChangelogFile="true"/>
+
+    <!--Таблица истории загрузки файлов для легковых автомобилей Б/У-->
+    <changeSet author="aelshin" id="1.0.1-createFileUploadHistoryTableV1">
+        <createSequence sequenceName="REF_FILEUPLOADHISTORY_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="REF_FILEUPLOADHISTORY">
+            <column autoIncrement="${autoIncrement}" name="HISTORYID" type="INT"
+                    defaultValueSequenceNext="REF_FILEUPLOADHISTORY_SEQ" remarks="Идентификатор записи в истории загрузок файлов">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="UPLOADDATESTART" type="TIMESTAMP" remarks="Дата и время начала загрузки файла">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPLOADDATEEND" type="TIMESTAMP" remarks="Дата и время окончания загрузки файла">
+                <constraints nullable="true"/>
+            </column>
+            <column name="STATUS" type="VARCHAR(10)" remarks="Статус загрузки файла">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USERINFO" type="VARCHAR(256)" remarks="Информация о пользователе">
+                <constraints nullable="true"/>
+            </column>
+            <column name="VERSIONNUMBER" type="INT" remarks="Номер версии файла">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILETYPEID" type="INT" remarks="Тип загружаемого файла">
+                <constraints nullable="false" foreignKeyName="FK01_REF_FILEUPLOADHISTORY" references="REF_REFITEM(REFITEMID)"/>
+            </column>
+            <column name="FILENAME" type="VARCHAR(256)" remarks="Название файла">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILECONTENT" type="CLOB" remarks="Содержимое файла">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ERRORMESSAGE" type="CLOB" remarks="Сообщение об ошибке">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="REF_FILEUPLOADHISTORY" indexName="K01_REF_FILEUPLOADHISTORY" unique="false">
+            <column name="FILETYPEID"/>
+        </createIndex>
+        <createIndex tableName="REF_FILEUPLOADHISTORY" indexName="K02_REF_FILEUPLOADHISTORY" unique="false">
+            <column name="FILENAME"/>
+        </createIndex>
+        <createIndex tableName="REF_FILEUPLOADHISTORY" indexName="K03_REF_FILEUPLOADHISTORY" unique="false">
+            <column name="USERINFO"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet author="aelshin" id="1.0.1-fillVehicleModelOwnFormLinkTableV1">
+        <sql>
+            insert into ref_modelownformlink
+            select
+              m.vehiclemodelid,
+              i.refitemid
+            from
+              ref_vehiclemodel m
+            left join ref_reference r on 1=1
+              and r.refsysname = 'propertyForm'
+            left join ref_refitem i on 1=1
+              and i.referenceid = r.referenceid
+              and i.code = 'FinancedCar';
+        </sql>
+    </changeSet>
+
+    <!--Таблица ролей-->
+    <changeSet author="aelshin" id="1.0.1-createUserRoleTableV1">
+        <createSequence sequenceName="CORE_USERROLE_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="CORE_USERROLE">
+            <column autoIncrement="${autoIncrement}" name="ROLEID" type="INT"
+                    defaultValueSequenceNext="CORE_USERROLE_SEQ" remarks="Идентификатор роли">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ROLENAME" type="VARCHAR(256)" remarks="Название роли">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLESYSNAME" type="VARCHAR(256)" remarks="Системное наименование роли">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(512)" remarks="Описание справочника">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <comment>Creation of CORE_USERROLE table</comment>
+    </changeSet>
+
+    <!--Таблица пользователей-->
+    <changeSet author="aelshin" id="1.0.1-createUserAccountTableV1">
+        <createSequence sequenceName="CORE_USERACCOUNT_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="CORE_USERACCOUNT">
+            <column autoIncrement="${autoIncrement}" name="USERACCOUNTID" type="INT"
+                    defaultValueSequenceNext="CORE_USERACCOUNT_SEQ" remarks="Идентификатор роли">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="LOGIN" type="VARCHAR(256)" remarks="Логин пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(256)" remarks="Пароль пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR(20)" remarks="Статус пользователя">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <comment>Creation of CORE_USERROLE table</comment>
+    </changeSet>
+
+    <!--Таблица связи ролей и пользователей-->
+    <changeSet author="aelshin" id="1.0.1-createRoleAccountTableV1">
+        <createSequence sequenceName="CORE_ROLEACCOUNT_SEQ" incrementBy="1" startValue="1"/>
+        <createTable tableName="CORE_ROLEACCOUNT">
+            <column autoIncrement="${autoIncrement}" name="LINKID" type="INT"
+                    defaultValueSequenceNext="CORE_ROLEACCOUNT_SEQ" remarks="Идентификатор связи роли и пользователя">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="USERACCOUNTID" type="INT" remarks="Идентификатор пользователей">
+                <constraints nullable="false" foreignKeyName="fk_useraccount" references="CORE_USERACCOUNT(USERACCOUNTID)"/>
+            </column>
+            <column name="ROLEID" type="INT" remarks="Идентификатор роли">
+                <constraints nullable="false" foreignKeyName="fk_role" references="CORE_USERROLE(ROLEID)"/>
+            </column>
+        </createTable>
+
+        <comment>Creation of CORE_ROLEACCOUNT table</comment>
+    </changeSet>
+
+    <include file="userroles.xml" relativeToChangelogFile="true"/>
+    <include file="useraccounts.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
