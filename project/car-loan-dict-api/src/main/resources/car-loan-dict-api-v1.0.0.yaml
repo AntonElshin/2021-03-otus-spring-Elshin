@@ -1,0 +1,3395 @@
+openapi: 3.0.0
+info:
+  title: car-loan-dict API
+  version: 1.0.0
+  description: Сервис справочников автокредитования
+  contact:
+    name: Anton Elshin
+    email: anton.elshin@mail.ru
+    url: 'https://otus.ru/'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/reference-group/refgroup/{refGroupId}':
+    parameters:
+      - $ref: '#/components/parameters/refGroupId'
+    get:
+      summary: Получение группы справочника по идентификатору.
+      operationId: getReferenceGroupById
+      description: Получение группы справочника по идентификатору.
+      tags:
+        - refgroup
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefGroupResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    parentId: 0
+                    sysname: string
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет группу справочника
+      operationId: modifyReferenceGroup
+      description: Метод изменяет группу справочника
+      tags:
+        - refgroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefGroupReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  parentId: 0
+                  sysname: string
+                  name: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefGroupResDTO'
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление группы справочника по идентификатору.
+      operationId: deleteReferenceGroup
+      description: Удаление группы справочника по идентификатору.
+      tags:
+        - refgroup
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference-group/refgroup:
+    parameters: []
+    post:
+      summary: Создание группы справочника.
+      operationId: createReferenceGroup
+      description: Создание группы справочника.
+      tags:
+        - refgroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefGroupReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  parentId: 0
+                  sysname: string
+                  name: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefGroupResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    parentId: 0
+                    sysname: string
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference-group/refgroups/all:
+    get:
+      summary: Метод для получения всех групп справочников
+      operationId: getAllReferenceGroups
+      description: Метод для получения всех групп справочников
+      tags:
+        - refgroup
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RefGroupResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+  '/reference/reference/{refId}':
+    parameters:
+      - $ref: '#/components/parameters/refId'
+    get:
+      summary: Получение справочника по идентификатору.
+      operationId: getReferenceById
+      description: Получение справочника по идентификатору.
+      tags:
+        - reference
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    groupId: 0
+                    sysname: string
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет справочник
+      operationId: modifyReference
+      description: Метод изменяет справочника
+      tags:
+        - reference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferenceReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  groupId: 0
+                  sysname: string
+                  name: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    groupId: 0
+                    sysname: string
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление справочника по идентификатору.
+      operationId: deleteReference
+      description: Удаление справочника по идентификатору.
+      tags:
+        - reference
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference/reference:
+    parameters: []
+    post:
+      summary: Создание справочника.
+      operationId: createReference
+      description: Создание справочника.
+      tags:
+        - reference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferenceReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  groupId: 0
+                  sysname: string
+                  name: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    groupId: 0
+                    sysname: string
+                    name: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference/references/all:
+    get:
+      summary: Метод для получения всех справочников по идентификатору группы
+      operationId: getAllReferencesByGroupId
+      description: Метод для получения всех справочников по идентификатору группы
+      tags:
+        - reference
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReferenceResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  '/reference-item/refitem/{refItemId}':
+    parameters:
+      - $ref: '#/components/parameters/refItemId'
+    get:
+      summary: Получение элемента справочника по идентификатору.
+      operationId: getReferenceItemById
+      description: Получение элемента справочника по идентификатору.
+      tags:
+        - refitem
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefItemResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет элемент справочника
+      operationId: modifyReferenceItem
+      description: Метод изменяет элемент справочника
+      tags:
+        - refitem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefItemReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  referenceId: 0
+                  code: string
+                  name: string
+                  sysname: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefItemResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление элемента справочника по идентификатору.
+      operationId: deleteReferenceItem
+      description: Удаление элемента справочника по идентификатору.
+      tags:
+        - refitem
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference-item/refitem:
+    parameters: []
+    post:
+      summary: Создание элемента справочника.
+      operationId: createReferenceItem
+      description: Создание элемента справочника.
+      tags:
+        - refitem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefItemReqDTO'
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  referenceId: 0
+                  code: string
+                  name: string
+                  brief: string
+                  description: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefItemResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /reference-item/refitems/all:
+    get:
+      summary: Метод для получения всех элементов справочника
+      operationId: getAllReferenceItems
+      description: Метод для получения всех элементов справочника
+      tags:
+        - refitems
+      parameters:
+        - $ref: '#/components/parameters/referenceId'
+        - $ref: '#/components/parameters/referenceSysName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RefItemResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  '/vehicle-brand/vehiclebrand/{vehicleBrandId}':
+    parameters:
+      - $ref: '#/components/parameters/vehicleBrandId'
+    get:
+      summary: Получение марки по идентификатору.
+      operationId: getVehicleBrand
+      description: Получение марки по идентификатору.
+      tags:
+        - vehiclebrand
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleBrandResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    productionKind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет марку автомобиля
+      operationId: modifyVehicleBrand
+      description: Метод изменяет марку автомобиля
+      tags:
+        - vehiclebrand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleBrandReqDTO'
+            examples:
+              example-1:
+                value:
+                  name: string
+                  productionKind:
+                    id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleBrandResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    productionKind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление марки по идентификатору.
+      operationId: deleteVehicleBrand
+      description: Удаление марки по идентификатору.
+      tags:
+        - vehiclebrand
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-brand/vehiclebrand:
+    parameters: []
+    post:
+      summary: Создание марки автомобиля
+      operationId: createVehicleBrand
+      description: Создание марки автомобиля
+      tags:
+        - vehiclebrand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleBrandReqDTO'
+            examples:
+              example-1:
+                value:
+                  name: string
+                  productionKind:
+                    id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleBrandResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: string
+                    productionKind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-brand/vehiclebrands/all:
+    get:
+      summary: Метод для получения всех марок автомобилей
+      operationId: getAllVehicleBrands
+      description: Метод для получения всех марок автомобилей
+      tags:
+        - vehiclebrands
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/productionKindId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleBrandResDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      name: string
+                      productionKind:
+                        id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+        '400':
+          description: Bad Request
+  '/vehicle-model/vehiclemodel/{vehicleModelId}':
+    parameters:
+      - $ref: '#/components/parameters/vehicleModelId'
+    get:
+      summary: Получение модели по идентификатору.
+      operationId: getVehicleModel
+      description: Получение модели по идентификатору.
+      tags:
+        - vehiclemodel
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleModelResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    brand:
+                      id: 1
+                      name: string
+                    name: string
+                    kind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    ownForms:
+                      - id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет модель автомобиля
+      operationId: modifyVehicleModel
+      description: Метод изменяет модель автомобиля
+      tags:
+        - vehiclemodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleModelReqDTO'
+            examples:
+              example-1:
+                value:
+                  brand:
+                    id: 1
+                  name: string
+                  kind:
+                    id: 1
+                  ownForms:
+                    - id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleModelResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    brand:
+                      id: 1
+                      name: string
+                    name: string
+                    kind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    ownForms:
+                      - id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление модели по идентификатору.
+      operationId: deleteVehicleModel
+      description: Удаление модели по идентификатору.
+      tags:
+        - vehiclemodel
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-model/vehiclemodel:
+    parameters: []
+    post:
+      summary: Создание модели автомобиля
+      operationId: createVehicleModel
+      description: Создание модели автомобиля
+      tags:
+        - vehiclemodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleModelReqDTO'
+            examples:
+              example-1:
+                value:
+                  brand:
+                    id: 1
+                  name: string
+                  kind:
+                    id: 1
+                  ownForms:
+                    - id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleModelResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    brand:
+                      id: 1
+                      name: string
+                    name: string
+                    kind:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    ownForms:
+                      - id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-model/vehiclemodels/all:
+    get:
+      summary: Метод для получения всех моделей автомобилей по идентификатору автомобиля
+      operationId: getAllVehicleModels
+      description: Метод для получения всех моделей автомобилей по идентификатору автомобиля
+      tags:
+        - vehiclemodels
+      parameters:
+        - $ref: '#/components/parameters/brandId'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/kindId'
+        - $ref: '#/components/parameters/propertyFormId'
+        - $ref: '#/components/parameters/productionKindId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleModelResDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      brand:
+                        id: 1
+                        name: string
+                      name: string
+                      kind:
+                        id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+                      ownForms:
+                        - id: 1
+                          referenceId: 0
+                          code: string
+                          name: string
+                          brief: string
+                          description: string
+        '400':
+          description: Bad Request
+  '/vehicle-set/vehicleset/{vehicleSetId}':
+    parameters:
+      - $ref: '#/components/parameters/vehicleSetId'
+    get:
+      summary: Получение комплектации по идентификатору.
+      operationId: getVehicleSet
+      description: Получение комплектации по идентификатору.
+      tags:
+        - vehicleset
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    model:
+                      id: 1
+                      name: string
+                    body:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineSize:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineType:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    power:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    transmission:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет комплектацию автомобиля
+      operationId: modifyVehicleSet
+      description: Метод изменяет комплектацию автомобиля
+      tags:
+        - vehicleset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleSetReqDTO'
+            examples:
+              example-1:
+                value:
+                  model:
+                    id: 1
+                  body:
+                    id: 1
+                  engineSize:
+                    id: 1
+                  engineType:
+                    id: 1
+                  power:
+                    id: 1
+                  transmission:
+                    id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    model:
+                      id: 1
+                      name: string
+                    body:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineSize:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineType:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    power:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    transmission:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление комплектации по идентификатору.
+      operationId: deleteVehicleSet
+      description: Удаление комплектации по идентификатору.
+      tags:
+        - vehicleset
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-set/vehicleset:
+    parameters: []
+    post:
+      summary: Создание комплектации автомобиля
+      operationId: createVehicleSet
+      description: Создание комплектации автомобиля
+      tags:
+        - vehicleset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleSetReqDTO'
+            examples:
+              example-1:
+                value:
+                  model:
+                    id: 1
+                  body:
+                    id: 1
+                  engineSize:
+                    id: 1
+                  engineType:
+                    id: 1
+                  power:
+                    id: 1
+                  transmission:
+                    id: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    model:
+                      id: 1
+                      name: string
+                    body:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineSize:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineType:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    power:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    transmission:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-set/vehiclesets/all:
+    get:
+      summary: Метод для получения всех комплектаций автомобилей по идентификатору модели автомобиля
+      operationId: getAllVehicleSets
+      description: Метод для получения всех комплектаций автомобилей по идентификатору модели автомобиля
+      tags:
+        - vehiclesets
+      parameters:
+        - $ref: '#/components/parameters/modelId'
+        - $ref: '#/components/parameters/bodyId'
+        - $ref: '#/components/parameters/engineSizeId'
+        - $ref: '#/components/parameters/engineTypeId'
+        - $ref: '#/components/parameters/powerId'
+        - $ref: '#/components/parameters/transmissionId'
+        - $ref: '#/components/parameters/yearId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleSetResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    model:
+                      id: 1
+                      name: string
+                    body:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineSize:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    engineType:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    power:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    transmission:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+        '400':
+          description: Bad Request
+  /vehicle-set/vehiclesets/checkprice:
+    get:
+      summary: Метод получения предельной стоимости комплектации
+      operationId: checkVehicleSetPrice
+      description: Метод получения предельной стоимости комплектации
+      tags:
+        - vehiclesets
+      parameters:
+        - $ref: '#/components/parameters/modelId'
+        - $ref: '#/components/parameters/characteristicSysName'
+        - $ref: '#/components/parameters/bodyId'
+        - $ref: '#/components/parameters/engineSizeId'
+        - $ref: '#/components/parameters/engineTypeId'
+        - $ref: '#/components/parameters/powerId'
+        - $ref: '#/components/parameters/transmissionId'
+        - $ref: '#/components/parameters/yearId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckVehicleSetPriceResDTO'
+              examples:
+                example-1:
+                  value:
+                    characteristicUniqueValues:
+                      - id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+                    price: 100000
+        '400':
+          description: Bad Request
+  '/vehicle-set-year/vehiclesetyear/{vehicleSetYearId}':
+    parameters:
+      - $ref: '#/components/parameters/vehicleSetYearId'
+    get:
+      summary: Получение года комплектации по идентификатору.
+      operationId: getVehicleSetYear
+      description: Получение года комплектации по идентификатору.
+      tags:
+        - vehiclesetyear
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetYearResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    set:
+                      id: 1
+                    year:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    price: 1
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    put:
+      summary: Метод изменяет год комплектацию автомобиля
+      operationId: modifyVehicleSetYear
+      description: Метод изменяет год комплектацию автомобиля
+      tags:
+        - vehiclesetyear
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleSetYearReqDTO'
+            examples:
+              example-1:
+                value:
+                  set:
+                    id: 1
+                  year:
+                    id: 1
+                  price: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetYearResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    year:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    price: 1
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity (WebDAV)
+    delete:
+      summary: Удаление года комплектации по идентификатору.
+      operationId: deleteVehicleSetYear
+      description: Удаление года комплектации по идентификатору.
+      tags:
+        - vehiclesetyear
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-set-year/vehiclesetyear:
+    parameters: []
+    post:
+      summary: Создание года комплектации автомобиля
+      operationId: createVehicleSetYear
+      description: Создание года комплектации автомобиля
+      tags:
+        - vehiclesetyear
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleSetYearReqDTO'
+            examples:
+              example-1:
+                value:
+                  set:
+                    id: 1
+                  year:
+                    id: 1
+                  price: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleSetYearResDTO'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    year:
+                      id: 1
+                      referenceId: 0
+                      code: string
+                      name: string
+                      brief: string
+                      description: string
+                    price: 1
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+  /vehicle-set-year/vehiclesetyears/all:
+    get:
+      summary: Метод для получения всех годов комплектаций автомобилей по идентификатору комплектации автомобиля
+      operationId: getAllVehicleSetYears
+      description: Метод для получения всех годов комплектаций автомобилей по идентификатору комплектации автомобиля
+      tags:
+        - vehiclesetyears
+      parameters:
+        - $ref: '#/components/parameters/setId'
+        - $ref: '#/components/parameters/yearId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleSetYearResDTO'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      year:
+                        id: 1
+                        referenceId: 0
+                        code: string
+                        name: string
+                        brief: string
+                        description: string
+                      price: 1
+        '400':
+          description: Bad Request
+  /file-upload/vehiclemodels/passenger-used:
+    parameters: [ ]
+    post:
+      summary: Загрузка файла моделей и комплектация легковых моделей БУ
+      operationId: uploadPassengerUsedVehicleModelsAndSets
+      description: Загрузка файла моделей и комплектация легковых моделей БУ
+      tags:
+        - fileupload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadHistoryResIdDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+components:
+  schemas:
+    ErrorDTO:
+      title: ErrorDTO
+      type: object
+      additionalProperties: false
+      description: Объект ошибки
+      x-examples:
+        example-1:
+          code: 1
+          message: string
+      properties:
+        code:
+          type: integer
+          format: int64
+          description: Код ошибки
+          minimum: 0
+          maximum: 2147483647
+        message:
+          type: string
+          description: Текст ошибки
+          maxLength: 256
+    SortDTO:
+      title: SortDTO
+      type: object
+      additionalProperties: false
+      description: Объект сортировки
+      x-examples:
+        example-1:
+          sorted: false
+          unsorted: true
+          empty: true
+      properties:
+        sorted:
+          type: boolean
+          description: Признак сортировки
+        unsorted:
+          type: boolean
+          description: Признак отсутствия сортировки
+        empty:
+          type: boolean
+          description: Признак пустой страницы
+    PageableDTO:
+      title: PageableDTO
+      type: object
+      additionalProperties: false
+      description: Объект информации о странице
+      x-examples:
+        example-1:
+          sort:
+            sorted: false
+            unsorted: true
+            empty: true
+          offset: 0
+          pageSize: 10
+          pageNumber: 0
+          paged: true
+          unpaged: false
+      properties:
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        offset:
+          type: integer
+          format: int64
+          description: Сдвиг
+          minimum: 0
+          maximum: 2147483647
+        pageSize:
+          type: integer
+          format: int64
+          description: Размер страницы
+          minimum: 0
+          maximum: 100
+        pageNumber:
+          type: integer
+          format: int64
+          description: Номер страницы
+          minimum: 0
+          maximum: 2147483647
+        paged:
+          type: boolean
+          description: Признак разбивки на страницы
+        unpaged:
+          type: boolean
+          description: Признак отсутствия разбивки на страницы
+    RefGroupReqDTO:
+      title: RefGroupReqDTO
+      type: object
+      additionalProperties: false
+      description: Группа справочников
+      x-examples:
+        example-1:
+          id: 1
+          parentId: 0
+          sysname: string
+          name: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        parentId:
+          type: integer
+          format: int64
+          description: Идентификатор родительской группы
+          minimum: 0
+          maximum: 2147483647
+        sysname:
+          type: string
+          description: Системное имя
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+      required:
+        - parentId
+        - sysname
+        - name
+    RefGroupReqIdDTO:
+      title: RefGroupReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Входящий объект с идентификатором группы справочника
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    RefGroupResDTO:
+      title: RefGroupResDTO
+      type: object
+      additionalProperties: false
+      description: Группа справочников
+      x-examples:
+        example-1:
+          id: 1
+          parentId: 0
+          sysname: string
+          name: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        parentId:
+          type: integer
+          format: int64
+          description: Идентификатор родительской группы
+          minimum: 0
+          maximum: 2147483647
+        sysname:
+          type: string
+          description: Системное имя
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+    RefGroupPageResponseDTO:
+      title: RefGroupPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив объектов групп справочников.
+          items:
+            $ref: '#/components/schemas/RefGroupResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - id: 1
+              parentId: 0
+              sysname: string
+              name: string
+              description: string
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка групп справочников по параметрам с пагинацией и сортировкой.
+    ReferenceReqDTO:
+      title: ReferenceReqDTO
+      type: object
+      additionalProperties: false
+      description: Справочник
+      x-examples:
+        example-1:
+          id: 1
+          groupId: 0
+          sysname: string
+          name: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        group:
+          $ref: '#/components/schemas/RefGroupReqIdDTO'
+        sysname:
+          type: string
+          description: Системное имя
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+      required:
+        - group
+        - sysname
+        - name
+    ReferenceReqIdDTO:
+      title: ReferenceReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Входящий объект с идентификатором справочника
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    ReferenceResDTO:
+      title: ReferenceResDTO
+      type: object
+      additionalProperties: false
+      description: Справочник
+      x-examples:
+        example-1:
+          id: 1
+          groupId: 0
+          sysname: string
+          name: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        group:
+          $ref: '#/components/schemas/RefGroupResDTO'
+        sysname:
+          type: string
+          description: Системное имя
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+    ReferencePageResponseDTO:
+      title: ReferencePageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив объектов справочников.
+          items:
+            $ref: '#/components/schemas/ReferenceResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - id: 1
+              groupId: 0
+              sysname: string
+              name: string
+              description: string
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка справочников по параметрам с пагинацией и сортировкой.
+    RefItemReqDTO:
+      title: RefItemReqDTO
+      type: object
+      additionalProperties: false
+      description: Элемент справочника
+      x-examples:
+        example-1:
+          id: 1
+          referenceId: 0
+          code: string
+          name: string
+          brief: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        reference:
+          $ref: '#/components/schemas/ReferenceReqIdDTO'
+        code:
+          type: string
+          description: Код элемента справочника
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        brief:
+          type: string
+          description: Сокращённое имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+      required:
+        - reference
+        - code
+        - name
+        - brief
+    RefItemReqIdDTO:
+      title: RefItemReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Входящий объект с идентификатором элемента справочника
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    RefItemResDTO:
+      title: RefItemResDTO
+      type: object
+      additionalProperties: false
+      description: Элемент справочника
+      x-examples:
+        example-1:
+          id: 1
+          referenceId: 0
+          code: string
+          name: string
+          brief: string
+          description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        reference:
+          $ref: '#/components/schemas/ReferenceResDTO'
+        code:
+          type: string
+          description: Код элемента справочника
+          maxLength: 256
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        brief:
+          type: string
+          description: Сокращённое имя
+          maxLength: 256
+        description:
+          type: string
+          description: Описание
+          maxLength: 512
+    RefItemPageResponseDTO:
+      title: RefItemPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив объектов элементов справочников.
+          items:
+            $ref: '#/components/schemas/RefItemResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов на странице.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка справочников по параметрам с пагинацией и сортировкой.
+    VehicleBrandReqDTO:
+      title: VehicleBrandReqDTO
+      type: object
+      additionalProperties: false
+      description: Входной объект для марок автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          name: string
+          productionKind:
+            id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор марки
+          minimum: 1
+          maximum: 2147483647
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        productionKind:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+      required:
+        - name
+    VehicleBrandReqIdDTO:
+      title: VehicleBrandReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Входящий объект с идентификатором марки
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    VehicleBrandResDTO:
+      title: VehicleBrandResDTO
+      type: object
+      additionalProperties: false
+      description: Марки автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          name: string
+          productionKind:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        productionKind:
+          $ref: '#/components/schemas/RefItemResDTO'
+    VehicleBrandPageResponseDTO:
+      title: VehicleBrandPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив марок автомобилей.
+          items:
+            $ref: '#/components/schemas/VehicleBrandResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - id: 1
+              name: 0
+              productionKind:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка марок автомобилей по параметрам с пагинацией и сортировкой.
+    VehicleModelReqDTO:
+      title: VehicleModelReqDTO
+      type: object
+      additionalProperties: false
+      description: Входной объект для моделей автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          brand:
+            id: 1
+          name: string
+          kind:
+            id: 1
+          ownForms:
+            - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор марки
+          minimum: 1
+          maximum: 2147483647
+        brand:
+          $ref: '#/components/schemas/VehicleBrandReqIdDTO'
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        kind:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        ownForms:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefItemReqIdDTO'
+      required:
+        - brand
+        - name
+        - kind
+    VehicleModelReqIdDTO:
+      title: VehicleModelReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором модели
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    VehicleModelResIdNameDTO:
+      title: VehicleModelResIdNameDTO
+      type: object
+      additionalProperties: false
+      description: Объект c идентификатором и именем модели
+      x-examples:
+        example-1:
+          - id: 1
+            name: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+    VehicleModelResDTO:
+      title: VehicleModelResDTO
+      type: object
+      additionalProperties: false
+      description: Модели автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          brand:
+            id: 1
+            name: string
+            productionKind:
+              id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+          name: string
+          kind:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          ownForms:
+            - id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        brand:
+          $ref: '#/components/schemas/VehicleBrandResDTO'
+        name:
+          type: string
+          description: Имя
+          maxLength: 256
+        kind:
+          $ref: '#/components/schemas/RefItemResDTO'
+        ownForms:
+          type: array
+          description: Формы собственности
+          items:
+            $ref: '#/components/schemas/RefItemResDTO'
+    VehicleModelPageResponseDTO:
+      title: VehicleModelPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив моделей автомобилей.
+          items:
+            $ref: '#/components/schemas/VehicleModelResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов на странице.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - modelId: 1
+              brand:
+                id: 1
+                name: string
+                productionKind:
+                  id: 1
+                  referenceId: 0
+                  code: string
+                  name: string
+                  brief: string
+                  description: string
+              name: 0
+              ownForms:
+                - id: 1
+                  referenceId: 0
+                  code: string
+                  name: string
+                  brief: string
+                  description: string
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка моделей автомобилей по параметрам с пагинацией и сортировкой.
+    VehicleSetReqDTO:
+      title: VehicleSetReqDTO
+      type: object
+      additionalProperties: false
+      description: Входной объект для комплектаций автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          model:
+            id: 1
+          body:
+            id: 1
+          engineSize:
+            id: 1
+          engineType:
+            id: 1
+          power:
+            id: 1
+          transmission:
+            id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор комплектации
+          minimum: 1
+          maximum: 2147483647
+        model:
+          $ref: '#/components/schemas/VehicleModelReqIdDTO'
+        body:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        engineSize:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        engineType:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        power:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        transmission:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+      required:
+        - model
+    VehicleSetReqIdDTO:
+      title: VehicleSetReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором комплектаций
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    VehicleSetResDTO:
+      title: VehicleSetResDTO
+      type: object
+      additionalProperties: false
+      description: Комплектации автомобилей
+      x-examples:
+        example-1:
+          id: 1
+          model:
+            id: 1
+            name: string
+          body:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          engineSize:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          engineType:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          power:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          transmission:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          years:
+            - year: null
+              id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+              price: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор комплектации
+          minimum: 1
+          maximum: 2147483647
+        model:
+          $ref: '#/components/schemas/VehicleModelResIdNameDTO'
+        body:
+          $ref: '#/components/schemas/RefItemResDTO'
+        engineSize:
+          $ref: '#/components/schemas/RefItemResDTO'
+        engineType:
+          $ref: '#/components/schemas/RefItemResDTO'
+        power:
+          $ref: '#/components/schemas/RefItemResDTO'
+        transmission:
+          $ref: '#/components/schemas/RefItemResDTO'
+        years:
+          type: array
+          items:
+            $ref: '#/components/schemas/VehicleSetYearResDTO'
+    VehicleSetPageResponseDTO:
+      title: VehicleSetPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив комплектаций автомобилей.
+          items:
+            $ref: '#/components/schemas/VehicleSetResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - setId: 1
+              model:
+                name: 0
+                productionKind:
+                  id: 1
+                  model: 0
+                modelId: 1
+                brand:
+                  id: 1
+                  name: string
+                  productionKind:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+              kind:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              year:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              state:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              body:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              engineSize:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              engineType:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              power:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              transmission:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              price: 100000
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка комплектаций автомобилей по параметрам с пагинацией и сортировкой.
+    CheckVehicleSetPriceResDTO:
+      title: CheckVehicleSetPriceResDTO
+      type: object
+      additionalProperties: false
+      properties:
+        characteristicUniqueValues:
+          type: array
+          minItems: 0
+          description: Массив уникальных значений запрашиваемой характеристики (если передан characteristicSysName)
+          items:
+            $ref: '#/components/schemas/RefItemResDTO'
+        price:
+          type: number
+          format: double
+          description: Стоимость (если не передан characteristicSysName)
+          minimum: 0
+          maximum: 100000000
+      x-examples:
+        example-1:
+          characteristicUniqueValues:
+            - id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+          price: 100000
+      description: Объект для поиска и проверки предельной стоимости комплектации автомобиля
+    VehicleSetYearReqDTO:
+      title: VehicleSetYearReqDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором года комплектаций
+      x-examples:
+        example-1:
+          set:
+            id: 1
+          year:
+            id: 1
+          price: 1
+      properties:
+        set:
+          $ref: '#/components/schemas/VehicleSetReqIdDTO'
+        year:
+          $ref: '#/components/schemas/RefItemReqIdDTO'
+        price:
+          type: number
+          format: double
+          description: Стоимость
+          minimum: 0
+          maximum: 100000000
+      required:
+        - set
+        - year
+    VehicleSetYearReqIdDTO:
+      title: VehicleSetYearReqIdDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором года комплектации
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+      required:
+        - id
+    VehicleSetYearResDTO:
+      title: VehicleSetYearResDTO
+      type: object
+      additionalProperties: false
+      description: Объект с комплектацией автомобиля
+      x-examples:
+        example-1:
+          id: 1
+          year:
+            id: 1
+            referenceId: 0
+            code: string
+            name: string
+            brief: string
+            description: string
+          price: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        year:
+          $ref: '#/components/schemas/RefItemResDTO'
+        price:
+          type: number
+          format: double
+          description: Стоимость
+          minimum: 0
+          maximum: 100000000
+    VehicleSetYearPageResponseDTO:
+      title: VehicleSetYearPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив годов выпуска и стоимостей комплектаций автомобилей.
+          items:
+            $ref: '#/components/schemas/VehicleSetYearResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - setId: 1
+              model:
+                name: 0
+                productionKind:
+                  id: 1
+                  model: 0
+                modelId: 1
+                brand:
+                  id: 1
+                  name: string
+                  productionKind:
+                    id: 1
+                    referenceId: 0
+                    code: string
+                    name: string
+                    brief: string
+                    description: string
+              kind:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              year:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              state:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              body:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              engineSize:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              engineType:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              power:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              transmission:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              price: 100000
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка годов выпуска и стоимостей комплектаций автомобилей по параметрам с пагинацией и сортировкой.
+    FileUploadHistoryResIdDTO:
+      title: FileUploadHistoryResIdDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором истории загрузки файлов
+      x-examples:
+        example-1:
+          - id: 1
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+    FileUploadHistoryResDTO:
+      title: FileUploadHistoryResDTO
+      type: object
+      additionalProperties: false
+      description: Объект с идентификатором истории загрузки файлов
+      x-examples:
+        example-1:
+          - id: 1
+            uploadDateStart: "2021-04-20T11:20:55"
+            uploadDateEnd: "2021-04-20T11:20:55"
+            status: "DONE"
+            userInfo: "Some user"
+            versionNumber: 1
+            fileType:
+              id: 1
+              referenceId: 0
+              code: string
+              name: string
+              brief: string
+              description: string
+            fileName: "File name"
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор
+          minimum: 1
+          maximum: 2147483647
+        uploadDateStart:
+          type: string
+          description: Дата и время начала загрузки файла
+          format: date-time
+        uploadDateEnd:
+          type: string
+          description: Дата и время окончания загрузки файла
+          format: date-time
+        status:
+          type: string
+          description: Статус загрузки
+          maxLength: 10
+        userInfo:
+          type: string
+          description: Информация о пользователе
+          maxLength: 256
+        versionNumber:
+          type: integer
+          format: int64
+          description: Номер версии файла
+          minimum: 1
+          maximum: 2147483647
+        fileType:
+          $ref: '#/components/schemas/RefItemResDTO'
+        fileName:
+          type: string
+          description: Название файла
+          maxLength: 256
+    FileUploadHistoryPageResponseDTO:
+      title: FileUploadHistoryPageResponseDTO
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: array
+          minItems: 0
+          description: Массив истории загрузки файлов.
+          items:
+            $ref: '#/components/schemas/FileUploadHistoryResDTO'
+        pageable:
+          $ref: '#/components/schemas/PageableDTO'
+        last:
+          type: boolean
+          description: Последняя страница.
+        totalPages:
+          type: integer
+          format: int64
+          description: Общее количество страниц.
+          minimum: 0
+          maximum: 2147483647
+        totalElements:
+          type: integer
+          format: int64
+          description: 'Общее количество записей. '
+          minimum: 0
+          maximum: 2147483647
+        size:
+          type: integer
+          format: int64
+          description: Количество элементов на текущей странице.
+          minimum: 0
+          maximum: 100
+        number:
+          type: integer
+          format: int64
+          description: Номер страницы.
+          minimum: 0
+          maximum: 2147483647
+        sort:
+          $ref: '#/components/schemas/SortDTO'
+        first:
+          type: boolean
+          description: Первая страница.
+        numberOfElements:
+          type: integer
+          format: int64
+          description: Количество элементов.
+          minimum: 0
+          maximum: 2147483647
+        empty:
+          type: boolean
+          description: Пустая страница.
+      x-examples:
+        example-1:
+          content:
+            - id: 1
+              uploadDateStart: "2021-04-20T11:20:55"
+              uploadDateEnd: "2021-04-20T11:20:55"
+              status: "DONE"
+              userInfo: "Some user"
+              versionNumber: 1
+              fileType:
+                id: 1
+                referenceId: 0
+                code: string
+                name: string
+                brief: string
+                description: string
+              fileName: "File name"
+          last: true
+          totalElements: 0
+          totalPages: 0
+          size: 0
+          number: 0
+          first: true
+          numberOfElements: 0
+          sort:
+            direction: string
+            property: string
+      description: Объект для передачи списка историй загрузок файлов по параметрам с пагинацией и сортировкой.
+  parameters:
+    page:
+      name: page
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 0
+        maximum: 2147483647
+      description: Номер страницы.
+    sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 256
+      description: 'Критерия сортировки: свойство(,asc|desc)'
+    size:
+      name: size
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        minimum: 0
+        maximum: 20
+      description: Количество элементов на странице.
+    name:
+      name: name
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по имени
+    sysname:
+      name: sysname
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по системному имени
+    parentId:
+      name: parentId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 0
+        maximum: 2147483647
+      description: Критерия фильтрации по родительской группе справочников
+    groupId:
+      name: groupId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по группе справочников
+    referenceId:
+      name: referenceId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по справочнику
+    referenceSysName:
+      name: referenceSysName
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по системному имени справочника
+    code:
+      name: code
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по коду элемента справочника
+    brief:
+      name: brief
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по сокращённому имени
+    refGroupId:
+      name: refGroupId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор группы справочника
+    refId:
+      name: refId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор справочника
+    refItemId:
+      name: refItemId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор элемента справочника
+    brandId:
+      name: brandId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по марке
+    productionKindId:
+      name: productionKindId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по типу производства
+    kindId:
+      name: kindId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по виду транспортного средства
+    propertyFormId:
+      name: propertyFormId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по форме собственности
+    modelId:
+      name: modelId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по модели
+    bodyId:
+      name: bodyId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по типу кузова
+    engineSizeId:
+      name: engineSizeId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по объёму двигателя
+    engineTypeId:
+      name: engineTypeId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по типу двигателя
+    powerId:
+      name: powerId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по мощности двигателя
+    transmissionId:
+      name: transmissionId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по типу трансмиссии
+    yearId:
+      name: yearId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по году выпуска
+    setId:
+      name: setId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по комплектации
+    characteristicSysName:
+      name: characteristicSysName
+      in: query
+      schema:
+        type: string
+        maxLength: 256
+      description: Критерия фильтрации по коду характеристики
+    fileTypeId:
+      name: fileTypeId
+      in: query
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Критерия фильтрации по типу загружаемого файла
+    vehicleBrandId:
+      name: vehicleBrandId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор марки автомобиля
+    vehicleModelId:
+      name: vehicleModelId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор модели автомобиля
+    vehicleSetId:
+      name: vehicleSetId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор комплектации автомобиля
+    vehicleSetYearId:
+      name: vehicleSetYearId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        maximum: 2147483647
+      description: Идентификатор года комплектации автомобиля
+tags:
+  - name: refgroups
+  - name: refgroup
+  - name: references
+  - name: reference
+  - name: refitems
+  - name: refitem
+  - name: vehiclebrands
+  - name: vehiclebrand
+  - name: vehiclemodels
+  - name: vehiclemodel
+  - name: vehiclesets
+  - name: vehicleset
+  - name: vehiclesetyears
+  - name: vehiclesetyear
+  - name: fileupload

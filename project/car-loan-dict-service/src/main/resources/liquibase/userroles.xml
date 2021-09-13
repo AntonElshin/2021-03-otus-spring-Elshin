@@ -1,0 +1,22 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <!-- Добавление роли администратор -->
+    <changeSet author="aelshin" id="1.0.1-insertAdminRoleV1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(ROLEID) FROM CORE_USERROLE WHERE ROLESYSNAME = 'ADMIN'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="CORE_USERROLE">
+            <column name="ROLEID" valueComputed="nextval('CORE_USERROLE_SEQ')"/>
+            <column name="ROLENAME">Администратор</column>
+            <column name="ROLESYSNAME">admin</column>
+            <column name="DESCRIPTION">Администратор</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

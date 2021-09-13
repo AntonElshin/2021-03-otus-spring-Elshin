@@ -1,0 +1,11 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+server:
+  port: 8081
+ru:
+  otus:
+    homework:
+      car-loan-dict:
+        base-url: http://localhost:8080
