@@ -20,7 +20,7 @@ docker-compose up --build
 http://localhost:3000/login - графана
 admin/admin
 
-http://localhost:8080/swagger-ui.html - swagger
+http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config - swagger
 
 Запросы SQL
 
